@@ -1,0 +1,3173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=1280"/>
+<title>Orbit · Creative finance lead network</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@500&display=swap" rel="stylesheet"/>
+<style>
+/* Assisted Living Orbit — design tokens & base */
+:root {
+  --accent: #2f5fe0;
+  --accent-deep: #1f3f99;
+  --accent-soft: #eaf0ff;
+  --planet: #2f7d4a;
+  --planet-soft: #e7f3ec;
+  --orbiter: #b04a2a;
+  --orbiter-soft: #f7ece6;
+
+  --bg: #f6f5f1;
+  --surface: #ffffff;
+  --surface-2: #faf8f3;
+  --line: #e8e4d9;
+  --line-strong: #d2cdbf;
+
+  --ink: #1a1a17;
+  --ink-2: #4b4a45;
+  --ink-3: #7a7870;
+  --ink-4: #a8a59c;
+
+  --warn: #b8742d;
+  --warn-soft: #fbf2e3;
+  --danger: #b03a3a;
+  --danger-soft: #fbe9e9;
+  --success: #2f7d4a;
+  --success-soft: #e7f3ec;
+
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  --shadow-sm: 0 1px 2px rgba(20, 18, 14, 0.04), 0 1px 1px rgba(20, 18, 14, 0.03);
+  --shadow: 0 2px 4px rgba(20, 18, 14, 0.04), 0 8px 24px -12px rgba(20, 18, 14, 0.10);
+  --shadow-lg: 0 4px 8px rgba(20, 18, 14, 0.06), 0 24px 48px -16px rgba(20, 18, 14, 0.16);
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-serif: "Fraunces", "Source Serif Pro", Georgia, "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --density-row: 52px;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button { font: inherit; color: inherit; cursor: pointer; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #d8d4c7; border-radius: 10px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: #c2bdac; }
+
+/* App layout */
+.app {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  background: var(--surface-2);
+  border-right: 1px solid var(--line);
+  display: flex; flex-direction: column;
+  padding: 18px 12px;
+  gap: 6px;
+  overflow-y: auto;
+}
+
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 10px 16px;
+}
+.brand-mark {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff 0%, var(--accent) 60%, var(--accent-deep) 100%);
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+}
+.brand-mark::after {
+  content: ""; position: absolute; inset: -6px;
+  border: 1px solid var(--ink-4); border-radius: 50%;
+  transform: rotate(-22deg) scaleY(0.45);
+  opacity: 0.55;
+}
+.brand-name {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+}
+
+.role-switch {
+  margin: 0 6px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.role-switch button {
+  background: transparent; border: 0; padding: 6px 10px;
+  border-radius: 999px;
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+  transition: background 120ms, color 120ms;
+}
+.role-switch button.active.orbiter {
+  background: var(--orbiter); color: #fff;
+}
+.role-switch button.active.planet {
+  background: var(--planet); color: #fff;
+}
+
+.nav-section {
+  display: flex; flex-direction: column; gap: 1px;
+  padding: 6px 0;
+}
+.nav-label {
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-4);
+  padding: 8px 10px 4px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 10px; border-radius: 8px;
+  color: var(--ink-2); font-weight: 500; font-size: 13px;
+  background: transparent; border: 0; text-align: left;
+  width: 100%;
+}
+.nav-item:hover { background: rgba(0,0,0,0.04); color: var(--ink); }
+.nav-item.active { background: var(--ink); color: #fff; }
+.nav-item.active .nav-icon { color: #fff; }
+.nav-icon { width: 16px; height: 16px; color: var(--ink-3); flex: 0 0 16px; }
+.nav-count {
+  margin-left: auto; font-size: 11px; font-weight: 600;
+  background: var(--surface); border: 1px solid var(--line);
+  padding: 1px 7px; border-radius: 999px; color: var(--ink-3);
+}
+.nav-item.active .nav-count { background: rgba(255,255,255,0.18); border-color: transparent; color: #fff; }
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 10px;
+  display: flex; align-items: center; gap: 10px;
+  border-top: 1px solid var(--line);
+}
+.avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-weight: 600; font-size: 12px; color: #fff;
+  background: var(--ink); flex: 0 0 32px;
+}
+.avatar.orbiter { background: var(--orbiter); }
+.avatar.planet { background: var(--planet); }
+.avatar.sm { width: 24px; height: 24px; font-size: 10px; }
+.avatar.lg { width: 44px; height: 44px; font-size: 14px; }
+
+.user-meta { display: flex; flex-direction: column; line-height: 1.2; }
+.user-meta .name { font-size: 13px; font-weight: 600; }
+.user-meta .role { font-size: 11px; color: var(--ink-3); }
+
+/* Main */
+.main {
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.topbar {
+  height: 56px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+.crumb {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--ink-3);
+}
+.crumb .here { color: var(--ink); font-weight: 600; }
+.topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+.search {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 10px;
+  width: 280px;
+  color: var(--ink-3);
+  font-size: 13px;
+}
+.search input {
+  background: transparent; border: 0; outline: 0; flex: 1;
+  font: inherit; color: var(--ink);
+}
+
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 8px;
+  display: grid; place-items: center;
+  background: transparent; border: 1px solid var(--line);
+  color: var(--ink-2);
+}
+.icon-btn:hover { background: var(--surface-2); color: var(--ink); }
+
+.content {
+  flex: 1; overflow-y: auto;
+  padding: 28px 32px 80px;
+}
+
+/* Typography */
+.h1 { font-family: var(--font-serif); font-weight: 500; font-size: 28px; letter-spacing: -0.015em; line-height: 1.15; margin: 0; }
+.h2 { font-family: var(--font-serif); font-weight: 500; font-size: 20px; letter-spacing: -0.01em; line-height: 1.2; margin: 0; }
+.h3 { font-weight: 600; font-size: 14px; letter-spacing: 0; margin: 0; }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+.muted { color: var(--ink-3); }
+.mono { font-family: var(--font-mono); }
+
+/* Page header */
+.page-head {
+  display: flex; align-items: flex-end; gap: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 22px;
+}
+.page-head .meta { display: flex; flex-direction: column; gap: 6px; }
+.page-head .actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px; font-weight: 500;
+  transition: background 120ms, border-color 120ms, transform 80ms;
+}
+.btn:hover { background: var(--surface-2); }
+.btn:active { transform: translateY(1px); }
+.btn.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+.btn.primary:hover { background: #000; }
+.btn.accent { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn.accent:hover { background: var(--accent-deep); }
+.btn.danger { background: var(--surface); color: var(--danger); border-color: var(--danger-soft); }
+.btn.success { background: var(--success); color: #fff; border-color: var(--success); }
+.btn.ghost { background: transparent; border-color: transparent; }
+.btn.ghost:hover { background: rgba(0,0,0,0.04); }
+.btn.lg { padding: 10px 18px; font-size: 14px; }
+.btn.sm { padding: 5px 10px; font-size: 12px; }
+.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+/* Inputs */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 12px; font-weight: 600; color: var(--ink-2); }
+.field .hint { font-size: 11px; color: var(--ink-3); }
+.input, .select, .textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font: inherit; color: var(--ink);
+  outline: none;
+  transition: border-color 120ms, box-shadow 120ms;
+}
+.input:focus, .select:focus, .textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.input.with-prefix { padding-left: 28px; }
+.input-wrap { position: relative; }
+.input-wrap .prefix {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--ink-3); font-size: 13px;
+}
+.textarea { min-height: 96px; resize: vertical; line-height: 1.5; }
+
+.checkbox, .radio {
+  width: 16px; height: 16px; border-radius: 4px;
+  border: 1.5px solid var(--line-strong);
+  background: var(--surface); display: inline-grid; place-items: center;
+  flex: 0 0 16px; transition: background 120ms, border-color 120ms;
+}
+.radio { border-radius: 50%; }
+.checkbox.checked, .radio.checked {
+  background: var(--ink); border-color: var(--ink);
+  color: #fff;
+}
+.checkbox.checked::after { content: "✓"; font-size: 11px; line-height: 1; }
+.radio.checked::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #fff; }
+
+.option-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border: 1px solid var(--line);
+  border-radius: 8px; background: var(--surface);
+  cursor: pointer; user-select: none;
+}
+.option-row:hover { border-color: var(--line-strong); }
+.option-row.active { border-color: var(--ink); background: var(--surface-2); }
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+.card.flat { box-shadow: none; }
+.card-pad { padding: 18px; }
+.card-head { padding: 14px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; }
+.card-body { padding: 18px; }
+.card-foot { padding: 12px 18px; border-top: 1px solid var(--line); display: flex; align-items: center; gap: 10px; }
+
+/* Badges */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600;
+  padding: 3px 8px; border-radius: 999px;
+  background: var(--surface-2); color: var(--ink-2);
+  border: 1px solid var(--line);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.badge.dot::before {
+  content: ""; width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor;
+}
+.badge.success { background: var(--success-soft); color: var(--success); border-color: transparent; }
+.badge.warn    { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.badge.danger  { background: var(--danger-soft); color: var(--danger); border-color: transparent; }
+.badge.accent  { background: var(--accent-soft); color: var(--accent-deep); border-color: transparent; }
+.badge.neutral { background: #efece4; color: var(--ink-2); border-color: transparent; }
+.badge.outline { background: transparent; }
+
+/* Tables */
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th {
+  text-align: left; font-weight: 600; font-size: 11px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-3); padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
+  position: sticky; top: 0;
+}
+.table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+.table tr:hover td { background: var(--surface-2); }
+.table tr.clickable { cursor: pointer; }
+
+/* Filters / chips */
+.chiprow { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 10px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--line);
+  font-size: 12px; color: var(--ink-2);
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--line-strong); }
+.chip.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+/* Stats */
+.stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.stat .lab { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+.stat .val { font-family: var(--font-serif); font-size: 26px; font-weight: 500; letter-spacing: -0.01em; }
+.stat .delta { font-size: 11px; color: var(--ink-3); }
+.stat .delta.up { color: var(--success); }
+.stat .delta.down { color: var(--danger); }
+
+/* Avatar/group */
+.avatar-group { display: inline-flex; }
+.avatar-group .avatar { border: 2px solid var(--surface); margin-left: -8px; }
+.avatar-group .avatar:first-child { margin-left: 0; }
+
+/* Two-pane */
+.two-pane {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 18px;
+}
+.three-pane {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr) 360px;
+  gap: 18px;
+  height: calc(100vh - 56px - 28px - 80px);
+  min-height: 600px;
+}
+
+/* Pipeline kanban */
+.kanban {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(220px, 1fr));
+  gap: 14px;
+}
+.kanban-col {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: flex; flex-direction: column;
+  min-height: 400px;
+}
+.kanban-head {
+  padding: 12px 14px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.kanban-head .title { font-weight: 600; font-size: 13px; }
+.kanban-head .count {
+  margin-left: auto;
+  font-size: 11px; font-weight: 600;
+  background: var(--surface); border: 1px solid var(--line);
+  padding: 1px 7px; border-radius: 999px; color: var(--ink-3);
+}
+.kanban-list {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 10px; overflow-y: auto;
+}
+.kanban-card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 10px; padding: 12px;
+  display: flex; flex-direction: column; gap: 8px;
+  cursor: pointer; transition: border-color 120ms, transform 80ms;
+}
+.kanban-card:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+
+/* Buy Box card */
+.bb-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  transition: border-color 120ms, transform 100ms, box-shadow 120ms;
+}
+.bb-card:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow);
+}
+.bb-banner {
+  height: 90px;
+  background: linear-gradient(135deg, var(--accent-soft) 0%, #f3edff 60%, #ffe8d6 100%);
+  position: relative;
+  border-bottom: 1px solid var(--line);
+}
+.bb-banner.alt-1 { background: linear-gradient(135deg, #e9f4ec 0%, #eaf3ff 100%); }
+.bb-banner.alt-2 { background: linear-gradient(135deg, #fef0e1 0%, #f3eaff 100%); }
+.bb-banner.alt-3 { background: linear-gradient(135deg, #ffeae0 0%, #f3f8ed 100%); }
+.bb-banner.alt-4 { background: linear-gradient(135deg, #e3eff1 0%, #fbf0e5 100%); }
+.bb-banner .planet-mark {
+  position: absolute; bottom: -22px; left: 18px;
+  width: 48px; height: 48px; border-radius: 50%;
+  border: 3px solid var(--surface);
+  background: radial-gradient(circle at 30% 30%, #fff 0%, var(--planet) 70%);
+}
+.bb-card-body { padding: 28px 18px 14px; display: flex; flex-direction: column; gap: 10px; }
+.bb-card .name { font-family: var(--font-serif); font-size: 18px; font-weight: 500; }
+.bb-card .where { font-size: 12px; color: var(--ink-3); }
+.bb-criteria { display: flex; flex-direction: column; gap: 6px; padding-top: 6px; border-top: 1px dashed var(--line); }
+.bb-crit-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.bb-crit-row .lab { color: var(--ink-3); width: 70px; flex: 0 0 70px; }
+.bb-crit-row .val { color: var(--ink); font-weight: 500; }
+.bb-foot {
+  padding: 10px 14px;
+  border-top: 1px solid var(--line);
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface-2);
+}
+.bb-foot .stat-mini { display: flex; flex-direction: column; line-height: 1.1; }
+.bb-foot .stat-mini .v { font-weight: 600; font-size: 13px; }
+.bb-foot .stat-mini .l { font-size: 10px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* Wizard / stepper */
+.stepper { display: flex; align-items: center; gap: 0; padding: 8px 0; }
+.step { display: flex; align-items: center; gap: 10px; flex: 1; }
+.step .num {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 12px; font-weight: 600;
+  background: var(--surface); border: 1.5px solid var(--line-strong);
+  color: var(--ink-3);
+}
+.step.done .num { background: var(--success); color: #fff; border-color: var(--success); }
+.step.active .num { background: var(--ink); color: #fff; border-color: var(--ink); }
+.step .lab { font-size: 12px; color: var(--ink-3); }
+.step.active .lab { color: var(--ink); font-weight: 600; }
+.step .bar { flex: 1; height: 1.5px; background: var(--line); }
+.step.done .bar { background: var(--success); }
+
+/* Inbox row */
+.inbox-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 120ms, background 120ms;
+}
+.inbox-row:hover { background: var(--surface-2); border-color: var(--line-strong); }
+.inbox-row.active { border-color: var(--ink); background: var(--surface-2); }
+.inbox-row.unread { border-left: 3px solid var(--accent); }
+
+/* Messaging */
+.msg-thread {
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 18px;
+  overflow-y: auto;
+}
+.msg {
+  max-width: 70%;
+  padding: 9px 12px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+.msg.them {
+  align-self: flex-start;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-bottom-left-radius: 4px;
+}
+.msg.me {
+  align-self: flex-end;
+  background: var(--ink);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.msg-meta { font-size: 10px; color: var(--ink-4); margin-top: 4px; }
+
+/* Property image placeholder */
+.img-placeholder {
+  background: repeating-linear-gradient(135deg, #efece4 0 8px, #e8e4d9 8px 16px);
+  border-radius: var(--radius);
+  display: grid; place-items: center;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+
+/* Diff/comparison rows */
+.kv-grid {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 6px 18px;
+  font-size: 13px;
+}
+.kv-grid .k { color: var(--ink-3); padding-top: 1px; }
+.kv-grid .v { color: var(--ink); }
+
+/* Drawer */
+.drawer-back {
+  position: fixed; inset: 0;
+  background: rgba(20, 18, 14, 0.35);
+  backdrop-filter: blur(2px);
+  z-index: 30;
+}
+.drawer {
+  position: fixed; right: 0; top: 0; bottom: 0;
+  width: min(640px, 100vw);
+  background: var(--surface);
+  border-left: 1px solid var(--line);
+  z-index: 31;
+  display: flex; flex-direction: column;
+  box-shadow: var(--shadow-lg);
+}
+.drawer-head {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; gap: 10px;
+}
+.drawer-body { flex: 1; overflow-y: auto; padding: 18px; }
+.drawer-foot {
+  padding: 14px 18px;
+  border-top: 1px solid var(--line);
+  display: flex; gap: 8px;
+  background: var(--surface-2);
+}
+
+/* Toggle */
+.toggle {
+  width: 30px; height: 18px; border-radius: 999px;
+  background: var(--line-strong); position: relative;
+  transition: background 120ms;
+  cursor: pointer; flex: 0 0 30px;
+}
+.toggle::after {
+  content: ""; position: absolute; top: 2px; left: 2px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: #fff;
+  transition: left 120ms;
+}
+.toggle.on { background: var(--ink); }
+.toggle.on::after { left: 14px; }
+
+/* Misc utility */
+.row { display: flex; align-items: center; gap: 8px; }
+.col { display: flex; flex-direction: column; gap: 8px; }
+.spacer { flex: 1; }
+.divider { height: 1px; background: var(--line); margin: 14px 0; }
+.divider.vert { width: 1px; height: 100%; background: var(--line); margin: 0 14px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+
+/* Map placeholder */
+.map {
+  background:
+    radial-gradient(circle at 22% 35%, #d3e4f5 0 4px, transparent 4px),
+    radial-gradient(circle at 60% 60%, #d3e4f5 0 4px, transparent 4px),
+    radial-gradient(circle at 75% 28%, #d3e4f5 0 4px, transparent 4px),
+    radial-gradient(circle at 35% 70%, #d3e4f5 0 4px, transparent 4px),
+    linear-gradient(135deg, #eef3f6 0%, #f5f1ea 100%);
+  background-size: cover;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+}
+.map::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+.pin {
+  position: absolute;
+  width: 28px; height: 28px;
+  display: grid; place-items: center;
+  background: var(--ink); color: #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: translate(-50%, -100%) rotate(-45deg);
+  font-size: 10px; font-weight: 700;
+}
+.pin > span { transform: rotate(45deg); }
+
+/* Empty state */
+.empty {
+  border: 1.5px dashed var(--line-strong);
+  border-radius: var(--radius);
+  padding: 36px;
+  text-align: center;
+  color: var(--ink-3);
+  background: var(--surface-2);
+}
+
+/* Tabs */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 16px; }
+.tab {
+  padding: 8px 14px;
+  font-size: 13px; font-weight: 500;
+  color: var(--ink-3);
+  background: transparent; border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.tab:hover { color: var(--ink); }
+.tab.active { color: var(--ink); font-weight: 600; border-bottom-color: var(--ink); }
+
+/* Term suggestion (creative finance) */
+.term-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  background: var(--surface);
+  display: flex; flex-direction: column; gap: 6px;
+  cursor: pointer;
+  transition: border-color 120ms, background 120ms;
+}
+.term-card:hover { border-color: var(--line-strong); }
+.term-card.active { border-color: var(--ink); background: var(--surface-2); }
+.term-card .label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+.term-card .name { font-family: var(--font-serif); font-size: 16px; font-weight: 500; }
+.term-card .desc { font-size: 12px; color: var(--ink-2); line-height: 1.4; }
+
+/* Splash dot pulse */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.6; }
+}
+.pulse-dot {
+  display: inline-block; width: 8px; height: 8px;
+  border-radius: 50%; background: var(--success);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+/* JV pie/split */
+.split-bar {
+  display: flex; height: 12px; border-radius: 8px; overflow: hidden;
+  border: 1px solid var(--line);
+}
+.split-bar .a { background: var(--orbiter); }
+.split-bar .b { background: var(--planet); }
+
+/* Loader for messaging composer */
+.composer {
+  border-top: 1px solid var(--line);
+  padding: 12px 14px;
+  background: var(--surface);
+  display: flex; align-items: end; gap: 8px;
+}
+.composer textarea {
+  flex: 1;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 9px 12px;
+  font: inherit; resize: none; min-height: 40px; max-height: 120px;
+  outline: none;
+}
+.composer textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+<script>
+window.TweaksPanel = function() { return null; };
+window.TweakSection = function() { return null; };
+window.TweakRadio = function() { return null; };
+window.TweakColor = function() { return null; };
+window.TweakToggle = function() { return null; };
+</script>
+<script type="text/babel">// Mock data for the Orbit prototype
+const PLANETS = [
+  {
+    id: "p-aurora",
+    name: "Aurora Holdings",
+    operator: "Maya Okafor",
+    initials: "AH",
+    markets: ["Phoenix, AZ", "Tucson, AZ", "Las Vegas, NV"],
+    propTypes: ["SFR", "Small Multi (2-4)"],
+    financing: ["Sub-To", "Seller Finance", "Wrap"],
+    pricing: "$180k – $450k",
+    appetite: 4,
+    closingSpeed: "10-14 days",
+    leadsClosed: 38,
+    avgSplit: "65 / 35",
+    avgResponse: "3.2h",
+    lookingFor: "Free-and-clear or low-balance notes. Below-market rates preferred.",
+    banner: "alt-1",
+    accept: 0.62,
+  },
+  {
+    id: "p-ironvine",
+    name: "Ironvine Capital",
+    operator: "Caleb Rhys",
+    initials: "IC",
+    markets: ["Atlanta, GA", "Charlotte, NC", "Birmingham, AL"],
+    propTypes: ["SFR", "Multifamily (5-30)"],
+    financing: ["Sub-To", "Wrap", "Novation"],
+    pricing: "$220k – $1.4M",
+    appetite: 5,
+    closingSpeed: "14-21 days",
+    leadsClosed: 71,
+    avgSplit: "60 / 40",
+    avgResponse: "1.8h",
+    lookingFor: "Distressed or assumable financing. Will entertain creative wraps.",
+    banner: "alt-2",
+    accept: 0.71,
+  },
+  {
+    id: "p-pinegrove",
+    name: "Pinegrove Realty Trust",
+    operator: "Sasha Lindgren",
+    initials: "PR",
+    markets: ["Indianapolis, IN", "Columbus, OH", "Louisville, KY"],
+    propTypes: ["SFR"],
+    financing: ["Seller Finance", "Sub-To"],
+    pricing: "$120k – $280k",
+    appetite: 3,
+    closingSpeed: "21-30 days",
+    leadsClosed: 22,
+    avgSplit: "70 / 30",
+    avgResponse: "5.5h",
+    lookingFor: "Long-term hold cash flow. Tired landlords welcome.",
+    banner: "alt-3",
+    accept: 0.48,
+  },
+  {
+    id: "p-meridian",
+    name: "Meridian Land Co.",
+    operator: "Jules Tanaka",
+    initials: "ML",
+    markets: ["Boise, ID", "Spokane, WA", "Reno, NV"],
+    propTypes: ["Land", "SFR"],
+    financing: ["Seller Finance"],
+    pricing: "$60k – $400k",
+    appetite: 2,
+    closingSpeed: "30-45 days",
+    leadsClosed: 14,
+    avgSplit: "75 / 25",
+    avgResponse: "8.4h",
+    lookingFor: "Owner-financed land deals, ideally 10+ acres.",
+    banner: "alt-4",
+    accept: 0.41,
+  },
+  {
+    id: "p-blueheron",
+    name: "Blue Heron Group",
+    operator: "Devon Park",
+    initials: "BH",
+    markets: ["Tampa, FL", "Orlando, FL", "Jacksonville, FL"],
+    propTypes: ["SFR", "Small Multi (2-4)", "Multifamily (5-30)"],
+    financing: ["Sub-To", "Seller Finance", "Wrap", "Novation"],
+    pricing: "$200k – $900k",
+    appetite: 5,
+    closingSpeed: "7-14 days",
+    leadsClosed: 92,
+    avgSplit: "55 / 45",
+    avgResponse: "0.9h",
+    lookingFor: "Coastal Florida; aggressive on sub-to with arrearages.",
+    banner: "alt-1",
+    accept: 0.78,
+  },
+  {
+    id: "p-rangers",
+    name: "Rangers Real Asset",
+    operator: "Quinn DeLeon",
+    initials: "RR",
+    markets: ["Dallas, TX", "Fort Worth, TX", "Oklahoma City, OK"],
+    propTypes: ["SFR", "Small Multi (2-4)"],
+    financing: ["Sub-To", "Seller Finance"],
+    pricing: "$170k – $520k",
+    appetite: 4,
+    closingSpeed: "10-18 days",
+    leadsClosed: 47,
+    avgSplit: "62 / 38",
+    avgResponse: "2.4h",
+    lookingFor: "Tired landlords; condition flexible if equity is reasonable.",
+    banner: "alt-2",
+    accept: 0.58,
+  },
+];
+
+const MY_LEADS = [
+  {
+    id: "L-2041",
+    address: "418 Camelback Ridge, Phoenix, AZ 85016",
+    seller: "R. Whitman",
+    submitted: "Apr 30, 2026",
+    submittedTo: "Aurora Holdings",
+    structure: "Sub-To",
+    askPrice: 412000,
+    mortgageBalance: 268000,
+    motivation: "Relocating to Oregon",
+    timeline: "60 days",
+    status: "under-review",
+    statusLabel: "Under review",
+    lastUpdate: "Maya replied 2h ago",
+    propType: "SFR",
+    bedBath: "4 bd · 2 ba",
+    sqft: 2140,
+    yearBuilt: 1996,
+    rate: 3.625,
+    payment: 1640,
+    proposedSplit: 65,
+    notes: "Owner inherited; doesn't want to be a landlord. Open to cash + monthly.",
+  },
+  {
+    id: "L-2039",
+    address: "1207 N Magnolia St, Tampa, FL 33604",
+    seller: "G. Vasquez",
+    submitted: "Apr 28, 2026",
+    submittedTo: "Blue Heron Group",
+    structure: "Wrap",
+    askPrice: 318000,
+    mortgageBalance: 191500,
+    motivation: "Job loss, behind 2 payments",
+    timeline: "ASAP",
+    status: "jv-signed",
+    statusLabel: "JV signed",
+    lastUpdate: "Closing Thu",
+    propType: "SFR",
+    bedBath: "3 bd · 2 ba",
+    sqft: 1580,
+    yearBuilt: 2003,
+    rate: 4.25,
+    payment: 1185,
+    proposedSplit: 55,
+  },
+  {
+    id: "L-2034",
+    address: "892 Pine Lake Dr, Indianapolis, IN 46220",
+    seller: "T. Holzmann",
+    submitted: "Apr 24, 2026",
+    submittedTo: "Pinegrove Realty Trust",
+    structure: "Seller Finance",
+    askPrice: 215000,
+    mortgageBalance: 0,
+    motivation: "Tired landlord, retirement",
+    timeline: "Flexible",
+    status: "countered",
+    statusLabel: "Counter-offered",
+    lastUpdate: "Sasha sent terms",
+    propType: "SFR",
+    bedBath: "3 bd · 1.5 ba",
+    sqft: 1320,
+    yearBuilt: 1971,
+    rate: 0,
+    payment: 0,
+    proposedSplit: 70,
+  },
+  {
+    id: "L-2030",
+    address: "55 Sundance Ln, Boise, ID 83716",
+    seller: "K. Reyes",
+    submitted: "Apr 20, 2026",
+    submittedTo: "Meridian Land Co.",
+    structure: "Seller Finance",
+    askPrice: 142000,
+    mortgageBalance: 0,
+    motivation: "Inherited, out of state",
+    timeline: "90 days",
+    status: "declined",
+    statusLabel: "Declined",
+    lastUpdate: "Outside buy box",
+    propType: "Land (4.2 ac)",
+    bedBath: "—",
+    sqft: 0,
+    yearBuilt: 0,
+    rate: 0,
+    payment: 0,
+    proposedSplit: 75,
+  },
+  {
+    id: "L-2027",
+    address: "3411 Ashberry Ct, Atlanta, GA 30331",
+    seller: "M. Castillo",
+    submitted: "Apr 17, 2026",
+    submittedTo: "Ironvine Capital",
+    structure: "Sub-To",
+    askPrice: 268000,
+    mortgageBalance: 198000,
+    motivation: "Divorce",
+    timeline: "30 days",
+    status: "closed-won",
+    statusLabel: "Closed",
+    lastUpdate: "Funded · $14,200 split",
+    propType: "SFR",
+    bedBath: "4 bd · 3 ba",
+    sqft: 1980,
+    yearBuilt: 2008,
+    rate: 5.125,
+    payment: 1320,
+    proposedSplit: 60,
+  },
+  {
+    id: "L-2024",
+    address: "718 Westlake Ave, Charlotte, NC 28208",
+    seller: "P. Onyema",
+    submitted: "Apr 14, 2026",
+    submittedTo: "Ironvine Capital",
+    structure: "Novation",
+    askPrice: 345000,
+    mortgageBalance: 0,
+    motivation: "Estate sale",
+    timeline: "45 days",
+    status: "in-talks",
+    statusLabel: "Seller talks",
+    lastUpdate: "Caleb on call w/ seller",
+    propType: "SFR",
+    bedBath: "3 bd · 2 ba",
+    sqft: 1640,
+    yearBuilt: 1989,
+    rate: 0,
+    payment: 0,
+    proposedSplit: 60,
+  },
+];
+
+const PLANET_INBOX = [
+  {
+    id: "L-2056",
+    address: "418 Camelback Ridge, Phoenix, AZ 85016",
+    orbiter: "Avery Quinn",
+    orbInit: "AQ",
+    received: "2h ago",
+    structure: "Sub-To",
+    fitScore: 92,
+    askPrice: 412000,
+    mortgage: 268000,
+    motivation: "Relocating",
+    unread: true,
+    propType: "SFR",
+  },
+  {
+    id: "L-2055",
+    address: "2200 Desert Bloom Way, Tucson, AZ 85704",
+    orbiter: "Reed Patel",
+    orbInit: "RP",
+    received: "5h ago",
+    structure: "Seller Finance",
+    fitScore: 81,
+    askPrice: 295000,
+    mortgage: 0,
+    motivation: "Tired landlord",
+    unread: true,
+    propType: "SFR",
+  },
+  {
+    id: "L-2052",
+    address: "9 Saguaro Trail, Phoenix, AZ 85044",
+    orbiter: "Imani Brooks",
+    orbInit: "IB",
+    received: "1d ago",
+    structure: "Wrap",
+    fitScore: 74,
+    askPrice: 388000,
+    mortgage: 224000,
+    motivation: "Job relocation",
+    unread: false,
+    propType: "SFR",
+  },
+  {
+    id: "L-2049",
+    address: "640 Mesa Verde Pl, Las Vegas, NV 89117",
+    orbiter: "Theo Marlowe",
+    orbInit: "TM",
+    received: "2d ago",
+    structure: "Sub-To",
+    fitScore: 88,
+    askPrice: 432000,
+    mortgage: 311000,
+    motivation: "Behind 1 mo",
+    unread: false,
+    propType: "SFR",
+  },
+];
+
+// Pipeline columns / planet view
+const PIPELINE = {
+  "new": [
+    { id: "L-2056", title: "418 Camelback Ridge", who: "Avery Q.", price: 412000, struct: "Sub-To" },
+    { id: "L-2055", title: "2200 Desert Bloom", who: "Reed P.", price: 295000, struct: "Sel-Fin" },
+  ],
+  "qualifying": [
+    { id: "L-2052", title: "9 Saguaro Trail", who: "Imani B.", price: 388000, struct: "Wrap" },
+    { id: "L-2049", title: "640 Mesa Verde", who: "Theo M.", price: 432000, struct: "Sub-To" },
+    { id: "L-2046", title: "318 Cactus Wren", who: "Avery Q.", price: 264000, struct: "Sub-To" },
+  ],
+  "jv": [
+    { id: "L-2041", title: "1207 N Magnolia", who: "Avery Q.", price: 318000, struct: "Wrap" },
+    { id: "L-2038", title: "77 Caldera Ct", who: "Reed P.", price: 372000, struct: "Sub-To" },
+  ],
+  "closing": [
+    { id: "L-2031", title: "412 Sunset Ridge", who: "Imani B.", price: 285000, struct: "Sel-Fin" },
+  ],
+  "closed": [
+    { id: "L-2027", title: "3411 Ashberry Ct", who: "Avery Q.", price: 268000, struct: "Sub-To" },
+    { id: "L-2019", title: "55 Citrus Ln", who: "Theo M.", price: 311000, struct: "Wrap" },
+  ],
+};
+
+const PIPELINE_COLS = [
+  { key: "new",        label: "New leads",        tone: "accent" },
+  { key: "qualifying", label: "Qualifying",       tone: "warn" },
+  { key: "jv",         label: "JV agreed",        tone: "neutral" },
+  { key: "closing",    label: "In closing",       tone: "outline" },
+  { key: "closed",     label: "Closed / funded",  tone: "success" },
+];
+
+const STRUCTURES = [
+  { id: "sub-to",        name: "Subject-To",       desc: "Take title; existing financing stays in seller's name." },
+  { id: "seller-finance",name: "Seller Finance",   desc: "Seller carries the note; new terms set between parties." },
+  { id: "wrap",          name: "Wrap-Around",      desc: "New mortgage wraps around the existing one." },
+  { id: "novation",      name: "Novation",         desc: "Seller agrees to substitute buyer onto existing loan." },
+  { id: "hybrid",        name: "Hybrid",           desc: "Mix of cash, sub-to, and seller-carry second." },
+];
+
+const STATUSES = {
+  "draft":         { label: "Draft",         tone: "neutral" },
+  "submitted":     { label: "Submitted",     tone: "accent" },
+  "under-review":  { label: "Under review",  tone: "warn" },
+  "in-talks":      { label: "Seller talks",  tone: "warn" },
+  "countered":     { label: "Countered",     tone: "warn" },
+  "jv-signed":     { label: "JV signed",     tone: "success" },
+  "closing":       { label: "Closing",       tone: "success" },
+  "closed-won":    { label: "Closed",        tone: "success" },
+  "declined":      { label: "Declined",      tone: "danger" },
+};
+
+const MESSAGES = [
+  { id: 1, planet: "Aurora Holdings", with: "Maya Okafor", role: "Planet", initials: "MO",
+    last: "Got it — sending novation paperwork to seller now.",
+    when: "2h", unread: 1, leadId: "L-2041",
+    thread: [
+      { from: "them", t: "Hey Avery — fit looks strong. What rate is the underlying?", at: "Yesterday 4:12 PM" },
+      { from: "me",   t: "3.625% fixed, 23 years left. Seller's open to leaving it in place.", at: "Yesterday 4:18 PM" },
+      { from: "them", t: "Perfect. I'll send a draft JV with 65/35 split. Sound good?", at: "Yesterday 4:22 PM" },
+      { from: "me",   t: "Yes — 65/35 works. Seller has movers booked Jun 12.", at: "10:04 AM" },
+      { from: "them", t: "Got it — sending novation paperwork to seller now.", at: "11:47 AM" },
+    ]
+  },
+  { id: 2, planet: "Pinegrove Realty Trust", with: "Sasha Lindgren", role: "Planet", initials: "SL",
+    last: "Counter is 8% IO for 36 then balloon. Can seller swallow that?",
+    when: "1d", unread: 1, leadId: "L-2034",
+    thread: [
+      { from: "them", t: "Counter is 8% IO for 36 then balloon. Can seller swallow that?", at: "Yesterday 9:15 AM" },
+    ]
+  },
+  { id: 3, planet: "Blue Heron Group", with: "Devon Park", role: "Planet", initials: "DP",
+    last: "We funded — splits hit your account Friday.",
+    when: "2d", unread: 0, leadId: "L-2039",
+    thread: [
+      { from: "them", t: "We funded — splits hit your account Friday.", at: "Mon 3:42 PM" },
+    ]
+  },
+  { id: 4, planet: "Ironvine Capital", with: "Caleb Rhys", role: "Planet", initials: "CR",
+    last: "Talking to the seller in 20.",
+    when: "3d", unread: 0, leadId: "L-2024",
+    thread: [
+      { from: "me",   t: "Seller available 2pm CT today.", at: "Sun 1:01 PM" },
+      { from: "them", t: "Talking to the seller in 20.", at: "Sun 1:40 PM" },
+    ]
+  },
+];
+
+window.ORBIT_DATA = {
+  PLANETS, MY_LEADS, PLANET_INBOX, PIPELINE, PIPELINE_COLS,
+  STRUCTURES, STATUSES, MESSAGES,
+};
+</script>
+<script type="text/babel">// Icons - simple line icons using SVG
+const Icon = ({ name, size = 16, stroke = 1.6, style = {} }) => {
+  const props = {
+    width: size, height: size, viewBox: "0 0 24 24",
+    fill: "none", stroke: "currentColor", strokeWidth: stroke,
+    strokeLinecap: "round", strokeLinejoin: "round",
+    style,
+  };
+  switch (name) {
+    case "compass":   return <svg {...props}><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>;
+    case "send":      return <svg {...props}><path d="M3 11l18-8-7 18-3-7z"/><path d="M11 13l-3-2"/></svg>;
+    case "list":      return <svg {...props}><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>;
+    case "inbox":     return <svg {...props}><path d="M3 13l3-8h12l3 8"/><path d="M3 13v6h18v-6"/><path d="M8 13a4 4 0 0 0 8 0"/></svg>;
+    case "kanban":    return <svg {...props}><rect x="3" y="3" width="6" height="14" rx="1"/><rect x="11" y="3" width="6" height="10" rx="1"/><rect x="19" y="3" width="2" height="6" rx="1"/></svg>;
+    case "target":    return <svg {...props}><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>;
+    case "handshake": return <svg {...props}><path d="M3 12l3-3 4 1 2-2 4 4-2 2"/><path d="M14 12l3 3 4-3"/><path d="M10 14l2 2 2-2"/></svg>;
+    case "chat":      return <svg {...props}><path d="M21 15a3 3 0 0 1-3 3H8l-5 4V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3z"/></svg>;
+    case "dashboard": return <svg {...props}><rect x="3" y="3" width="8" height="10" rx="1"/><rect x="13" y="3" width="8" height="6" rx="1"/><rect x="13" y="11" width="8" height="10" rx="1"/><rect x="3" y="15" width="8" height="6" rx="1"/></svg>;
+    case "search":    return <svg {...props}><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>;
+    case "bell":      return <svg {...props}><path d="M6 8a6 6 0 0 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9z"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>;
+    case "plus":      return <svg {...props}><path d="M12 5v14M5 12h14"/></svg>;
+    case "filter":    return <svg {...props}><path d="M3 5h18l-7 9v6l-4-2v-4z"/></svg>;
+    case "arrow":     return <svg {...props}><path d="M5 12h14M13 6l6 6-6 6"/></svg>;
+    case "back":      return <svg {...props}><path d="M19 12H5M11 6l-6 6 6 6"/></svg>;
+    case "check":     return <svg {...props}><path d="M5 12l5 5L20 6"/></svg>;
+    case "x":         return <svg {...props}><path d="M6 6l12 12M18 6L6 18"/></svg>;
+    case "more":      return <svg {...props}><circle cx="6" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="18" cy="12" r="1.4"/></svg>;
+    case "phone":     return <svg {...props}><path d="M5 4h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>;
+    case "calendar":  return <svg {...props}><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>;
+    case "map":       return <svg {...props}><path d="M9 4l-6 2v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>;
+    case "home":      return <svg {...props}><path d="M3 12l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>;
+    case "dollar":    return <svg {...props}><path d="M12 2v20"/><path d="M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>;
+    case "doc":       return <svg {...props}><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>;
+    case "edit":      return <svg {...props}><path d="M14 4l6 6L8 22H2v-6z"/></svg>;
+    case "settings":  return <svg {...props}><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.7a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.5A7 7 0 0 0 5 12a7 7 0 0 0 .1 1.2l-2 1.5 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.7a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.5z"/></svg>;
+    case "globe":     return <svg {...props}><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>;
+    case "spark":     return <svg {...props}><path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></svg>;
+    case "user":      return <svg {...props}><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>;
+    case "users":     return <svg {...props}><circle cx="9" cy="8" r="4"/><path d="M2 20a7 7 0 0 1 14 0"/><path d="M16 4a4 4 0 0 1 0 8"/><path d="M22 20a6 6 0 0 0-4-5.6"/></svg>;
+    case "clock":     return <svg {...props}><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>;
+    case "trend":     return <svg {...props}><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>;
+    case "paperclip": return <svg {...props}><path d="M21 12l-9 9a5 5 0 0 1-7-7l9-9a3 3 0 0 1 4 4l-8 8a1 1 0 0 1-2-2l7-7"/></svg>;
+    case "split":     return <svg {...props}><path d="M5 3v6a4 4 0 0 0 4 4h10"/><path d="M5 21v-6a4 4 0 0 1 4-4"/><path d="M16 9l3-3-3-3M16 17l3-3-3-3"/></svg>;
+    case "sliders":   return <svg {...props}><path d="M4 6h12M20 6h0M4 12h6M14 12h6M4 18h16"/><circle cx="18" cy="6" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="6" cy="18" r="2"/></svg>;
+    case "logo":      return <svg {...props}><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-25 12 12)"/></svg>;
+    case "lightning": return <svg {...props}><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>;
+    default: return null;
+  }
+};
+
+window.Icon = Icon;
+</script>
+<script type="text/babel">// Shared components used across screens
+const { useState, useEffect, useMemo, useRef } = React;
+const { Icon } = window;
+const { STATUSES } = window.ORBIT_DATA;
+
+const Money = ({ value, compact = false }) => {
+  if (!value) return <span>—</span>;
+  const opts = compact && value >= 1000
+    ? { notation: "compact", maximumFractionDigits: 1 }
+    : { maximumFractionDigits: 0 };
+  return <span>${"" + Number(value).toLocaleString("en-US", opts)}</span>;
+};
+
+const Badge = ({ tone = "neutral", dot = false, children }) => (
+  <span className={`badge ${tone} ${dot ? "dot" : ""}`}>{children}</span>
+);
+
+const StatusBadge = ({ status }) => {
+  const s = STATUSES[status] || { label: status, tone: "neutral" };
+  return <Badge tone={s.tone} dot>{s.label}</Badge>;
+};
+
+const Avatar = ({ initials, kind = "neutral", size = "" }) => (
+  <span className={`avatar ${kind} ${size}`}>{initials}</span>
+);
+
+const PageHead = ({ eyebrow, title, subtitle, actions }) => (
+  <div className="page-head">
+    <div className="meta">
+      {eyebrow && <span className="eyebrow">{eyebrow}</span>}
+      <h1 className="h1">{title}</h1>
+      {subtitle && <span className="muted">{subtitle}</span>}
+    </div>
+    {actions && <div className="actions">{actions}</div>}
+  </div>
+);
+
+const Stepper = ({ steps, current }) => (
+  <div className="stepper">
+    {steps.map((s, i) => (
+      <React.Fragment key={s}>
+        <div className={`step ${i < current ? "done" : ""} ${i === current ? "active" : ""}`}>
+          <div className="num">{i < current ? "✓" : i + 1}</div>
+          <div className="lab">{s}</div>
+        </div>
+        {i < steps.length - 1 && <div className={`bar ${i < current ? "done" : ""}`} style={{flex:1, height:1.5, background: i < current ? "var(--success)" : "var(--line)"}} />}
+      </React.Fragment>
+    ))}
+  </div>
+);
+
+const Field = ({ label, hint, children }) => (
+  <div className="field">
+    {label && <label>{label}</label>}
+    {children}
+    {hint && <span className="hint">{hint}</span>}
+  </div>
+);
+
+const Toggle = ({ on, onChange }) => (
+  <span className={`toggle ${on ? "on" : ""}`} onClick={() => onChange(!on)} />
+);
+
+const FitMeter = ({ score }) => {
+  const tone = score >= 85 ? "success" : score >= 70 ? "warn" : "neutral";
+  return (
+    <div style={{display:"flex", alignItems:"center", gap:8}}>
+      <div style={{
+        width: 40, height: 6, background: "var(--line)", borderRadius: 999, overflow: "hidden"
+      }}>
+        <div style={{
+          width: `${score}%`, height: "100%",
+          background: tone === "success" ? "var(--success)" : tone === "warn" ? "var(--warn)" : "var(--ink-3)",
+        }} />
+      </div>
+      <span style={{fontSize:12, fontWeight:600, color:"var(--ink-2)"}}>{score}</span>
+    </div>
+  );
+};
+
+const AppetiteDots = ({ level }) => (
+  <span style={{display:"inline-flex", gap:3}}>
+    {[1,2,3,4,5].map(i => (
+      <span key={i} style={{
+        width:6, height:6, borderRadius:"50%",
+        background: i <= level ? "var(--ink)" : "var(--line-strong)",
+      }} />
+    ))}
+  </span>
+);
+
+const SplitBar = ({ orbiter }) => (
+  <div className="split-bar">
+    <div className="a" style={{width: `${orbiter}%`}} />
+    <div className="b" style={{width: `${100 - orbiter}%`}} />
+  </div>
+);
+
+const EmptyState = ({ icon = "spark", title, body, action }) => (
+  <div className="empty">
+    <div style={{display:"inline-flex", padding:10, borderRadius:"50%", background:"var(--surface)", border:"1px solid var(--line)", marginBottom:10}}>
+      <Icon name={icon} size={20} />
+    </div>
+    <div style={{fontWeight:600, color:"var(--ink)", marginBottom:4}}>{title}</div>
+    {body && <div style={{fontSize:13, marginBottom:12}}>{body}</div>}
+    {action}
+  </div>
+);
+
+const Drawer = ({ open, onClose, children }) => {
+  if (!open) return null;
+  return (
+    <React.Fragment>
+      <div className="drawer-back" onClick={onClose} />
+      <div className="drawer">{children}</div>
+    </React.Fragment>
+  );
+};
+
+Object.assign(window, {
+  Money, Badge, StatusBadge, Avatar, PageHead, Stepper, Field, Toggle,
+  FitMeter, AppetiteDots, SplitBar, EmptyState, Drawer,
+});
+</script>
+<script type="text/babel">// Orbiter: Browse Planets and their Buy Boxes
+const { Icon } = window;
+const { Badge, FitMeter, AppetiteDots, PageHead } = window;
+const { PLANETS } = window.ORBIT_DATA;
+
+function BrowsePlanets({ onOpenPlanet, onSendLead }) {
+  const [filter, setFilter] = React.useState("all");
+  const [view, setView] = React.useState("grid");
+  const [search, setSearch] = React.useState("");
+
+  const filters = [
+    { id: "all",       label: "All Planets" },
+    { id: "sub-to",    label: "Sub-To" },
+    { id: "seller",    label: "Seller Finance" },
+    { id: "wrap",      label: "Wrap" },
+    { id: "novation",  label: "Novation" },
+    { id: "fast",      label: "Fast close (<14d)" },
+  ];
+
+  const filtered = PLANETS.filter(p => {
+    const matchSearch = search === "" ||
+      p.name.toLowerCase().includes(search.toLowerCase()) ||
+      p.markets.some(m => m.toLowerCase().includes(search.toLowerCase()));
+    if (!matchSearch) return false;
+    if (filter === "all") return true;
+    if (filter === "sub-to") return p.financing.includes("Sub-To");
+    if (filter === "seller") return p.financing.includes("Seller Finance");
+    if (filter === "wrap") return p.financing.includes("Wrap");
+    if (filter === "novation") return p.financing.includes("Novation");
+    if (filter === "fast") return p.closingSpeed.startsWith("7") || p.closingSpeed.startsWith("10");
+    return true;
+  });
+
+  return (
+    <div>
+      <PageHead
+        eyebrow="Marketplace"
+        title="Browse Planets"
+        subtitle="Find buyers whose buy box matches the seller you're talking to. Send the lead, JV the deal, get paid on close."
+        actions={
+          <React.Fragment>
+            <button className="btn" onClick={() => setView(view === "grid" ? "map" : "grid")}>
+              <Icon name={view === "grid" ? "map" : "kanban"} size={14}/>
+              {view === "grid" ? "Map view" : "Grid view"}
+            </button>
+            <button className="btn primary" onClick={onSendLead}>
+              <Icon name="send" size={14}/> New lead
+            </button>
+          </React.Fragment>
+        }
+      />
+
+      {/* Filter bar */}
+      <div style={{display:"flex", alignItems:"center", gap:14, marginBottom:18, flexWrap:"wrap"}}>
+        <div className="search" style={{width:300}}>
+          <Icon name="search" size={14}/>
+          <input
+            placeholder="Search by Planet, market, or operator…"
+            value={search} onChange={e => setSearch(e.target.value)}
+          />
+        </div>
+        <div className="chiprow">
+          {filters.map(f => (
+            <button key={f.id}
+              className={`chip ${filter === f.id ? "active" : ""}`}
+              onClick={() => setFilter(f.id)}>
+              {f.label}
+            </button>
+          ))}
+        </div>
+        <div className="spacer"/>
+        <span className="muted" style={{fontSize:12}}>{filtered.length} of {PLANETS.length} Planets</span>
+      </div>
+
+      {view === "map" ? (
+        <MapView planets={filtered} onOpen={onOpenPlanet} />
+      ) : (
+        <div className="grid-cards">
+          {filtered.map(p => (
+            <PlanetCard key={p.id} planet={p} onClick={() => onOpenPlanet(p)} onSend={onSendLead}/>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PlanetCard({ planet, onClick, onSend }) {
+  return (
+    <div className="bb-card" onClick={onClick} role="button">
+      <div className={`bb-banner ${planet.banner}`}>
+        <div className="planet-mark"/>
+        <div style={{position:"absolute", top:10, right:10, display:"flex", gap:6}}>
+          <Badge tone="outline">
+            <Icon name="lightning" size={11}/>
+            {planet.closingSpeed}
+          </Badge>
+        </div>
+      </div>
+      <div className="bb-card-body">
+        <div style={{display:"flex", alignItems:"flex-end", justifyContent:"space-between"}}>
+          <div>
+            <div className="name">{planet.name}</div>
+            <div className="where">{planet.markets.slice(0,2).join(" · ")}{planet.markets.length>2 ? ` +${planet.markets.length-2}` : ""}</div>
+          </div>
+          <AppetiteDots level={planet.appetite}/>
+        </div>
+        <div className="bb-criteria">
+          <div className="bb-crit-row">
+            <span className="lab">Types</span>
+            <span className="val">{planet.propTypes.join(", ")}</span>
+          </div>
+          <div className="bb-crit-row">
+            <span className="lab">Financing</span>
+            <span className="val">{planet.financing.join(" · ")}</span>
+          </div>
+          <div className="bb-crit-row">
+            <span className="lab">Price</span>
+            <span className="val">{planet.pricing}</span>
+          </div>
+        </div>
+      </div>
+      <div className="bb-foot">
+        <div className="stat-mini">
+          <span className="v">{planet.leadsClosed}</span>
+          <span className="l">Closed</span>
+        </div>
+        <div className="stat-mini">
+          <span className="v">{planet.avgSplit}</span>
+          <span className="l">Avg split</span>
+        </div>
+        <div className="stat-mini">
+          <span className="v">{planet.avgResponse}</span>
+          <span className="l">Reply</span>
+        </div>
+        <div className="spacer"/>
+        <button className="btn sm primary" onClick={(e)=>{e.stopPropagation(); onSend(planet);}}>
+          Send lead
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function MapView({ planets, onOpen }) {
+  const positions = [
+    { left: "16%", top: "62%" },
+    { left: "32%", top: "44%" },
+    { left: "48%", top: "55%" },
+    { left: "21%", top: "30%" },
+    { left: "72%", top: "70%" },
+    { left: "62%", top: "40%" },
+  ];
+  return (
+    <div className="map" style={{height: 540}}>
+      {planets.map((p, i) => (
+        <div key={p.id} style={{position:"absolute", ...positions[i % positions.length]}}>
+          <div className="pin" onClick={() => onOpen(p)} style={{cursor:"pointer"}}>
+            <span>{p.initials}</span>
+          </div>
+          <div style={{
+            position: "absolute", top: 8, left: -80, width: 200,
+            background: "var(--surface)", border: "1px solid var(--line)",
+            borderRadius: 10, padding: 10, boxShadow: "var(--shadow-sm)",
+            fontSize: 12,
+          }}>
+            <div style={{fontWeight:600, marginBottom:2}}>{p.name}</div>
+            <div className="muted" style={{fontSize:11}}>{p.markets[0]}</div>
+            <div style={{display:"flex", gap:4, marginTop:6, flexWrap:"wrap"}}>
+              {p.financing.slice(0,2).map(f => (
+                <Badge key={f} tone="neutral">{f}</Badge>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+window.BrowsePlanets = BrowsePlanets;
+window.PlanetCard = PlanetCard;
+</script>
+<script type="text/babel">// Orbiter: Submit a new lead - multi-step wizard
+const { Icon, Badge, Avatar, Money, Field, Stepper, FitMeter, SplitBar } = window;
+const { PLANETS, STRUCTURES } = window.ORBIT_DATA;
+
+function SubmitLead({ presetPlanet, onCancel, onSubmit }) {
+  const [step, setStep] = React.useState(0);
+  const [lead, setLead] = React.useState({
+    address: "418 Camelback Ridge",
+    city: "Phoenix",
+    state: "AZ",
+    zip: "85016",
+    propType: "SFR",
+    bedBath: "4 bd · 2 ba",
+    sqft: "2140",
+    yearBuilt: "1996",
+    sellerName: "Robert Whitman",
+    sellerPhone: "(602) 555-0184",
+    sellerEmail: "rwhitman@example.com",
+    motivation: "Inherited the property and relocating to Oregon for work. Doesn't want to manage it from out of state.",
+    timeline: "60 days",
+    askPrice: "412000",
+    mortgageBalance: "268000",
+    rate: "3.625",
+    payment: "1640",
+    arrearages: "0",
+    structures: ["sub-to"],
+    notes: "Owner is open to taking a chunk of cash up front and a monthly until the underlying is paid. Expressed interest in a 'novation' but didn't know the term.",
+    targetPlanet: presetPlanet?.id || "p-aurora",
+    proposedSplit: 65,
+    callRecording: "seller-call-2026-04-30.mp3",
+  });
+
+  const set = (k, v) => setLead(prev => ({ ...prev, [k]: v }));
+
+  const steps = ["Property", "Seller", "Financing", "Pick Planet", "Review"];
+
+  const next = () => setStep(s => Math.min(s + 1, steps.length - 1));
+  const back = () => setStep(s => Math.max(s - 1, 0));
+
+  return (
+    <div style={{maxWidth: 980, margin: "0 auto"}}>
+      <button className="btn ghost sm" style={{marginBottom: 8}} onClick={onCancel}>
+        <Icon name="back" size={14}/> Cancel & return
+      </button>
+      <PageHead
+        eyebrow="New submission"
+        title="Send a lead to a Planet"
+        subtitle="The Planet will review fit, propose a JV split, and (if it's a yes) talk to the seller."
+      />
+
+      <div style={{marginBottom: 24, padding: "10px 18px", background: "var(--surface)", border: "1px solid var(--line)", borderRadius: "var(--radius)"}}>
+        <Stepper steps={steps} current={step}/>
+      </div>
+
+      <div className="card" style={{marginBottom: 16}}>
+        <div className="card-body">
+          {step === 0 && <PropertyStep lead={lead} set={set}/>}
+          {step === 1 && <SellerStep lead={lead} set={set}/>}
+          {step === 2 && <FinancingStep lead={lead} set={set}/>}
+          {step === 3 && <PickPlanetStep lead={lead} set={set}/>}
+          {step === 4 && <ReviewStep lead={lead} set={set}/>}
+        </div>
+        <div className="card-foot">
+          {step > 0 && <button className="btn" onClick={back}><Icon name="back" size={14}/> Back</button>}
+          <div className="spacer"/>
+          <span className="muted" style={{fontSize:12}}>Step {step+1} of {steps.length}</span>
+          {step < steps.length - 1 ? (
+            <button className="btn primary" onClick={next}>
+              Continue <Icon name="arrow" size={14}/>
+            </button>
+          ) : (
+            <button className="btn accent" onClick={() => onSubmit(lead)}>
+              <Icon name="send" size={14}/> Send to Planet
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PropertyStep({ lead, set }) {
+  return (
+    <div className="col" style={{gap: 16}}>
+      <h2 className="h2">Property details</h2>
+      <div className="grid-2">
+        <Field label="Street address">
+          <input className="input" value={lead.address} onChange={e=>set("address", e.target.value)}/>
+        </Field>
+        <div className="grid-3">
+          <Field label="City"><input className="input" value={lead.city} onChange={e=>set("city", e.target.value)}/></Field>
+          <Field label="State"><input className="input" value={lead.state} onChange={e=>set("state", e.target.value)}/></Field>
+          <Field label="ZIP"><input className="input" value={lead.zip} onChange={e=>set("zip", e.target.value)}/></Field>
+        </div>
+      </div>
+      <div className="grid-4">
+        <Field label="Type">
+          <select className="select" value={lead.propType} onChange={e=>set("propType", e.target.value)}>
+            <option>SFR</option>
+            <option>Small Multi (2-4)</option>
+            <option>Multifamily (5-30)</option>
+            <option>Land</option>
+            <option>Commercial</option>
+          </select>
+        </Field>
+        <Field label="Bed / bath"><input className="input" value={lead.bedBath} onChange={e=>set("bedBath", e.target.value)}/></Field>
+        <Field label="Sq ft"><input className="input" value={lead.sqft} onChange={e=>set("sqft", e.target.value)}/></Field>
+        <Field label="Year built"><input className="input" value={lead.yearBuilt} onChange={e=>set("yearBuilt", e.target.value)}/></Field>
+      </div>
+      <Field label="Photos / property condition" hint="Drop in MLS photos or a quick walk-around video later — Planets weigh condition heavily.">
+        <div style={{
+          display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:8
+        }}>
+          {[1,2,3,4].map(i => (
+            <div key={i} className="img-placeholder" style={{aspectRatio:"4/3"}}>
+              {i === 1 ? "EXTERIOR FRONT" : i === 2 ? "KITCHEN" : i === 3 ? "BACKYARD" : "+ ADD"}
+            </div>
+          ))}
+        </div>
+      </Field>
+    </div>
+  );
+}
+
+function SellerStep({ lead, set }) {
+  return (
+    <div className="col" style={{gap: 16}}>
+      <h2 className="h2">Seller & motivation</h2>
+      <div className="grid-3">
+        <Field label="Seller name"><input className="input" value={lead.sellerName} onChange={e=>set("sellerName", e.target.value)}/></Field>
+        <Field label="Phone"><input className="input" value={lead.sellerPhone} onChange={e=>set("sellerPhone", e.target.value)}/></Field>
+        <Field label="Email"><input className="input" value={lead.sellerEmail} onChange={e=>set("sellerEmail", e.target.value)}/></Field>
+      </div>
+      <Field label="Motivation" hint="Why are they selling? The more specific, the better.">
+        <textarea className="textarea" value={lead.motivation} onChange={e=>set("motivation", e.target.value)}/>
+      </Field>
+      <div className="grid-2">
+        <Field label="Timeline">
+          <select className="select" value={lead.timeline} onChange={e=>set("timeline", e.target.value)}>
+            <option>ASAP / under 30 days</option>
+            <option>30 days</option>
+            <option>60 days</option>
+            <option>90 days</option>
+            <option>Flexible</option>
+          </select>
+        </Field>
+        <Field label="Call recording / notes" hint="Optional — pulled from your call dialer">
+          <div className="option-row">
+            <Icon name="phone" size={14}/>
+            <span style={{flex:1}}>{lead.callRecording}</span>
+            <Badge tone="success" dot>14:32</Badge>
+          </div>
+        </Field>
+      </div>
+    </div>
+  );
+}
+
+function FinancingStep({ lead, set }) {
+  const toggleStruct = (id) => {
+    const has = lead.structures.includes(id);
+    set("structures", has ? lead.structures.filter(x => x !== id) : [...lead.structures, id]);
+  };
+  return (
+    <div className="col" style={{gap: 16}}>
+      <h2 className="h2">Financing & terms</h2>
+      <div className="grid-3">
+        <Field label="Asking price">
+          <div className="input-wrap">
+            <span className="prefix">$</span>
+            <input className="input with-prefix" value={lead.askPrice} onChange={e=>set("askPrice", e.target.value)}/>
+          </div>
+        </Field>
+        <Field label="Mortgage balance" hint="0 if free-and-clear">
+          <div className="input-wrap">
+            <span className="prefix">$</span>
+            <input className="input with-prefix" value={lead.mortgageBalance} onChange={e=>set("mortgageBalance", e.target.value)}/>
+          </div>
+        </Field>
+        <Field label="Underlying rate">
+          <div className="input-wrap">
+            <input className="input" value={lead.rate} onChange={e=>set("rate", e.target.value)}/>
+            <span style={{position:"absolute", right:12, top:"50%", transform:"translateY(-50%)", color:"var(--ink-3)"}}>%</span>
+          </div>
+        </Field>
+      </div>
+      <div className="grid-2">
+        <Field label="Monthly P&I">
+          <div className="input-wrap">
+            <span className="prefix">$</span>
+            <input className="input with-prefix" value={lead.payment} onChange={e=>set("payment", e.target.value)}/>
+          </div>
+        </Field>
+        <Field label="Arrearages">
+          <div className="input-wrap">
+            <span className="prefix">$</span>
+            <input className="input with-prefix" value={lead.arrearages} onChange={e=>set("arrearages", e.target.value)}/>
+          </div>
+        </Field>
+      </div>
+      <div className="divider"/>
+      <Field label="Seller's willingness" hint="Tap all structures the seller indicated openness to during the call.">
+        <div className="grid-3">
+          {STRUCTURES.map(s => (
+            <div key={s.id}
+              className={`term-card ${lead.structures.includes(s.id) ? "active" : ""}`}
+              onClick={() => toggleStruct(s.id)}>
+              <span className="label">Creative finance</span>
+              <span className="name">{s.name}</span>
+              <span className="desc">{s.desc}</span>
+              {lead.structures.includes(s.id) && (
+                <span style={{position:"absolute"}}>
+                  {/* check ribbon */}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      </Field>
+      <Field label="Notes from the seller call">
+        <textarea className="textarea" value={lead.notes} onChange={e=>set("notes", e.target.value)}/>
+      </Field>
+    </div>
+  );
+}
+
+function PickPlanetStep({ lead, set }) {
+  // score planets by overlap
+  const scored = PLANETS.map(p => {
+    let score = 50;
+    if (p.markets.some(m => m.includes(lead.state))) score += 25;
+    if (p.markets.some(m => m.toLowerCase().includes(lead.city.toLowerCase()))) score += 15;
+    if (p.propTypes.includes(lead.propType)) score += 8;
+    const structName = STRUCTURES.find(s => s.id === lead.structures[0])?.name;
+    if (structName && p.financing.includes(structName === "Subject-To" ? "Sub-To" : structName === "Wrap-Around" ? "Wrap" : structName)) score += 10;
+    score = Math.min(99, score);
+    return { ...p, score };
+  }).sort((a,b) => b.score - a.score);
+
+  return (
+    <div className="col" style={{gap: 16}}>
+      <h2 className="h2">Pick a Planet</h2>
+      <p className="muted" style={{margin:0}}>We've ranked your network by fit for this lead. The top match has the highest overlap on geography, property type, and financing structure.</p>
+      <div className="col" style={{gap:8}}>
+        {scored.slice(0, 5).map((p, i) => (
+          <div key={p.id}
+               className={`option-row ${lead.targetPlanet === p.id ? "active" : ""}`}
+               onClick={() => set("targetPlanet", p.id)}
+               style={{padding:"12px 14px"}}>
+            <span className={`radio ${lead.targetPlanet === p.id ? "checked" : ""}`}/>
+            <Avatar initials={p.initials} kind="planet"/>
+            <div style={{display:"flex", flexDirection:"column", gap:2, flex:1, minWidth:0}}>
+              <div style={{fontWeight:600}}>{p.name}{i === 0 && <Badge tone="success" style={{marginLeft:8}}>Top match</Badge>}</div>
+              <div className="muted" style={{fontSize:12}}>
+                {p.markets.join(" · ")} · {p.financing.join(", ")}
+              </div>
+            </div>
+            <div style={{display:"flex", flexDirection:"column", alignItems:"flex-end", gap:4}}>
+              <FitMeter score={p.score}/>
+              <span className="muted" style={{fontSize:11}}>{p.avgSplit} avg split · replies {p.avgResponse}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="divider"/>
+      <Field label="Proposed JV split" hint="What you're asking the Planet to agree to. They can counter.">
+        <div className="row" style={{gap:14}}>
+          <input type="range" min="40" max="80" step="5"
+            value={lead.proposedSplit}
+            onChange={e => set("proposedSplit", parseInt(e.target.value))}
+            style={{flex:1}}/>
+          <div style={{minWidth: 200}}>
+            <SplitBar orbiter={lead.proposedSplit}/>
+            <div style={{display:"flex", justifyContent:"space-between", fontSize:11, marginTop:4}}>
+              <span><span className="mono" style={{color:"var(--orbiter)"}}>●</span> You {lead.proposedSplit}%</span>
+              <span><span className="mono" style={{color:"var(--planet)"}}>●</span> Planet {100 - lead.proposedSplit}%</span>
+            </div>
+          </div>
+        </div>
+      </Field>
+    </div>
+  );
+}
+
+function ReviewStep({ lead }) {
+  const planet = PLANETS.find(p => p.id === lead.targetPlanet);
+  const structures = lead.structures.map(s => STRUCTURES.find(x => x.id === s)?.name).filter(Boolean);
+  return (
+    <div className="col" style={{gap: 18}}>
+      <h2 className="h2">Review & send</h2>
+      <div className="grid-2" style={{gap: 18}}>
+        <div className="card flat" style={{border:"1px solid var(--line)", padding:18}}>
+          <div className="eyebrow" style={{marginBottom:10}}>Property</div>
+          <div className="kv-grid">
+            <span className="k">Address</span><span className="v">{lead.address}, {lead.city}, {lead.state} {lead.zip}</span>
+            <span className="k">Type</span><span className="v">{lead.propType} · {lead.bedBath} · {lead.sqft} sqft · built {lead.yearBuilt}</span>
+            <span className="k">Asking</span><span className="v"><Money value={parseInt(lead.askPrice)}/></span>
+            <span className="k">Mortgage</span><span className="v"><Money value={parseInt(lead.mortgageBalance)}/> at {lead.rate}%</span>
+            <span className="k">Payment</span><span className="v"><Money value={parseInt(lead.payment)}/>/mo</span>
+          </div>
+        </div>
+        <div className="card flat" style={{border:"1px solid var(--line)", padding:18}}>
+          <div className="eyebrow" style={{marginBottom:10}}>Seller</div>
+          <div className="kv-grid">
+            <span className="k">Name</span><span className="v">{lead.sellerName}</span>
+            <span className="k">Contact</span><span className="v">{lead.sellerPhone} · {lead.sellerEmail}</span>
+            <span className="k">Motivation</span><span className="v">{lead.motivation}</span>
+            <span className="k">Timeline</span><span className="v">{lead.timeline}</span>
+            <span className="k">Open to</span><span className="v">{structures.join(", ")}</span>
+          </div>
+        </div>
+      </div>
+      <div className="card flat" style={{border:"1px solid var(--line)", padding:18}}>
+        <div className="eyebrow" style={{marginBottom:10}}>JV Proposal</div>
+        <div style={{display:"flex", alignItems:"center", gap:18}}>
+          <Avatar initials={planet?.initials || "??"} kind="planet" size="lg"/>
+          <div style={{flex:1}}>
+            <div style={{fontWeight:600, fontFamily:"var(--font-serif)", fontSize:18}}>{planet?.name}</div>
+            <div className="muted" style={{fontSize:12}}>{planet?.markets.join(" · ")}</div>
+          </div>
+          <div style={{minWidth: 240}}>
+            <SplitBar orbiter={lead.proposedSplit}/>
+            <div style={{display:"flex", justifyContent:"space-between", fontSize:12, marginTop:6}}>
+              <span>You: <strong>{lead.proposedSplit}%</strong></span>
+              <span>Planet: <strong>{100 - lead.proposedSplit}%</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style={{padding:14, background:"var(--accent-soft)", borderRadius:10, fontSize:13, display:"flex", gap:10}}>
+        <Icon name="spark" size={16}/>
+        <div>
+          <strong>Heads up:</strong> Once sent, {planet?.name} typically replies in {planet?.avgResponse}. You'll be notified when they review or message.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+window.SubmitLead = SubmitLead;
+</script>
+<script type="text/babel">// Orbiter: My Leads tracker
+const { Icon, Money, StatusBadge, Avatar, PageHead, SplitBar } = window;
+const { MY_LEADS, PLANETS } = window.ORBIT_DATA;
+
+function MyLeads({ onOpenLead, onNew }) {
+  const [filter, setFilter] = React.useState("all");
+
+  const filterDefs = [
+    { id: "all",      label: "All",          count: MY_LEADS.length },
+    { id: "active",   label: "Active",       count: MY_LEADS.filter(l => !["closed-won","declined"].includes(l.status)).length },
+    { id: "needs",    label: "Needs you",    count: MY_LEADS.filter(l => l.status === "countered").length },
+    { id: "closed",   label: "Closed",       count: MY_LEADS.filter(l => l.status === "closed-won").length },
+    { id: "declined", label: "Declined",     count: MY_LEADS.filter(l => l.status === "declined").length },
+  ];
+
+  const filtered = MY_LEADS.filter(l => {
+    if (filter === "all") return true;
+    if (filter === "active") return !["closed-won","declined"].includes(l.status);
+    if (filter === "needs") return l.status === "countered";
+    if (filter === "closed") return l.status === "closed-won";
+    if (filter === "declined") return l.status === "declined";
+    return true;
+  });
+
+  const earnings = MY_LEADS.filter(l => l.status === "closed-won").length * 14200;
+  const pending = MY_LEADS.filter(l => l.status === "jv-signed").length * 11500;
+
+  return (
+    <div>
+      <PageHead
+        eyebrow="My pipeline"
+        title="Leads I've sent"
+        subtitle="Track every lead you've sent, where it is in the Planet's process, and what's owed when it closes."
+        actions={
+          <button className="btn primary" onClick={onNew}>
+            <Icon name="send" size={14}/> New lead
+          </button>
+        }
+      />
+
+      <div className="stat-row" style={{marginBottom: 22}}>
+        <div className="stat">
+          <span className="lab">Sent · 30d</span>
+          <span className="val">12</span>
+          <span className="delta up">+3 vs last 30</span>
+        </div>
+        <div className="stat">
+          <span className="lab">Active</span>
+          <span className="val">7</span>
+          <span className="delta">2 awaiting your reply</span>
+        </div>
+        <div className="stat">
+          <span className="lab">Earned · YTD</span>
+          <span className="val"><Money value={earnings}/></span>
+          <span className="delta up">+1 closed this month</span>
+        </div>
+        <div className="stat">
+          <span className="lab">Pending splits</span>
+          <span className="val"><Money value={pending}/></span>
+          <span className="delta">funds Fri</span>
+        </div>
+      </div>
+
+      <div style={{display:"flex", gap:6, marginBottom:14, flexWrap:"wrap"}}>
+        {filterDefs.map(f => (
+          <button key={f.id}
+            className={`chip ${filter === f.id ? "active" : ""}`}
+            onClick={() => setFilter(f.id)}>
+            {f.label} <span style={{opacity: 0.7}}>{f.count}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="card" style={{padding: 0, overflow: "hidden"}}>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Lead</th>
+              <th>Planet</th>
+              <th>Structure</th>
+              <th>Asking / Balance</th>
+              <th>Split</th>
+              <th>Status</th>
+              <th>Last update</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map(l => {
+              const planet = PLANETS.find(p => p.name === l.submittedTo);
+              return (
+                <tr key={l.id} className="clickable" onClick={() => onOpenLead(l)}>
+                  <td>
+                    <div style={{display:"flex", flexDirection:"column"}}>
+                      <span style={{fontWeight:600}}>{l.address.split(",")[0]}</span>
+                      <span className="muted" style={{fontSize:11}}>{l.id} · {l.seller} · {l.submitted}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div style={{display:"flex", alignItems:"center", gap:8}}>
+                      <Avatar initials={planet?.initials || "??"} kind="planet" size="sm"/>
+                      <span>{l.submittedTo}</span>
+                    </div>
+                  </td>
+                  <td><Badge tone="neutral">{l.structure}</Badge></td>
+                  <td>
+                    <div style={{display:"flex", flexDirection:"column", lineHeight:1.2}}>
+                      <span><Money value={l.askPrice}/></span>
+                      <span className="muted" style={{fontSize:11}}>
+                        {l.mortgageBalance > 0 ? <span><Money value={l.mortgageBalance}/> bal</span> : "Free & clear"}
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <div style={{minWidth: 90}}>
+                      <SplitBar orbiter={l.proposedSplit}/>
+                      <div style={{fontSize:11, marginTop:3}}>{l.proposedSplit}/{100 - l.proposedSplit}</div>
+                    </div>
+                  </td>
+                  <td><StatusBadge status={l.status}/></td>
+                  <td className="muted" style={{fontSize:12}}>{l.lastUpdate}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+window.MyLeads = MyLeads;
+</script>
+<script type="text/babel">// Lead detail drawer + JV negotiation
+const { Icon, Money, Badge, StatusBadge, Avatar, SplitBar } = window;
+const { PLANETS, STRUCTURES } = window.ORBIT_DATA;
+
+function LeadDetail({ lead, role, onClose, onMessage }) {
+  if (!lead) return null;
+  const planet = PLANETS.find(p => p.name === lead.submittedTo);
+  const struct = STRUCTURES.find(s => s.name === lead.structure || s.name.startsWith(lead.structure));
+
+  // For "countered" status — show counter terms
+  const isCountered = lead.status === "countered";
+
+  return (
+    <div style={{display:"flex", flexDirection:"column", height:"100%"}}>
+      <div className="drawer-head">
+        <button className="icon-btn" onClick={onClose}><Icon name="x" size={16}/></button>
+        <div style={{display:"flex", flexDirection:"column", lineHeight:1.2, flex:1}}>
+          <span className="muted" style={{fontSize:11}}>{lead.id} · sent {lead.submitted}</span>
+          <span style={{fontWeight:600, fontFamily:"var(--font-serif)", fontSize:18}}>{lead.address.split(",")[0]}</span>
+        </div>
+        <StatusBadge status={lead.status}/>
+        <button className="icon-btn"><Icon name="more" size={16}/></button>
+      </div>
+
+      <div className="drawer-body" style={{display:"flex", flexDirection:"column", gap:18}}>
+        {/* Property header */}
+        <div className="img-placeholder" style={{height:160, fontSize:13}}>
+          {lead.propType.toUpperCase()} · {lead.bedBath.toUpperCase()} · {lead.address.split(",")[0].toUpperCase()}
+        </div>
+        <div className="kv-grid">
+          <span className="k">Address</span><span className="v">{lead.address}</span>
+          <span className="k">Type</span><span className="v">{lead.propType} · {lead.bedBath} · {lead.sqft || "—"} sqft</span>
+          <span className="k">Seller</span><span className="v">{lead.seller}</span>
+          <span className="k">Motivation</span><span className="v">{lead.motivation}</span>
+          <span className="k">Timeline</span><span className="v">{lead.timeline}</span>
+        </div>
+
+        <div className="divider"/>
+
+        <div>
+          <div className="eyebrow" style={{marginBottom:10}}>Financing</div>
+          <div className="grid-3">
+            <Stat label="Asking" value={<Money value={lead.askPrice}/>}/>
+            <Stat label="Balance" value={lead.mortgageBalance ? <Money value={lead.mortgageBalance}/> : "Free & clear"}/>
+            <Stat label="Rate" value={lead.rate ? `${lead.rate}%` : "—"}/>
+          </div>
+          <div style={{marginTop:10}}>
+            <Badge tone="accent">{lead.structure}</Badge>
+            {struct && <span className="muted" style={{fontSize:12, marginLeft:8}}>{struct.desc}</span>}
+          </div>
+        </div>
+
+        <div className="divider"/>
+
+        {/* JV proposal */}
+        <div>
+          <div className="eyebrow" style={{marginBottom:10}}>JV split</div>
+          <div className="card flat" style={{border:"1px solid var(--line)", padding:14}}>
+            <div style={{display:"flex", alignItems:"center", gap:14}}>
+              <Avatar initials={planet?.initials || "??"} kind="planet"/>
+              <div style={{flex:1, fontSize:13, fontWeight:500}}>{lead.submittedTo}</div>
+              <span style={{fontSize:13, fontWeight:600}}>{lead.proposedSplit} / {100 - lead.proposedSplit}</span>
+            </div>
+            <div style={{marginTop:10}}>
+              <SplitBar orbiter={lead.proposedSplit}/>
+            </div>
+            {isCountered && (
+              <div style={{marginTop:12, padding:10, background:"var(--warn-soft)", borderRadius:8}}>
+                <div style={{fontSize:12, fontWeight:600, color:"var(--warn)", marginBottom:4}}>Counter from {lead.submittedTo}</div>
+                <div style={{fontSize:13}}>Offering 60/40 with $5k cash to seller at close. Wants to see roof inspection before final yes.</div>
+                <div style={{display:"flex", gap:6, marginTop:10}}>
+                  <button className="btn sm success">Accept counter</button>
+                  <button className="btn sm">Counter back</button>
+                  <button className="btn sm danger">Decline</button>
+                </div>
+              </div>
+            )}
+            {lead.status === "jv-signed" && (
+              <div style={{marginTop:12, padding:10, background:"var(--success-soft)", borderRadius:8, fontSize:13}}>
+                <Icon name="check" size={14}/> JV signed Apr 28. Estimated split at close: <strong><Money value={Math.round(lead.askPrice * 0.04 * lead.proposedSplit / 100)}/></strong>
+              </div>
+            )}
+            {lead.status === "closed-won" && (
+              <div style={{marginTop:12, padding:10, background:"var(--success-soft)", borderRadius:8, fontSize:13}}>
+                <Icon name="check" size={14}/> Closed & funded · You earned <strong><Money value={14200}/></strong>
+              </div>
+            )}
+            {lead.status === "declined" && (
+              <div style={{marginTop:12, padding:10, background:"var(--danger-soft)", borderRadius:8, fontSize:13}}>
+                <strong>Reason:</strong> Outside buy box (rural land — Meridian wants 10+ ac).
+                <div style={{marginTop:6}}>
+                  <button className="btn sm">Resubmit to another Planet</button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {lead.notes && (
+          <React.Fragment>
+            <div className="divider"/>
+            <div>
+              <div className="eyebrow" style={{marginBottom:8}}>Your notes</div>
+              <div style={{fontSize:13, lineHeight:1.55}}>{lead.notes}</div>
+            </div>
+          </React.Fragment>
+        )}
+
+        {/* Activity */}
+        <div className="divider"/>
+        <div>
+          <div className="eyebrow" style={{marginBottom:10}}>Activity</div>
+          <div className="col" style={{gap:10}}>
+            <ActivityRow icon="send" who="You" what={`Sent lead to ${lead.submittedTo}`} when={lead.submitted}/>
+            <ActivityRow icon="check" who={lead.submittedTo} what="Reviewed and matched buy box" when="Apr 30"/>
+            {isCountered && <ActivityRow icon="split" who="Sasha L." what="Sent counter terms" when="2h ago"/>}
+            {lead.status === "jv-signed" && <ActivityRow icon="doc" who="Both parties" what="JV agreement signed" when="Apr 28"/>}
+            {lead.status === "closed-won" && <ActivityRow icon="dollar" who="Title" what="Closed and funded" when="Apr 22"/>}
+          </div>
+        </div>
+      </div>
+
+      <div className="drawer-foot">
+        <button className="btn"><Icon name="phone" size={14}/> Call seller</button>
+        <button className="btn" onClick={() => onMessage && onMessage(lead)}>
+          <Icon name="chat" size={14}/> Message Planet
+        </button>
+        <div className="spacer"/>
+        {lead.status === "countered" && (
+          <button className="btn accent">Respond to counter</button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Stat({ label, value }) {
+  return (
+    <div style={{display:"flex", flexDirection:"column", padding:"8px 12px", background:"var(--surface-2)", borderRadius:8, border:"1px solid var(--line)"}}>
+      <span style={{fontSize:11, color:"var(--ink-3)", textTransform:"uppercase", letterSpacing:"0.06em"}}>{label}</span>
+      <span style={{fontSize:14, fontWeight:600, fontFamily:"var(--font-serif)"}}>{value}</span>
+    </div>
+  );
+}
+
+function ActivityRow({ icon, who, what, when }) {
+  return (
+    <div style={{display:"flex", gap:10, alignItems:"flex-start"}}>
+      <div style={{
+        width:28, height:28, borderRadius:"50%",
+        background:"var(--surface-2)", border:"1px solid var(--line)",
+        display:"grid", placeItems:"center", color:"var(--ink-3)", flex:"0 0 28px"
+      }}>
+        <Icon name={icon} size={13}/>
+      </div>
+      <div style={{flex:1, fontSize:13}}>
+        <span style={{fontWeight:600}}>{who}</span> {what}
+        <div className="muted" style={{fontSize:11}}>{when}</div>
+      </div>
+    </div>
+  );
+}
+
+window.LeadDetail = LeadDetail;
+</script>
+<script type="text/babel">// Planet screens: Inbox, Buy Box manage, Pipeline, JV flow
+const { Icon, Money, Badge, StatusBadge, Avatar, FitMeter, SplitBar, PageHead, Field, Toggle } = window;
+const { PLANET_INBOX, PIPELINE, PIPELINE_COLS, PLANETS } = window.ORBIT_DATA;
+
+function PlanetInbox({ onOpenLead }) {
+  const [selected, setSelected] = React.useState(PLANET_INBOX[0]);
+  const [filter, setFilter] = React.useState("all");
+
+  const filtered = PLANET_INBOX.filter(l => {
+    if (filter === "all") return true;
+    if (filter === "unread") return l.unread;
+    if (filter === "high") return l.fitScore >= 85;
+    return true;
+  });
+
+  return (
+    <div>
+      <PageHead
+        eyebrow="Incoming"
+        title="Lead inbox"
+        subtitle="Leads sent by Orbiters in your network — ranked by buy-box fit."
+        actions={
+          <React.Fragment>
+            <button className="btn"><Icon name="filter" size={14}/> Filter</button>
+            <button className="btn primary"><Icon name="settings" size={14}/> Tune buy box</button>
+          </React.Fragment>
+        }
+      />
+
+      <div className="three-pane">
+        {/* Filter rail */}
+        <div className="card" style={{padding:14, display:"flex", flexDirection:"column", gap:10}}>
+          <div style={{fontSize:11, fontWeight:600, color:"var(--ink-3)", letterSpacing:"0.08em", textTransform:"uppercase"}}>Inbox</div>
+          {[
+            {id:"all", label:"All leads", n: PLANET_INBOX.length, icon:"inbox"},
+            {id:"unread", label:"Unread", n: PLANET_INBOX.filter(l=>l.unread).length, icon:"bell"},
+            {id:"high", label:"High fit (85+)", n: PLANET_INBOX.filter(l=>l.fitScore>=85).length, icon:"target"},
+          ].map(f => (
+            <button key={f.id}
+              className={`nav-item ${filter === f.id ? "active" : ""}`}
+              onClick={() => setFilter(f.id)}>
+              <Icon name={f.icon} size={14}/>
+              {f.label}
+              <span className="nav-count">{f.n}</span>
+            </button>
+          ))}
+
+          <div className="divider"/>
+          <div style={{fontSize:11, fontWeight:600, color:"var(--ink-3)", letterSpacing:"0.08em", textTransform:"uppercase"}}>By structure</div>
+          {["Sub-To", "Seller Finance", "Wrap", "Novation"].map(s => (
+            <button key={s} className="nav-item">
+              <span style={{width:14}}/>{s}
+            </button>
+          ))}
+        </div>
+
+        {/* Lead list */}
+        <div className="col" style={{gap:8, overflowY:"auto", paddingRight:4}}>
+          {filtered.map(l => (
+            <div key={l.id}
+              className={`inbox-row ${l.unread ? "unread" : ""} ${selected?.id === l.id ? "active" : ""}`}
+              onClick={() => setSelected(l)}>
+              <Avatar initials={l.orbInit} kind="orbiter" size="sm"/>
+              <div style={{flex:1, minWidth: 0}}>
+                <div style={{display:"flex", alignItems:"center", gap:8}}>
+                  <span style={{fontWeight:600, fontSize:13, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis"}}>
+                    {l.address.split(",")[0]}
+                  </span>
+                  <Badge tone="neutral">{l.structure}</Badge>
+                </div>
+                <div className="muted" style={{fontSize:11, marginTop:2}}>
+                  from {l.orbiter} · {l.received} · {l.motivation}
+                </div>
+              </div>
+              <div style={{display:"flex", flexDirection:"column", alignItems:"flex-end", gap:4}}>
+                <FitMeter score={l.fitScore}/>
+                <span style={{fontSize:11, fontWeight:600}}><Money value={l.askPrice} compact/></span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Detail */}
+        <div className="card" style={{display:"flex", flexDirection:"column", overflow:"hidden"}}>
+          {selected ? <InboxDetail lead={selected}/> : <EmptyState title="Pick a lead" body="Choose a lead from the left to review."/>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InboxDetail({ lead }) {
+  return (
+    <div style={{display:"flex", flexDirection:"column", height:"100%"}}>
+      <div className="card-head">
+        <div style={{flex:1}}>
+          <div style={{fontFamily:"var(--font-serif)", fontWeight:500, fontSize:18}}>{lead.address.split(",")[0]}</div>
+          <div className="muted" style={{fontSize:12}}>{lead.address} · {lead.id}</div>
+        </div>
+        <Badge tone="accent">Fit {lead.fitScore}</Badge>
+      </div>
+      <div style={{padding:18, overflowY:"auto", flex:1}}>
+        <div className="img-placeholder" style={{height: 140, marginBottom: 16}}>EXTERIOR + STREET</div>
+        <div className="grid-3" style={{marginBottom:16}}>
+          <Stat2 label="Asking" value={<Money value={lead.askPrice}/>}/>
+          <Stat2 label="Balance" value={lead.mortgage ? <Money value={lead.mortgage}/> : "Free"}/>
+          <Stat2 label="Equity" value={<Money value={lead.askPrice - lead.mortgage}/>}/>
+        </div>
+
+        <div className="card flat" style={{border:"1px solid var(--line)", padding:14, marginBottom:16}}>
+          <div className="eyebrow" style={{marginBottom:8}}>Why this fits</div>
+          <div className="col" style={{gap:6}}>
+            <FitRow ok label="Geography" detail="Phoenix, AZ — in your markets"/>
+            <FitRow ok label="Property type" detail="SFR — matches"/>
+            <FitRow ok label="Structure" detail="Sub-To — your preferred"/>
+            <FitRow warn label="Price" detail="$412k — top of your range ($180k–$450k)"/>
+          </div>
+        </div>
+
+        <div className="card flat" style={{border:"1px solid var(--line)", padding:14, marginBottom:16}}>
+          <div className="eyebrow" style={{marginBottom:8}}>From the Orbiter</div>
+          <div style={{display:"flex", gap:10, alignItems:"center", marginBottom:10}}>
+            <Avatar initials={lead.orbInit} kind="orbiter" size="sm"/>
+            <div>
+              <div style={{fontWeight:600, fontSize:13}}>{lead.orbiter}</div>
+              <div className="muted" style={{fontSize:11}}>4.8 ★ · 14 closed deals · 2.1h reply</div>
+            </div>
+            <div className="spacer"/>
+            <span className="muted" style={{fontSize:12}}>Proposing 65/35</span>
+          </div>
+          <div style={{fontSize:13, lineHeight:1.55, color:"var(--ink-2)"}}>
+            "Robert inherited the property and is moving out of state. Doesn't want to be a landlord. Spoke to him for ~25 min — he's open to taking $20–30k cash and monthly until the underlying is paid. Mentioned 'novation' but didn't know the term. Plenty of motivation, no rush."
+          </div>
+          <div className="row" style={{marginTop:10}}>
+            <Icon name="phone" size={12}/>
+            <span className="muted" style={{fontSize:12}}>seller-call-2026-04-30.mp3 · 14:32</span>
+          </div>
+        </div>
+      </div>
+      <div className="card-foot">
+        <button className="btn"><Icon name="chat" size={14}/> Message Avery</button>
+        <div className="spacer"/>
+        <button className="btn danger sm"><Icon name="x" size={14}/> Decline</button>
+        <button className="btn sm"><Icon name="split" size={14}/> Counter</button>
+        <button className="btn accent"><Icon name="check" size={14}/> Send JV @ 65/35</button>
+      </div>
+    </div>
+  );
+}
+
+function FitRow({ ok, warn, label, detail }) {
+  return (
+    <div style={{display:"flex", alignItems:"center", gap:10, fontSize:13}}>
+      <span style={{
+        width:18, height:18, borderRadius:"50%",
+        background: ok ? "var(--success-soft)" : warn ? "var(--warn-soft)" : "var(--danger-soft)",
+        color: ok ? "var(--success)" : warn ? "var(--warn)" : "var(--danger)",
+        display:"grid", placeItems:"center", flex:"0 0 18px"
+      }}>
+        <Icon name={ok ? "check" : "spark"} size={11}/>
+      </span>
+      <span style={{fontWeight:600, width: 110}}>{label}</span>
+      <span className="muted" style={{fontSize:12}}>{detail}</span>
+    </div>
+  );
+}
+
+function Stat2({ label, value }) {
+  return (
+    <div style={{display:"flex", flexDirection:"column", padding:"8px 12px", background:"var(--surface-2)", borderRadius:8, border:"1px solid var(--line)"}}>
+      <span style={{fontSize:11, color:"var(--ink-3)", textTransform:"uppercase", letterSpacing:"0.06em"}}>{label}</span>
+      <span style={{fontSize:15, fontWeight:600, fontFamily:"var(--font-serif)"}}>{value}</span>
+    </div>
+  );
+}
+
+function EmptyState({ title, body }) {
+  return <div className="empty"><div style={{fontWeight:600, color:"var(--ink)"}}>{title}</div>{body && <div style={{fontSize:13}}>{body}</div>}</div>;
+}
+
+// Planet: manage your buy box
+function BuyBoxManage() {
+  const [markets, setMarkets] = React.useState(["Phoenix, AZ", "Tucson, AZ", "Las Vegas, NV"]);
+  const [types, setTypes] = React.useState(["SFR", "Small Multi (2-4)"]);
+  const [structures, setStructures] = React.useState(["Sub-To", "Seller Finance", "Wrap"]);
+  const [priceMin, setPriceMin] = React.useState(180);
+  const [priceMax, setPriceMax] = React.useState(450);
+  const [autoMatch, setAutoMatch] = React.useState(true);
+
+  return (
+    <div style={{maxWidth: 980, margin: "0 auto"}}>
+      <PageHead
+        eyebrow="My Planet"
+        title="Buy Box"
+        subtitle="What Orbiters see when they pick you. Tighten this and you'll get fewer, better-fit leads."
+        actions={
+          <React.Fragment>
+            <button className="btn">Preview as Orbiter</button>
+            <button className="btn primary">Save changes</button>
+          </React.Fragment>
+        }
+      />
+
+      <div className="grid-2" style={{alignItems:"start"}}>
+        <div className="col" style={{gap:14}}>
+          <div className="card">
+            <div className="card-head"><h3 className="h3">Markets</h3><div className="spacer"/><button className="btn sm"><Icon name="plus" size={12}/> Add</button></div>
+            <div className="card-body">
+              <div className="chiprow">
+                {markets.map(m => (
+                  <span key={m} className="chip active" style={{paddingRight:6}}>
+                    {m}
+                    <button className="icon-btn" style={{width:18, height:18, border:"none", background:"transparent", color:"#fff"}} onClick={() => setMarkets(markets.filter(x=>x!==m))}>
+                      <Icon name="x" size={11}/>
+                    </button>
+                  </span>
+                ))}
+                <span className="chip"><Icon name="plus" size={12}/> Add ZIP</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-head"><h3 className="h3">Property types</h3></div>
+            <div className="card-body">
+              <div className="grid-2">
+                {["SFR", "Small Multi (2-4)", "Multifamily (5-30)", "Commercial", "Land", "Mobile / Manufactured"].map(t => {
+                  const on = types.includes(t);
+                  return (
+                    <div key={t}
+                      className={`option-row ${on ? "active" : ""}`}
+                      onClick={() => setTypes(on ? types.filter(x=>x!==t) : [...types, t])}>
+                      <span className={`checkbox ${on ? "checked" : ""}`}/>
+                      <span style={{fontSize:13, fontWeight:500}}>{t}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-head"><h3 className="h3">Financing structures</h3></div>
+            <div className="card-body">
+              <div className="grid-2">
+                {["Sub-To", "Seller Finance", "Wrap", "Novation", "Hybrid", "Cash"].map(s => {
+                  const on = structures.includes(s);
+                  return (
+                    <div key={s}
+                      className={`option-row ${on ? "active" : ""}`}
+                      onClick={() => setStructures(on ? structures.filter(x=>x!==s) : [...structures, s])}>
+                      <span className={`checkbox ${on ? "checked" : ""}`}/>
+                      <span style={{fontSize:13, fontWeight:500}}>{s}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col" style={{gap:14}}>
+          <div className="card">
+            <div className="card-head"><h3 className="h3">Price range</h3></div>
+            <div className="card-body">
+              <div className="grid-2">
+                <Field label="Minimum">
+                  <div className="input-wrap">
+                    <span className="prefix">$</span>
+                    <input className="input with-prefix" value={`${priceMin},000`} onChange={e=>setPriceMin(parseInt(e.target.value.replace(/[^0-9]/g, "")) / 1000)}/>
+                  </div>
+                </Field>
+                <Field label="Maximum">
+                  <div className="input-wrap">
+                    <span className="prefix">$</span>
+                    <input className="input with-prefix" value={`${priceMax},000`} onChange={e=>setPriceMax(parseInt(e.target.value.replace(/[^0-9]/g, "")) / 1000)}/>
+                  </div>
+                </Field>
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-head"><h3 className="h3">JV defaults</h3></div>
+            <div className="card-body col" style={{gap:14}}>
+              <Field label="Default split offered" hint="Starting point for negotiations.">
+                <div style={{display:"flex", gap:14, alignItems:"center"}}>
+                  <input type="range" min="40" max="80" step="5" defaultValue="65" style={{flex:1}}/>
+                  <div style={{minWidth: 200}}>
+                    <SplitBar orbiter={65}/>
+                    <div style={{display:"flex", justifyContent:"space-between", fontSize:11, marginTop:4}}>
+                      <span>Orbiter 65%</span>
+                      <span>You 35%</span>
+                    </div>
+                  </div>
+                </div>
+              </Field>
+              <Field label="Reply target" hint="Goal turnaround time on new leads.">
+                <select className="select" defaultValue="<4h">
+                  <option>{"< 1h"}</option>
+                  <option>{"< 4h"}</option>
+                  <option>{"< 1 business day"}</option>
+                </select>
+              </Field>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-head"><h3 className="h3">Auto-match</h3></div>
+            <div className="card-body">
+              <div style={{display:"flex", alignItems:"center", gap:14}}>
+                <Toggle on={autoMatch} onChange={setAutoMatch}/>
+                <div style={{flex:1, fontSize:13}}>
+                  When ON, leads matching {">"}80% of your buy box are routed straight to your Inbox without manual Orbiter pick.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-head"><h3 className="h3">Free-form notes</h3><span className="muted" style={{fontSize:12, marginLeft:"auto"}}>Shown to Orbiters</span></div>
+            <div className="card-body">
+              <textarea className="textarea" defaultValue="Free-and-clear or low-balance notes preferred. Below-market interest rates a big plus. Will close quickly when title is clean — slower if there's probate."/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Planet: pipeline kanban
+function Pipeline() {
+  return (
+    <div>
+      <PageHead
+        eyebrow="Acquisitions"
+        title="Deal pipeline"
+        subtitle="From new lead to funded close."
+        actions={
+          <React.Fragment>
+            <button className="btn"><Icon name="filter" size={14}/> Filter</button>
+            <button className="btn primary"><Icon name="plus" size={14}/> Add manually</button>
+          </React.Fragment>
+        }
+      />
+      <div className="kanban">
+        {PIPELINE_COLS.map(col => (
+          <div key={col.key} className="kanban-col">
+            <div className="kanban-head">
+              <Badge tone={col.tone} dot>{col.label}</Badge>
+              <span className="count">{(PIPELINE[col.key] || []).length}</span>
+            </div>
+            <div className="kanban-list">
+              {(PIPELINE[col.key] || []).map(c => (
+                <div key={c.id} className="kanban-card">
+                  <div style={{display:"flex", alignItems:"center", gap:8}}>
+                    <span className="muted" style={{fontSize:11, fontFamily:"var(--font-mono)"}}>{c.id}</span>
+                    <div className="spacer"/>
+                    <Badge tone="neutral">{c.struct}</Badge>
+                  </div>
+                  <div style={{fontWeight:600, fontSize:13, fontFamily:"var(--font-serif)"}}>{c.title}</div>
+                  <div className="row" style={{justifyContent:"space-between"}}>
+                    <span className="muted" style={{fontSize:11}}>{c.who}</span>
+                    <span style={{fontWeight:600, fontSize:12}}><Money value={c.price} compact/></span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+window.PlanetInbox = PlanetInbox;
+window.BuyBoxManage = BuyBoxManage;
+window.Pipeline = Pipeline;
+</script>
+<script type="text/babel">// Shared screens: Messaging, Dashboard
+const { Icon, Money, Badge, Avatar, PageHead, SplitBar } = window;
+const { MESSAGES, MY_LEADS, PLANETS } = window.ORBIT_DATA;
+
+function Messaging() {
+  const [active, setActive] = React.useState(MESSAGES[0]);
+  const [draft, setDraft] = React.useState("");
+  return (
+    <div>
+      <PageHead
+        eyebrow="Conversations"
+        title="Messages"
+        subtitle="Threads tied to specific leads. Keep the deal context in one place."
+      />
+      <div className="three-pane" style={{height: "calc(100vh - 240px)"}}>
+        <div className="card" style={{padding:0, overflowY:"auto"}}>
+          <div style={{padding:"12px 14px", borderBottom:"1px solid var(--line)"}}>
+            <div className="search" style={{width:"100%"}}>
+              <Icon name="search" size={14}/>
+              <input placeholder="Search threads…"/>
+            </div>
+          </div>
+          {MESSAGES.map(m => (
+            <div key={m.id}
+              onClick={() => setActive(m)}
+              style={{
+                padding:"14px 16px", borderBottom:"1px solid var(--line)",
+                cursor:"pointer",
+                background: active.id === m.id ? "var(--surface-2)" : "transparent",
+                borderLeft: active.id === m.id ? "3px solid var(--ink)" : "3px solid transparent",
+              }}>
+              <div style={{display:"flex", alignItems:"center", gap:8, marginBottom:4}}>
+                <Avatar initials={m.initials} kind="planet" size="sm"/>
+                <span style={{fontWeight:600, fontSize:13, flex:1, minWidth:0, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis"}}>{m.with}</span>
+                <span className="muted" style={{fontSize:11}}>{m.when}</span>
+              </div>
+              <div className="muted" style={{fontSize:12, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis"}}>
+                {m.last}
+              </div>
+              <div style={{display:"flex", gap:6, marginTop:6, alignItems:"center"}}>
+                <Badge tone="outline">{m.leadId}</Badge>
+                {m.unread > 0 && <span style={{
+                  background:"var(--accent)", color:"#fff", borderRadius:999,
+                  fontSize:10, fontWeight:700, padding:"1px 6px"
+                }}>{m.unread}</span>}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="card" style={{display:"flex", flexDirection:"column", overflow:"hidden"}}>
+          <div className="card-head">
+            <Avatar initials={active.initials} kind="planet"/>
+            <div style={{flex:1}}>
+              <div style={{fontWeight:600, fontSize:14}}>{active.with}</div>
+              <div className="muted" style={{fontSize:12}}>{active.planet} · {active.role}</div>
+            </div>
+            <button className="icon-btn"><Icon name="phone" size={14}/></button>
+            <button className="icon-btn"><Icon name="more" size={14}/></button>
+          </div>
+          <div className="msg-thread" style={{flex:1}}>
+            {active.thread.map((t, i) => (
+              <div key={i} style={{display:"flex", flexDirection:"column", alignItems: t.from === "me" ? "flex-end" : "flex-start"}}>
+                <div className={`msg ${t.from}`}>{t.t}</div>
+                <span className="msg-meta">{t.at}</span>
+              </div>
+            ))}
+          </div>
+          <div className="composer">
+            <textarea
+              placeholder="Reply to Maya…"
+              value={draft}
+              onChange={e => setDraft(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  if (draft.trim()) {
+                    active.thread.push({ from: "me", t: draft, at: "Now" });
+                    setDraft("");
+                  }
+                }
+              }}
+            />
+            <button className="icon-btn"><Icon name="paperclip" size={14}/></button>
+            <button className="btn primary" onClick={() => {
+              if (draft.trim()) {
+                active.thread.push({ from: "me", t: draft, at: "Now" });
+                setDraft("");
+              }
+            }}>
+              <Icon name="send" size={14}/> Send
+            </button>
+          </div>
+        </div>
+
+        <div className="card" style={{padding:0, overflowY:"auto"}}>
+          <div className="card-head"><h3 className="h3">Lead context</h3></div>
+          <div style={{padding:14, display:"flex", flexDirection:"column", gap:14}}>
+            <div className="img-placeholder" style={{height:120, fontSize:11}}>{active.leadId}</div>
+            <div className="kv-grid">
+              <span className="k">Lead</span><span className="v" style={{fontFamily:"var(--font-mono)", fontSize:12}}>{active.leadId}</span>
+              <span className="k">Address</span><span className="v">418 Camelback Ridge</span>
+              <span className="k">Structure</span><span className="v">Sub-To</span>
+              <span className="k">Status</span><span className="v"><Badge tone="warn" dot>Under review</Badge></span>
+            </div>
+            <div className="divider"/>
+            <div className="eyebrow">Proposed JV</div>
+            <SplitBar orbiter={65}/>
+            <div style={{display:"flex", justifyContent:"space-between", fontSize:12}}>
+              <span>You 65%</span>
+              <span>Aurora 35%</span>
+            </div>
+            <button className="btn sm">Open lead detail</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Dashboard({ role, onJump }) {
+  const isOrbiter = role === "orbiter";
+  return (
+    <div>
+      <PageHead
+        eyebrow={isOrbiter ? "Orbiter dashboard" : "Planet dashboard"}
+        title={isOrbiter ? "Welcome back, Avery" : "Welcome back, Maya"}
+        subtitle={isOrbiter
+          ? "Six leads in motion. One needs your reply."
+          : "Three new leads in your inbox."}
+        actions={
+          isOrbiter
+            ? <button className="btn primary" onClick={() => onJump("submit")}><Icon name="send" size={14}/> New lead</button>
+            : <button className="btn primary" onClick={() => onJump("buybox")}><Icon name="settings" size={14}/> Tune buy box</button>
+        }
+      />
+
+      <div className="stat-row" style={{marginBottom: 22}}>
+        {isOrbiter ? (
+          <React.Fragment>
+            <StatBlock lab="Sent · 30d" val="12" delta="+3" deltaTone="up"/>
+            <StatBlock lab="Active deals" val="7" delta="2 need reply"/>
+            <StatBlock lab="Earned · YTD" val={<Money value={42600}/>} delta="+1 closed"/>
+            <StatBlock lab="Avg fit" val="74" delta="aim for 80+"/>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <StatBlock lab="Inbox" val="11" delta="3 unread" deltaTone="up"/>
+            <StatBlock lab="In closing" val="4" delta="1 funds Fri"/>
+            <StatBlock lab="Acquired · YTD" val="22" delta="+6 vs last yr" deltaTone="up"/>
+            <StatBlock lab="Avg time-to-JV" val="18h" delta="goal: <12h"/>
+          </React.Fragment>
+        )}
+      </div>
+
+      <div className="grid-2" style={{alignItems:"start"}}>
+        <div className="card">
+          <div className="card-head">
+            <h3 className="h3">{isOrbiter ? "Needs your reply" : "Hot inbox"}</h3>
+            <div className="spacer"/>
+            <button className="btn ghost sm" onClick={() => onJump(isOrbiter ? "leads" : "inbox")}>View all <Icon name="arrow" size={12}/></button>
+          </div>
+          <div className="card-body col" style={{gap:8}}>
+            {(isOrbiter ? MY_LEADS.filter(l => l.status === "countered" || l.status === "under-review").slice(0,3)
+                       : []).map(l => (
+              <div key={l.id} className="option-row" style={{cursor:"pointer"}}>
+                <Avatar initials="AH" kind="planet" size="sm"/>
+                <div style={{flex:1, minWidth:0}}>
+                  <div style={{fontWeight:600, fontSize:13}}>{l.address.split(",")[0]}</div>
+                  <div className="muted" style={{fontSize:11}}>{l.submittedTo} · {l.lastUpdate}</div>
+                </div>
+                <Badge tone={l.status === "countered" ? "warn" : "neutral"} dot>{l.statusLabel}</Badge>
+              </div>
+            ))}
+            {!isOrbiter && PLANET_INBOX.slice(0,3).map(l => (
+              <div key={l.id} className="option-row" style={{cursor:"pointer"}}>
+                <Avatar initials={l.orbInit} kind="orbiter" size="sm"/>
+                <div style={{flex:1, minWidth:0}}>
+                  <div style={{fontWeight:600, fontSize:13}}>{l.address.split(",")[0]}</div>
+                  <div className="muted" style={{fontSize:11}}>{l.orbiter} · {l.received} · {l.structure}</div>
+                </div>
+                <FitMeter score={l.fitScore}/>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-head"><h3 className="h3">Activity</h3></div>
+          <div className="card-body col" style={{gap:14}}>
+            <Timeline items={isOrbiter ? [
+              { icon: "split",  who: "Sasha L.",            what: "sent counter on L-2034",        when: "2h ago",  tone:"warn" },
+              { icon: "check",  who: "Maya O.",             what: "matched L-2056 to buy box",      when: "5h ago",  tone:"success" },
+              { icon: "dollar", who: "Title (Blue Heron)",  what: "funded L-2027 — your $14,200",   when: "yesterday", tone:"success" },
+              { icon: "send",   who: "You",                 what: "sent L-2056 to Aurora",          when: "2d ago",  tone:"accent" },
+              { icon: "x",      who: "Meridian",            what: "declined L-2030 (out of box)",   when: "5d ago",  tone:"danger" },
+            ] : [
+              { icon: "send",   who: "Avery Q.",            what: "sent L-2056 — sub-to in Phoenix",  when: "2h ago",  tone:"accent" },
+              { icon: "send",   who: "Reed P.",             what: "sent L-2055 — seller fin in Tucson", when: "5h ago", tone:"accent" },
+              { icon: "doc",    who: "JV signed",           what: "with Avery on L-2041",            when: "yesterday", tone:"success" },
+              { icon: "dollar", who: "Funded",              what: "L-2019 — $311k acquired",         when: "2d ago",  tone:"success" },
+            ]}/>
+          </div>
+        </div>
+      </div>
+
+      {isOrbiter && (
+        <React.Fragment>
+          <h2 className="h2" style={{marginTop:32, marginBottom:14}}>Suggested Planets for your area</h2>
+          <div className="grid-cards">
+            {PLANETS.slice(0, 3).map(p => (
+              <div key={p.id} className="bb-card" onClick={() => onJump("browse")}>
+                <div className={`bb-banner ${p.banner}`}><div className="planet-mark"/></div>
+                <div className="bb-card-body">
+                  <div style={{fontFamily:"var(--font-serif)", fontSize:18}}>{p.name}</div>
+                  <div className="muted" style={{fontSize:12}}>{p.markets.slice(0,2).join(" · ")}</div>
+                  <div style={{fontSize:12, color:"var(--ink-2)"}}>{p.lookingFor}</div>
+                </div>
+                <div className="bb-foot">
+                  <span style={{fontSize:11, fontWeight:600, color:"var(--ink-3)"}}>{p.financing.join(" · ")}</span>
+                  <div className="spacer"/>
+                  <Badge tone="success">{Math.round(p.accept * 100)}% accept</Badge>
+                </div>
+              </div>
+            ))}
+          </div>
+        </React.Fragment>
+      )}
+    </div>
+  );
+}
+
+function Timeline({ items }) {
+  return (
+    <div className="col" style={{gap:14, position:"relative"}}>
+      {items.map((it, i) => (
+        <div key={i} style={{display:"flex", gap:12, alignItems:"flex-start"}}>
+          <div style={{
+            width: 28, height: 28, borderRadius: "50%",
+            display:"grid", placeItems:"center",
+            background: it.tone === "success" ? "var(--success-soft)"
+                      : it.tone === "warn" ? "var(--warn-soft)"
+                      : it.tone === "danger" ? "var(--danger-soft)"
+                      : it.tone === "accent" ? "var(--accent-soft)"
+                      : "var(--surface-2)",
+            color: it.tone === "success" ? "var(--success)"
+                 : it.tone === "warn" ? "var(--warn)"
+                 : it.tone === "danger" ? "var(--danger)"
+                 : it.tone === "accent" ? "var(--accent-deep)"
+                 : "var(--ink-3)",
+            flex:"0 0 28px"
+          }}>
+            <Icon name={it.icon} size={13}/>
+          </div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:13}}><strong>{it.who}</strong> {it.what}</div>
+            <div className="muted" style={{fontSize:11}}>{it.when}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function StatBlock({ lab, val, delta, deltaTone }) {
+  return (
+    <div className="stat">
+      <span className="lab">{lab}</span>
+      <span className="val">{val}</span>
+      <span className={`delta ${deltaTone || ""}`}>{delta}</span>
+    </div>
+  );
+}
+
+const { PLANET_INBOX } = window.ORBIT_DATA;
+const { FitMeter } = window;
+
+window.Messaging = Messaging;
+window.Dashboard = Dashboard;
+</script>
+<script type="text/babel">// JV agreement signing flow
+const { Icon, Badge, Avatar, PageHead, SplitBar, Money, Field } = window;
+const { PLANETS } = window.ORBIT_DATA;
+
+function JVAgreement({ leadId = "L-2041" }) {
+  const [step, setStep] = React.useState(0);
+  const [signed, setSigned] = React.useState(false);
+  const planet = PLANETS[0];
+
+  return (
+    <div style={{maxWidth: 1080, margin: "0 auto"}}>
+      <PageHead
+        eyebrow={`JV — ${leadId}`}
+        title="Joint venture agreement"
+        subtitle="A short, plain-language JV between Orbiter and Planet for this single lead."
+        actions={
+          <React.Fragment>
+            <button className="btn"><Icon name="doc" size={14}/> Download PDF</button>
+            <Badge tone={signed ? "success" : "warn"} dot>{signed ? "Both signed" : "Awaiting Planet"}</Badge>
+          </React.Fragment>
+        }
+      />
+
+      <div className="grid-2" style={{alignItems:"start"}}>
+        <div className="card">
+          <div className="card-head">
+            <h3 className="h3">Agreement</h3>
+            <div className="spacer"/>
+            <span className="muted" style={{fontSize:12}}>Auto-generated · Editable</span>
+          </div>
+          <div style={{padding:"24px 28px", maxHeight: 540, overflowY:"auto"}}>
+            <div style={{fontFamily:"var(--font-serif)", fontSize:22, fontWeight:500, marginBottom:6}}>Single-Deal JV Agreement</div>
+            <div className="muted" style={{fontSize:12, marginBottom:18}}>Effective on full execution by both parties</div>
+
+            <div style={{fontSize:13, lineHeight:1.7, color:"var(--ink-2)"}}>
+              <p><strong>Parties.</strong> "Orbiter" is <strong>Avery Quinn</strong>. "Planet" is <strong>Aurora Holdings, LLC</strong>, operated by <strong>Maya Okafor</strong>.</p>
+
+              <p><strong>1. Subject Property.</strong> 418 Camelback Ridge, Phoenix, AZ 85016 ("the Property"), currently owned by Robert Whitman ("Seller").</p>
+
+              <p><strong>2. Structure.</strong> The Parties intend to acquire the Property on a Subject-To basis, leaving the Seller's existing financing in place at 3.625% with an outstanding balance of approximately $268,000.</p>
+
+              <p><strong>3. Roles.</strong> Orbiter has originated the lead and conducted seller communications to date. Planet will conduct underwriting, contract negotiation, due diligence, closing, and post-close asset management.</p>
+
+              <p><strong>4. Compensation Split.</strong> Net profit at closing (defined as gross seller credit, assignment fee, or cash to Orbiter at title), as well as any back-end profit on subsequent sale within 24 months, shall be split <strong style={{color:"var(--orbiter)"}}>65% to Orbiter</strong> and <strong style={{color:"var(--planet)"}}>35% to Planet</strong>.</p>
+
+              <p><strong>5. Expenses.</strong> Planet shall bear all out-of-pocket transaction costs (title, escrow, inspections). These costs shall be deducted from gross proceeds prior to applying the split in §4.</p>
+
+              <p><strong>6. Exclusivity.</strong> Orbiter agrees not to shop this lead to any other Planet for 14 days from execution.</p>
+
+              <p><strong>7. Walk-away.</strong> If Planet declines to proceed after underwriting, this Agreement terminates and Orbiter is free to re-list the lead.</p>
+
+              <p><strong>8. Dispute.</strong> Any dispute shall be resolved by binding arbitration in the state of Arizona.</p>
+            </div>
+          </div>
+          <div className="card-foot">
+            <button className="btn"><Icon name="edit" size={14}/> Suggest edit</button>
+            <div className="spacer"/>
+            {!signed && step === 0 && (
+              <button className="btn accent" onClick={() => setStep(1)}>
+                <Icon name="check" size={14}/> Continue to sign
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="col" style={{gap:14}}>
+          <div className="card">
+            <div className="card-head"><h3 className="h3">Terms summary</h3></div>
+            <div className="card-body col" style={{gap:14}}>
+              <div>
+                <div className="eyebrow" style={{marginBottom:6}}>Profit split</div>
+                <SplitBar orbiter={65}/>
+                <div style={{display:"flex", justifyContent:"space-between", fontSize:12, marginTop:6}}>
+                  <span><span style={{color:"var(--orbiter)"}}>●</span> You (Orbiter) · <strong>65%</strong></span>
+                  <span><span style={{color:"var(--planet)"}}>●</span> Aurora · <strong>35%</strong></span>
+                </div>
+              </div>
+              <div className="kv-grid">
+                <span className="k">Property</span><span className="v">418 Camelback Ridge</span>
+                <span className="k">Structure</span><span className="v">Sub-To</span>
+                <span className="k">Estimated profit</span><span className="v"><Money value={28400}/></span>
+                <span className="k">Your est. payout</span><span className="v" style={{color:"var(--success)"}}><Money value={18460}/></span>
+                <span className="k">Exclusivity</span><span className="v">14 days</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-head"><h3 className="h3">Signatures</h3></div>
+            <div className="card-body col" style={{gap:14}}>
+              <SignatureRow
+                name="Avery Quinn"
+                role="Orbiter"
+                kind="orbiter"
+                initials="AQ"
+                signed={step >= 1}
+                onSign={() => setStep(1)}
+              />
+              <SignatureRow
+                name="Maya Okafor"
+                role="Planet · Aurora Holdings"
+                kind="planet"
+                initials="MO"
+                signed={signed}
+                disabled={step < 1}
+                onSign={() => setSigned(true)}
+              />
+              {signed && (
+                <div style={{padding:12, background:"var(--success-soft)", borderRadius:8, fontSize:13}}>
+                  <Icon name="check" size={14}/> Fully executed. Aurora will reach out to seller within 24h.
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SignatureRow({ name, role, kind, initials, signed, disabled, onSign }) {
+  return (
+    <div style={{
+      display:"flex", alignItems:"center", gap:12,
+      padding:14, background: signed ? "var(--success-soft)" : "var(--surface-2)",
+      borderRadius:10, border:"1px solid var(--line)"
+    }}>
+      <Avatar initials={initials} kind={kind}/>
+      <div style={{flex:1}}>
+        <div style={{fontWeight:600, fontSize:13}}>{name}</div>
+        <div className="muted" style={{fontSize:11}}>{role}</div>
+      </div>
+      {signed ? (
+        <div style={{display:"flex", flexDirection:"column", alignItems:"flex-end"}}>
+          <div style={{
+            fontFamily:'"Caveat", "Brush Script MT", cursive',
+            fontSize: 22, fontStyle:"italic",
+            color: kind === "orbiter" ? "var(--orbiter)" : "var(--planet)",
+            lineHeight: 1
+          }}>
+            {name}
+          </div>
+          <div className="muted" style={{fontSize:10}}>signed · just now</div>
+        </div>
+      ) : (
+        <button className="btn primary sm" onClick={onSign} disabled={disabled}>
+          <Icon name="edit" size={12}/> Sign
+        </button>
+      )}
+    </div>
+  );
+}
+
+window.JVAgreement = JVAgreement;
+</script>
+<script type="text/babel">// Main app shell — sidebar, topbar, role + screen routing
+const { useState } = React;
+const { Icon } = window;
+const { Drawer } = window;
+
+const NAV_ORBITER = [
+  { id: "dashboard", label: "Dashboard",      icon: "dashboard" },
+  { id: "browse",    label: "Browse Planets", icon: "compass" },
+  { id: "submit",    label: "Submit a lead",  icon: "send" },
+  { id: "leads",     label: "My leads",       icon: "list", count: 7 },
+  { id: "messages",  label: "Messages",       icon: "chat", count: 2 },
+  { id: "jv",        label: "JV agreements",  icon: "doc" },
+];
+const NAV_PLANET = [
+  { id: "dashboard", label: "Dashboard",      icon: "dashboard" },
+  { id: "inbox",     label: "Lead inbox",     icon: "inbox", count: 11 },
+  { id: "pipeline",  label: "Pipeline",       icon: "kanban" },
+  { id: "buybox",    label: "Buy Box",        icon: "target" },
+  { id: "messages",  label: "Messages",       icon: "chat", count: 2 },
+  { id: "jv",        label: "JV agreements",  icon: "doc" },
+];
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "#2f5fe0",
+  "density": "comfortable",
+  "showFitBadges": true
+}/*EDITMODE-END*/;
+
+function App() {
+  const [role, setRole] = useState("orbiter");
+  const [screen, setScreen] = useState("dashboard");
+  const [drawerLead, setDrawerLead] = useState(null);
+  const [submitPreset, setSubmitPreset] = useState(null);
+  const [tweaks, setTweaks] = useState(TWEAK_DEFAULTS);
+  const setTweak = (k, v) => {
+    const next = typeof k === "object" ? { ...tweaks, ...k } : { ...tweaks, [k]: v };
+    setTweaks(next);
+    window.parent.postMessage({ type: "__edit_mode_set_keys", edits: next }, "*");
+  };
+
+  // Apply accent tweak live
+  React.useEffect(() => {
+    document.documentElement.style.setProperty("--accent", tweaks.accent);
+  }, [tweaks.accent]);
+
+  const nav = role === "orbiter" ? NAV_ORBITER : NAV_PLANET;
+  const here = nav.find(n => n.id === screen) || nav[0];
+
+  const onJump = (id) => setScreen(id);
+  const onOpenLead = (lead) => setDrawerLead(lead);
+  const onSendLead = (planet) => { setSubmitPreset(planet || null); setScreen("submit"); };
+
+  const switchRole = (r) => {
+    setRole(r);
+    if (!nav.find(n => n.id === screen)) setScreen("dashboard");
+    setScreen("dashboard");
+  };
+
+  return (
+    <div className="app">
+      <aside className="sidebar">
+        <div className="brand">
+          <div className="brand-mark"/>
+          <div className="brand-name">Orbit</div>
+        </div>
+
+        <div className="role-switch">
+          <button className={`${role === "orbiter" ? "active orbiter" : ""}`} onClick={() => switchRole("orbiter")}>Orbiter</button>
+          <button className={`${role === "planet" ? "active planet" : ""}`} onClick={() => switchRole("planet")}>Planet</button>
+        </div>
+
+        <div className="nav-section">
+          <div className="nav-label">Workspace</div>
+          {nav.map(n => (
+            <button key={n.id}
+              className={`nav-item ${screen === n.id ? "active" : ""}`}
+              onClick={() => setScreen(n.id)}>
+              <Icon name={n.icon} size={14} stroke={1.6} style={{flex:"0 0 14px"}}/>
+              <span>{n.label}</span>
+              {n.count != null && <span className="nav-count">{n.count}</span>}
+            </button>
+          ))}
+        </div>
+
+        <div className="sidebar-footer">
+          <span className={`avatar ${role}`}>{role === "orbiter" ? "AQ" : "MO"}</span>
+          <div className="user-meta">
+            <span className="name">{role === "orbiter" ? "Avery Quinn" : "Maya Okafor"}</span>
+            <span className="role">{role === "orbiter" ? "Orbiter · Phoenix" : "Aurora Holdings"}</span>
+          </div>
+        </div>
+      </aside>
+
+      <main className="main">
+        <header className="topbar">
+          <div className="crumb">
+            <span>{role === "orbiter" ? "Orbiter" : "Planet"}</span>
+            <Icon name="arrow" size={11} stroke={2}/>
+            <span className="here">{here.label}</span>
+          </div>
+          <div className="topbar-actions">
+            <div className="search">
+              <Icon name="search" size={14}/>
+              <input placeholder={role === "orbiter" ? "Search Planets, leads, sellers…" : "Search leads, Orbiters, addresses…"}/>
+            </div>
+            <button className="icon-btn"><Icon name="bell" size={15}/></button>
+            <button className="icon-btn"><Icon name="settings" size={15}/></button>
+          </div>
+        </header>
+
+        <div className="content">
+          {screen === "dashboard" && <window.Dashboard role={role} onJump={onJump}/>}
+          {screen === "browse"    && role === "orbiter" && <window.BrowsePlanets onOpenPlanet={() => onSendLead()} onSendLead={onSendLead}/>}
+          {screen === "submit"    && role === "orbiter" && <window.SubmitLead presetPlanet={submitPreset} onCancel={() => setScreen("browse")} onSubmit={() => { setScreen("leads"); }}/>}
+          {screen === "leads"     && role === "orbiter" && <window.MyLeads onOpenLead={onOpenLead} onNew={() => setScreen("submit")}/>}
+          {screen === "inbox"     && role === "planet"  && <window.PlanetInbox onOpenLead={onOpenLead}/>}
+          {screen === "pipeline"  && role === "planet"  && <window.Pipeline/>}
+          {screen === "buybox"    && role === "planet"  && <window.BuyBoxManage/>}
+          {screen === "messages"  && <window.Messaging/>}
+          {screen === "jv"        && <window.JVAgreement/>}
+        </div>
+      </main>
+
+      <Drawer open={!!drawerLead} onClose={() => setDrawerLead(null)}>
+        <window.LeadDetail lead={drawerLead} role={role} onClose={() => setDrawerLead(null)} onMessage={() => { setDrawerLead(null); setScreen("messages"); }}/>
+      </Drawer>
+
+      {/* Tweaks */}
+      
+    </div>
+  );
+}
+
+/*
+  const { TweaksPanel, TweakSection, TweakRadio, TweakColor, TweakToggle } = window;
+  if (!TweaksPanel) return null;
+  return (
+    <TweaksPanel title="Tweaks">
+      <TweakSection title="Role">
+        <TweakRadio
+          value={role}
+          onChange={setRole}
+          options={[
+            { value: "orbiter", label: "Orbiter" },
+            { value: "planet", label: "Planet" },
+          ]}
+        />
+      </TweakSection>
+      <TweakSection title="Accent">
+        <TweakColor
+          value={tweaks.accent}
+          onChange={v => setTweak("accent", v)}
+          options={["#2f5fe0", "#1f8a5b", "#b04a2a", "#7a4ad9", "#1a1a17"]}
+        />
+      </TweakSection>
+      <TweakSection title="Density">
+        <TweakRadio
+          value={tweaks.density}
+          onChange={v => setTweak("density", v)}
+          options={[
+            { value: "compact", label: "Compact" },
+            { value: "comfortable", label: "Comfy" },
+          ]}
+        />
+      </TweakSection>
+      <TweakSection title="Display">
+        <TweakToggle
+          value={tweaks.showFitBadges}
+          onChange={v => setTweak("showFitBadges", v)}
+          label="Show fit scores"
+        />
+      </TweakSection>
+    </TweaksPanel>
+  );
+}
+
+*/
+window.OrbitApp = App;
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App/>);
+</script>
+</body>
+</html>
