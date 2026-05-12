@@ -17,6 +17,8 @@
   --planet-soft: #e7f3ec;
   --orbiter: #b04a2a;
   --orbiter-soft: #f7ece6;
+  --moon: #5b7b9e;
+  --moon-soft: #e8f0f8;
 
   --bg: #f6f5f1;
   --surface: #ffffff;
@@ -120,12 +122,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
   margin: 0 6px 14px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 12px;
   padding: 3px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 2px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 .role-switch button {
@@ -140,6 +142,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .role-switch button.active.planet {
   background: var(--planet); color: #fff;
+}
+.role-switch button.active.moon {
+  background: var(--moon); color: #fff;
 }
 
 .nav-section {
@@ -184,6 +189,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .avatar.orbiter { background: var(--orbiter); }
 .avatar.planet { background: var(--planet); }
+.avatar.moon { background: var(--moon); }
 .avatar.sm { width: 24px; height: 24px; font-size: 10px; }
 .avatar.lg { width: 44px; height: 44px; font-size: 14px; }
 
@@ -2674,18 +2680,25 @@ function Messaging() {
 
 function Dashboard({ role, onJump }) {
   const isOrbiter = role === "orbiter";
+  const isMoon = role === "moon";
+  const isPlanet = role === "planet";
   return (
     <div>
       <PageHead
-        eyebrow={isOrbiter ? "Orbiter dashboard" : "Planet dashboard"}
-        title={isOrbiter ? "Welcome back, Avery" : "Welcome back, Maya"}
+        eyebrow={isOrbiter ? "Orbit dashboard" : isPlanet ? "Planet dashboard" : "Moon dashboard"}
+        title={isOrbiter ? "Welcome back, Avery" : isPlanet ? "Welcome back, Maya" : "Welcome back, Jordan"}
         subtitle={isOrbiter
           ? "Six leads in motion. One needs your reply."
-          : "Three new leads in your inbox."}
+          : isPlanet ? "Three new leads in your inbox."
+          : "You have leads coming in and deals to send out."}
         actions={
           isOrbiter
             ? <button className="btn primary" onClick={() => onJump("submit")}><Icon name="send" size={14}/> New lead</button>
-            : <button className="btn primary" onClick={() => onJump("buybox")}><Icon name="settings" size={14}/> Tune buy box</button>
+            : isPlanet ? <button className="btn primary" onClick={() => onJump("buybox")}><Icon name="settings" size={14}/> Tune buy box</button>
+            : <div style={{display:"flex",gap:8}}>
+                <button className="btn primary" onClick={() => onJump("submit")}><Icon name="send" size={14}/> Submit lead</button>
+                <button className="btn ghost" onClick={() => onJump("inbox")}><Icon name="inbox" size={14}/> My inbox</button>
+              </div>
         }
       />
 
@@ -2696,6 +2709,13 @@ function Dashboard({ role, onJump }) {
             <StatBlock lab="Active deals" val="7" delta="2 need reply"/>
             <StatBlock lab="Earned · YTD" val={<Money value={42600}/>} delta="+1 closed"/>
             <StatBlock lab="Avg fit" val="74" delta="aim for 80+"/>
+          </React.Fragment>
+        ) : isMoon ? (
+          <React.Fragment>
+            <StatBlock lab="Leads sent · 30d" val="5" delta="+2" deltaTone="up"/>
+            <StatBlock lab="Inbox (incoming)" val="8" delta="2 unread" deltaTone="up"/>
+            <StatBlock lab="Earned · YTD" val={<Money value={31200}/>} delta="+1 closed"/>
+            <StatBlock lab="Active JVs" val="4" delta="2 as Orbit"/>
           </React.Fragment>
         ) : (
           <React.Fragment>
@@ -2710,7 +2730,7 @@ function Dashboard({ role, onJump }) {
       <div className="grid-2" style={{alignItems:"start"}}>
         <div className="card">
           <div className="card-head">
-            <h3 className="h3">{isOrbiter ? "Needs your reply" : "Hot inbox"}</h3>
+            <h3 className="h3">{isOrbiter ? "Needs your reply" : isMoon ? "Your inbox" : "Hot inbox"}</h3>
             <div className="spacer"/>
             <button className="btn ghost sm" onClick={() => onJump(isOrbiter ? "leads" : "inbox")}>View all <Icon name="arrow" size={12}/></button>
           </div>
@@ -2726,7 +2746,7 @@ function Dashboard({ role, onJump }) {
                 <Badge tone={l.status === "countered" ? "warn" : "neutral"} dot>{l.statusLabel}</Badge>
               </div>
             ))}
-            {!isOrbiter && PLANET_INBOX.slice(0,3).map(l => (
+            {(isPlanet || isMoon) && PLANET_INBOX.slice(0,3).map(l => (
               <div key={l.id} className="option-row" style={{cursor:"pointer"}}>
                 <Avatar initials={l.orbInit} kind="orbiter" size="sm"/>
                 <div style={{flex:1, minWidth:0}}>
@@ -2742,7 +2762,7 @@ function Dashboard({ role, onJump }) {
         <div className="card">
           <div className="card-head"><h3 className="h3">Activity</h3></div>
           <div className="card-body col" style={{gap:14}}>
-            <Timeline items={isOrbiter ? [
+            <Timeline items={(isOrbiter || isMoon) ? [
               { icon: "split",  who: "Sasha L.",            what: "sent counter on L-2034",        when: "2h ago",  tone:"warn" },
               { icon: "check",  who: "Maya O.",             what: "matched L-2056 to buy box",      when: "5h ago",  tone:"success" },
               { icon: "dollar", who: "Title (Blue Heron)",  what: "funded L-2027 — your $14,200",   when: "yesterday", tone:"success" },
@@ -3008,6 +3028,17 @@ const NAV_PLANET = [
   { id: "messages",  label: "Messages",       icon: "chat", count: 2 },
   { id: "jv",        label: "JV agreements",  icon: "doc" },
 ];
+const NAV_MOON = [
+  { id: "dashboard", label: "Dashboard",      icon: "dashboard" },
+  { id: "inbox",     label: "Lead inbox",     icon: "inbox", count: 11, section: "As a Planet" },
+  { id: "pipeline",  label: "Pipeline",       icon: "kanban" },
+  { id: "buybox",    label: "Buy Box",        icon: "target" },
+  { id: "browse",    label: "Browse Planets", icon: "compass", section: "As an Orbit" },
+  { id: "submit",    label: "Submit a lead",  icon: "send" },
+  { id: "leads",     label: "My leads",       icon: "list", count: 3 },
+  { id: "messages",  label: "Messages",       icon: "chat", count: 2 },
+  { id: "jv",        label: "JV agreements",  icon: "doc" },
+];
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "accent": "#2f5fe0",
@@ -3032,7 +3063,7 @@ function App() {
     document.documentElement.style.setProperty("--accent", tweaks.accent);
   }, [tweaks.accent]);
 
-  const nav = role === "orbiter" ? NAV_ORBITER : NAV_PLANET;
+  const nav = role === "orbiter" ? NAV_ORBITER : role === "planet" ? NAV_PLANET : NAV_MOON;
   const here = nav.find(n => n.id === screen) || nav[0];
 
   const onJump = (id) => setScreen(id);
@@ -3054,28 +3085,32 @@ function App() {
         </div>
 
         <div className="role-switch">
-          <button className={`${role === "orbiter" ? "active orbiter" : ""}`} onClick={() => switchRole("orbiter")}>Orbiter</button>
+          <button className={`${role === "orbiter" ? "active orbiter" : ""}`} onClick={() => switchRole("orbiter")}>Orbit</button>
           <button className={`${role === "planet" ? "active planet" : ""}`} onClick={() => switchRole("planet")}>Planet</button>
+          <button className={`${role === "moon" ? "active moon" : ""}`} onClick={() => switchRole("moon")}>Moon</button>
         </div>
 
         <div className="nav-section">
           <div className="nav-label">Workspace</div>
           {nav.map(n => (
-            <button key={n.id}
-              className={`nav-item ${screen === n.id ? "active" : ""}`}
-              onClick={() => setScreen(n.id)}>
-              <Icon name={n.icon} size={14} stroke={1.6} style={{flex:"0 0 14px"}}/>
-              <span>{n.label}</span>
-              {n.count != null && <span className="nav-count">{n.count}</span>}
-            </button>
+            <React.Fragment key={n.id}>
+              {n.section && <div className="nav-label" style={{marginTop:8, fontSize:9, opacity:0.6}}>{n.section}</div>}
+              <button
+                className={`nav-item ${screen === n.id ? "active" : ""}`}
+                onClick={() => setScreen(n.id)}>
+                <Icon name={n.icon} size={14} stroke={1.6} style={{flex:"0 0 14px"}}/>
+                <span>{n.label}</span>
+                {n.count != null && <span className="nav-count">{n.count}</span>}
+              </button>
+            </React.Fragment>
           ))}
         </div>
 
         <div className="sidebar-footer">
-          <span className={`avatar ${role}`}>{role === "orbiter" ? "AQ" : "MO"}</span>
+          <span className={`avatar ${role}`}>{role === "orbiter" ? "AQ" : role === "planet" ? "MO" : "JR"}</span>
           <div className="user-meta">
-            <span className="name">{role === "orbiter" ? "Avery Quinn" : "Maya Okafor"}</span>
-            <span className="role">{role === "orbiter" ? "Orbiter · Phoenix" : "Aurora Holdings"}</span>
+            <span className="name">{role === "orbiter" ? "Avery Quinn" : role === "planet" ? "Maya Okafor" : "Jordan Rivera"}</span>
+            <span className="role">{role === "orbiter" ? "Orbit · Phoenix" : role === "planet" ? "Aurora Holdings" : "Moon · RV Parks / MF"}</span>
           </div>
         </div>
       </aside>
@@ -3083,14 +3118,14 @@ function App() {
       <main className="main">
         <header className="topbar">
           <div className="crumb">
-            <span>{role === "orbiter" ? "Orbiter" : "Planet"}</span>
+            <span>{role === "orbiter" ? "Orbit" : role === "planet" ? "Planet" : "Moon"}</span>
             <Icon name="arrow" size={11} stroke={2}/>
             <span className="here">{here.label}</span>
           </div>
           <div className="topbar-actions">
             <div className="search">
               <Icon name="search" size={14}/>
-              <input placeholder={role === "orbiter" ? "Search Planets, leads, sellers…" : "Search leads, Orbiters, addresses…"}/>
+              <input placeholder={role === "orbiter" ? "Search Planets, leads, sellers…" : role === "planet" ? "Search leads, Orbits, addresses…" : "Search leads, Planets, sellers…"}/>
             </div>
             <button className="icon-btn"><Icon name="bell" size={15}/></button>
             <button className="icon-btn"><Icon name="settings" size={15}/></button>
@@ -3099,12 +3134,12 @@ function App() {
 
         <div className="content">
           {screen === "dashboard" && <window.Dashboard role={role} onJump={onJump}/>}
-          {screen === "browse"    && role === "orbiter" && <window.BrowsePlanets onOpenPlanet={() => onSendLead()} onSendLead={onSendLead}/>}
-          {screen === "submit"    && role === "orbiter" && <window.SubmitLead presetPlanet={submitPreset} onCancel={() => setScreen("browse")} onSubmit={() => { setScreen("leads"); }}/>}
-          {screen === "leads"     && role === "orbiter" && <window.MyLeads onOpenLead={onOpenLead} onNew={() => setScreen("submit")}/>}
-          {screen === "inbox"     && role === "planet"  && <window.PlanetInbox onOpenLead={onOpenLead}/>}
-          {screen === "pipeline"  && role === "planet"  && <window.Pipeline/>}
-          {screen === "buybox"    && role === "planet"  && <window.BuyBoxManage/>}
+          {screen === "browse"    && (role === "orbiter" || role === "moon") && <window.BrowsePlanets onOpenPlanet={() => onSendLead()} onSendLead={onSendLead}/>}
+          {screen === "submit"    && (role === "orbiter" || role === "moon") && <window.SubmitLead presetPlanet={submitPreset} onCancel={() => setScreen("browse")} onSubmit={() => { setScreen("leads"); }}/>}
+          {screen === "leads"     && (role === "orbiter" || role === "moon") && <window.MyLeads onOpenLead={onOpenLead} onNew={() => setScreen("submit")}/>}
+          {screen === "inbox"     && (role === "planet"  || role === "moon") && <window.PlanetInbox onOpenLead={onOpenLead}/>}
+          {screen === "pipeline"  && (role === "planet"  || role === "moon") && <window.Pipeline/>}
+          {screen === "buybox"    && (role === "planet"  || role === "moon") && <window.BuyBoxManage/>}
           {screen === "messages"  && <window.Messaging/>}
           {screen === "jv"        && <window.JVAgreement/>}
         </div>
