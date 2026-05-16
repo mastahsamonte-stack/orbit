@@ -3,319 +3,338 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GHL Client Portal — Orbit Network (Realistic Mockup)</title>
+<title>Orbit Network — GHL Portal Mockup</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f4f6f8; color: #1a1a1a; font-size: 14px; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f4f6f8;color:#1a1a1a;font-size:14px}
 
-  /* ── Role Switcher Bar ── */
-  .role-bar { background: #1a1a2e; padding: 8px 20px; display: flex; align-items: center; gap: 10px; }
-  .role-bar-label { color: #aaa; font-size: 11px; }
-  .role-btn { padding: 5px 16px; border-radius: 999px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; background: rgba(255,255,255,0.1); color: #ccc; transition: all 0.15s; }
-  .role-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
-  .role-btn.active-orbit { background: #b04a2a; color: #fff; }
-  .role-btn.active-planet { background: #2f7d4a; color: #fff; }
-  .role-btn.active-moon { background: #5b7b9e; color: #fff; }
-  .role-bar-note { margin-left: auto; color: #666; font-size: 10px; }
+  /* Role bar */
+  .role-bar{background:#1a1a2e;padding:8px 20px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
+  .role-bar-label{color:#aaa;font-size:11px;white-space:nowrap}
+  .role-btn{padding:5px 16px;border-radius:999px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:rgba(255,255,255,0.1);color:#ccc;transition:all .15s}
+  .role-btn.active-orbit{background:#b04a2a;color:#fff}
+  .role-btn.active-planet{background:#2f7d4a;color:#fff}
+  .role-btn.active-moon{background:#5b7b9e;color:#fff}
+  .role-bar-note{margin-left:auto;color:#666;font-size:10px;white-space:nowrap}
 
-  /* ── Layout ── */
-  .shell { display: flex; height: calc(100vh - 37px); overflow: hidden; }
-  .sidebar { width: 240px; background: #fff; border-right: 1px solid #e0e0e0; display: flex; flex-direction: column; flex-shrink: 0; }
-  .main { flex: 1; overflow-y: auto; background: #f4f6f8; }
+  /* Layout */
+  .shell{display:flex;height:calc(100vh - 37px);overflow:hidden}
+  .sidebar{width:240px;background:#fff;border-right:1px solid #e0e0e0;display:flex;flex-direction:column;flex-shrink:0}
+  .main{flex:1;overflow-y:auto;background:#f4f6f8}
 
-  /* ── Sidebar ── */
-  .sb-brand { padding: 16px 16px 12px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 10px; }
-  .sb-logo { width: 32px; height: 32px; background: #0073e6; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 13px; flex-shrink: 0; }
-  .sb-brand-name { font-weight: 700; font-size: 14px; color: #111; }
-  .sb-brand-sub { font-size: 10px; color: #888; }
-  .sb-user { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 10px; }
-  .sb-avatar { width: 34px; height: 34px; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
-  .sb-user-name { font-weight: 600; font-size: 13px; }
-  .sb-user-role { font-size: 11px; color: #888; margin-top: 1px; }
-  .sb-nav { padding: 10px 8px; flex: 1; overflow-y: auto; }
-  .sb-section { font-size: 10px; color: #aaa; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 8px 4px; }
-  .sb-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 6px; cursor: pointer; color: #444; font-size: 13px; transition: background 0.15s; margin-bottom: 1px; }
-  .sb-item:hover { background: #f0f4ff; color: #0073e6; }
-  .sb-item.active { background: #e8f0ff; color: #0073e6; font-weight: 600; }
-  .sb-item svg { width: 16px; height: 16px; flex-shrink: 0; }
-  .sb-badge { margin-left: auto; background: #0073e6; color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 999px; font-weight: 700; }
-  .sb-badge.red { background: #e53e3e; }
-  .sb-footer { padding: 12px 16px; border-top: 1px solid #f0f0f0; font-size: 11px; color: #aaa; }
+  /* Sidebar */
+  .sb-brand{padding:16px 16px 12px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:10px}
+  .sb-logo{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;flex-shrink:0}
+  .sb-brand-name{font-weight:700;font-size:14px;color:#111}
+  .sb-brand-sub{font-size:10px;color:#888}
+  .sb-user{padding:12px 16px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:10px}
+  .sb-avatar{width:34px;height:34px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+  .sb-user-name{font-weight:600;font-size:13px}
+  .sb-user-role{font-size:11px;color:#888;margin-top:1px}
+  .sb-nav{padding:10px 8px;flex:1;overflow-y:auto}
+  .sb-section{font-size:10px;color:#aaa;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:10px 8px 4px}
+  .moon-section{background:#f0f4f8;border-radius:4px;padding:4px 8px;font-size:10px;font-weight:700;color:#5b7b9e;text-transform:uppercase;letter-spacing:.08em;margin:8px 0 2px}
+  .sb-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:6px;cursor:pointer;color:#444;font-size:13px;transition:background .15s;margin-bottom:1px}
+  .sb-item:hover{background:#f0f4ff;color:#0073e6}
+  .sb-item.active{background:#e8f0ff;color:#0073e6;font-weight:600}
+  .sb-item svg{width:16px;height:16px;flex-shrink:0}
+  .sb-badge{margin-left:auto;color:#fff;font-size:10px;padding:1px 6px;border-radius:999px;font-weight:700}
+  .bg-blue{background:#0073e6}.bg-red{background:#e53e3e}
+  .sb-footer{padding:12px 16px;border-top:1px solid #f0f0f0;font-size:11px;color:#aaa}
 
-  /* ── Topbar ── */
-  .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 24px; display: flex; align-items: center; gap: 12px; }
-  .topbar-title { font-weight: 700; font-size: 16px; flex: 1; }
-  .topbar-btn { padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
-  .btn-primary { background: #0073e6; color: #fff; }
-  .btn-ghost { background: transparent; border: 1px solid #ddd; color: #444; cursor: pointer; }
+  /* Topbar */
+  .topbar{background:#fff;border-bottom:1px solid #e0e0e0;padding:12px 24px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+  .topbar-title{font-weight:700;font-size:16px;flex:1}
+  .tb-btn{padding:7px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:none}
+  .btn-primary{background:#0073e6;color:#fff}.btn-primary:hover{background:#005cbf}
+  .btn-ghost{background:transparent;border:1px solid #ddd;color:#444;cursor:pointer}
+  .btn-ghost:hover{background:#f5f5f5}
 
-  /* ── Tab nav ── */
-  .view-tabs { display: flex; gap: 4px; padding: 0 24px; background: #fff; border-bottom: 1px solid #e0e0e0; }
-  .vtab { padding: 11px 16px; font-size: 13px; font-weight: 500; color: #666; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
-  .vtab.active { color: #0073e6; border-bottom-color: #0073e6; font-weight: 600; }
+  /* Tabs */
+  .view-tabs{display:flex;gap:4px;padding:0 24px;background:#fff;border-bottom:1px solid #e0e0e0;flex-shrink:0}
+  .vtab{padding:11px 16px;font-size:13px;font-weight:500;color:#666;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+  .vtab.active{color:#0073e6;border-bottom-color:#0073e6;font-weight:600}
 
-  /* ── Content ── */
-  .content { padding: 24px; }
-  .screen { display: none; }
-  .screen.active { display: block; }
+  /* Content */
+  .content{padding:24px}
+  .screen{display:none}
+  .screen.active{display:flex;flex-direction:column;height:100%}
 
-  /* ── Cards ── */
-  .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
-  .card-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
-  .card-sub { font-size: 12px; color: #888; margin-bottom: 14px; }
-  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
-  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .stat-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; }
-  .stat-label { font-size: 11px; color: #888; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
-  .stat-val { font-size: 24px; font-weight: 700; color: #111; }
-  .stat-delta { font-size: 11px; color: #16a34a; margin-top: 2px; }
-  .stat-delta.warn { color: #b45309; }
+  /* Cards */
+  .card{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:20px;margin-bottom:16px}
+  .card-title{font-weight:700;font-size:15px;margin-bottom:4px}
+  .card-sub{font-size:12px;color:#888;margin-bottom:14px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+  .stat-card{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:16px}
+  .stat-label{font-size:11px;color:#888;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+  .stat-val{font-size:24px;font-weight:700;color:#111}
+  .stat-delta{font-size:11px;color:#16a34a;margin-top:2px}
+  .stat-delta.warn{color:#b45309}
 
-  /* ── Community Feed ── */
-  .feed-post { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
-  .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .post-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0; }
-  .post-name { font-weight: 600; font-size: 13px; }
-  .post-time { font-size: 11px; color: #aaa; }
-  .post-body { font-size: 13px; color: #333; line-height: 1.5; }
-  .post-tag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 600; margin-right: 4px; margin-top: 8px; }
-  .tag-announce { background: #e8f0ff; color: #0073e6; }
-  .tag-win { background: #e6f9f0; color: #16a34a; }
-  .tag-tip { background: #fff7e6; color: #b45309; }
-  .post-actions { display: flex; gap: 16px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #f0f0f0; }
-  .post-action { font-size: 12px; color: #888; cursor: pointer; }
-  .post-action:hover { color: #0073e6; }
+  /* Note */
+  .note{background:#fff8e6;border:1px solid #fbbf24;border-radius:8px;padding:12px 16px;margin-bottom:18px;font-size:12px;color:#78350f;display:flex;gap:8px}
 
-  /* ── Form ── */
-  .form-group { margin-bottom: 16px; }
-  .form-label { font-size: 12px; font-weight: 600; color: #444; margin-bottom: 5px; display: block; }
-  .form-label span { color: #e53e3e; }
-  .form-input { width: 100%; padding: 9px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; color: #111; outline: none; }
-  .form-input:focus { border-color: #0073e6; }
-  .form-select { width: 100%; padding: 9px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; color: #111; background: #fff; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .form-textarea { width: 100%; padding: 9px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; color: #111; min-height: 80px; resize: vertical; }
-  .form-submit { background: #0073e6; color: #fff; border: none; padding: 10px 24px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 6px; }
-  .form-step { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-  .step { padding: 5px 12px; border-radius: 999px; font-size: 11px; font-weight: 600; }
-  .step.done { background: #16a34a; color: #fff; }
-  .step.active { background: #0073e6; color: #fff; }
-  .step.todo { background: #f0f0f0; color: #aaa; }
+  /* Tables */
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;font-size:11px;font-weight:600;color:#888;padding:8px 12px;border-bottom:2px solid #eee;text-transform:uppercase;letter-spacing:.04em}
+  td{padding:11px 12px;border-bottom:1px solid #f0f0f0;font-size:13px;vertical-align:middle}
+  tr:hover td{background:#f8faff}
+  .status-badge{display:inline-block;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600}
+  .s-new{background:#e8f0ff;color:#0073e6}
+  .s-review{background:#fff7e6;color:#b45309}
+  .s-matched{background:#e6f9f0;color:#16a34a}
+  .s-locked{background:#fef2f2;color:#e53e3e}
+  .s-passed{background:#f0f0f0;color:#999}
+  .s-jv{background:#f0e8ff;color:#6c3fc5}
 
-  /* ── Pipeline Kanban ── */
-  .kanban { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 8px; }
-  .kol { min-width: 200px; background: #f0f4f8; border-radius: 8px; padding: 12px; flex-shrink: 0; }
-  .kol-head { font-size: 12px; font-weight: 700; color: #555; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
-  .kol-count { background: #ddd; border-radius: 999px; padding: 1px 7px; font-size: 10px; color: #666; }
-  .k-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 12px; margin-bottom: 8px; cursor: pointer; }
-  .k-card:hover { border-color: #0073e6; }
-  .k-addr { font-weight: 600; font-size: 12px; margin-bottom: 4px; }
-  .k-meta { font-size: 11px; color: #888; margin-bottom: 6px; }
-  .k-tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
-  .k-subto { background: #e8f0ff; color: #0073e6; }
-  .k-sf { background: #fff0e6; color: #b45309; }
-  .k-nov { background: #f0e8ff; color: #6c3fc5; }
+  /* Action buttons */
+  .ab{padding:4px 10px;border-radius:4px;font-size:11px;font-weight:600;cursor:pointer;border:none;margin-right:4px;transition:opacity .15s}
+  .ab:hover{opacity:.85}
+  .ab-accept{background:#16a34a;color:#fff}
+  .ab-pass{background:#f0f0f0;color:#666}
+  .ab-jv{background:#6c3fc5;color:#fff}
+  .ab-view{background:#0073e6;color:#fff}
+  .ab-dis{background:#f5f5f5;color:#ccc;cursor:not-allowed}
 
-  /* ── Tables ── */
-  table { width: 100%; border-collapse: collapse; }
-  th { text-align: left; font-size: 11px; font-weight: 600; color: #888; padding: 8px 12px; border-bottom: 2px solid #eee; text-transform: uppercase; letter-spacing: 0.04em; }
-  td { padding: 12px; border-bottom: 1px solid #f0f0f0; font-size: 13px; vertical-align: middle; }
-  tr:hover td { background: #f8faff; }
-  .status-badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-  .s-new { background: #e8f0ff; color: #0073e6; }
-  .s-review { background: #fff7e6; color: #b45309; }
-  .s-matched { background: #e6f9f0; color: #16a34a; }
-  .s-locked { background: #fef2f2; color: #e53e3e; }
-  .s-closed { background: #f0f0f0; color: #888; }
-  .action-btn { padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; border: none; margin-right: 4px; }
-  .ab-accept { background: #16a34a; color: #fff; }
-  .ab-pass { background: #f0f0f0; color: #666; }
-  .ab-jv { background: #0073e6; color: #fff; }
+  /* Tags */
+  .k-tag{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600}
+  .k-subto{background:#e8f0ff;color:#0073e6}
+  .k-sf{background:#fff0e6;color:#b45309}
+  .k-nov{background:#f0e8ff;color:#6c3fc5}
+  .tag-pill{display:inline-block;padding:3px 10px;background:#e8f0ff;color:#0073e6;border-radius:999px;font-size:11px;font-weight:600;margin:2px}
+  .tag-pill.green{background:#e6f9f0;color:#16a34a}
 
-  /* ── Buy Box ── */
-  .bb-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f5f5f5; gap: 14px; }
-  .bb-label { font-size: 12px; font-weight: 600; color: #555; width: 160px; flex-shrink: 0; }
-  .bb-val { flex: 1; }
-  .tag-pill { display: inline-block; padding: 3px 10px; background: #e8f0ff; color: #0073e6; border-radius: 999px; font-size: 11px; font-weight: 600; margin: 2px; }
-  .tag-pill.green { background: #e6f9f0; color: #16a34a; }
+  /* Community feed */
+  .feed-post{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:16px;margin-bottom:12px}
+  .post-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .post-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+  .post-name{font-weight:600;font-size:13px}
+  .post-time{font-size:11px;color:#aaa}
+  .post-body{font-size:13px;color:#333;line-height:1.5}
+  .post-tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:600;margin-right:4px;margin-top:8px}
+  .tag-announce{background:#e8f0ff;color:#0073e6}
+  .tag-win{background:#e6f9f0;color:#16a34a}
+  .tag-tip{background:#fff7e6;color:#b45309}
+  .post-actions{display:flex;gap:16px;margin-top:12px;padding-top:10px;border-top:1px solid #f0f0f0}
+  .post-action{font-size:12px;color:#888;cursor:pointer;background:none;border:none;padding:0}
+  .post-action:hover{color:#0073e6}
+  .comment-box{margin-top:12px;display:none}
+  .comment-input{width:100%;padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:13px;outline:none}
+  .comment-input:focus{border-color:#0073e6}
 
-  /* ── Note banner ── */
-  .note { background: #fff8e6; border: 1px solid #fbbf24; border-radius: 8px; padding: 12px 16px; margin-bottom: 18px; font-size: 12px; color: #78350f; display: flex; gap: 10px; }
-  .note strong { color: #92400e; }
+  /* Form */
+  .form-group{margin-bottom:14px}
+  .form-label{font-size:12px;font-weight:600;color:#444;margin-bottom:5px;display:block}
+  .form-label span{color:#e53e3e}
+  .form-input{width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:6px;font-size:13px;color:#111;outline:none}
+  .form-input:focus{border-color:#0073e6;box-shadow:0 0 0 3px rgba(0,115,230,.1)}
+  .form-select{width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:6px;font-size:13px;color:#111;background:#fff}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .form-textarea{width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:6px;font-size:13px;color:#111;min-height:80px;resize:vertical}
+  .form-next{background:#0073e6;color:#fff;border:none;padding:10px 24px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px}
+  .form-submit-btn{background:#16a34a;color:#fff;border:none;padding:10px 24px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px;width:100%}
+  .form-step{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+  .step{padding:5px 12px;border-radius:999px;font-size:11px;font-weight:600}
+  .step.done{background:#16a34a;color:#fff}
+  .step.active{background:#0073e6;color:#fff}
+  .step.todo{background:#f0f0f0;color:#aaa}
+  .form-page{display:none}.form-page.active{display:block}
 
-  /* ── Section divider for Moon ── */
-  .moon-section { background: #f0f4f8; border-radius: 6px; padding: 6px 10px; font-size: 10px; font-weight: 700; color: #5b7b9e; text-transform: uppercase; letter-spacing: 0.08em; margin: 10px 0 4px; }
+  /* Pipeline */
+  .kanban{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px}
+  .kol{min-width:190px;background:#f0f4f8;border-radius:8px;padding:12px;flex-shrink:0}
+  .kol-head{font-size:12px;font-weight:700;color:#555;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+  .kol-count{background:#ddd;border-radius:999px;padding:1px 7px;font-size:10px;color:#666}
+  .k-card{background:#fff;border:1px solid #e0e0e0;border-radius:6px;padding:12px;margin-bottom:8px;cursor:pointer;transition:border .15s}
+  .k-card:hover{border-color:#0073e6;box-shadow:0 2px 8px rgba(0,115,230,.1)}
+  .k-addr{font-weight:600;font-size:12px;margin-bottom:4px}
+  .k-meta{font-size:11px;color:#888;margin-bottom:6px}
+
+  /* Buy box */
+  .bb-row{display:flex;align-items:center;padding:12px 0;border-bottom:1px solid #f5f5f5;gap:14px}
+  .bb-label{font-size:12px;font-weight:600;color:#555;width:160px;flex-shrink:0}
+  .bb-val{flex:1}
+
+  /* Toast */
+  .toast{position:fixed;bottom:24px;right:24px;background:#1a1a2e;color:#fff;padding:12px 20px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;max-width:320px}
+  .toast.show{opacity:1;transform:translateY(0)}
+  .toast.success{background:#16a34a}
+  .toast.warn{background:#b45309}
+
+  /* Modal */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:none;align-items:center;justify-content:center}
+  .modal-overlay.open{display:flex}
+  .modal{background:#fff;border-radius:12px;padding:28px;max-width:560px;width:90%;max-height:80vh;overflow-y:auto;position:relative}
+  .modal-title{font-size:17px;font-weight:700;margin-bottom:4px}
+  .modal-sub{font-size:12px;color:#888;margin-bottom:20px}
+  .modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;line-height:1}
+  .modal-close:hover{color:#333}
+  .modal-section{background:#f8faff;border-radius:6px;padding:12px;margin-bottom:12px;font-size:12px;line-height:1.6}
+  .modal-section strong{display:block;margin-bottom:4px;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.04em}
+  .modal-actions{display:flex;gap:10px;margin-top:20px}
+  .modal-btn{flex:1;padding:10px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:none;text-align:center}
+  .mb-primary{background:#6c3fc5;color:#fff}
+  .mb-ghost{background:#f5f5f5;color:#444}
+
+  /* Composer */
+  .composer{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:16px;margin-bottom:16px;display:none}
+  .composer.open{display:block}
+  .composer-input{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:13px;min-height:80px;resize:vertical;outline:none}
+  .composer-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+
+  /* Confirmation screen */
+  .confirm-screen{text-align:center;padding:40px 20px}
+  .confirm-icon{font-size:48px;margin-bottom:16px}
+  .confirm-title{font-size:20px;font-weight:700;margin-bottom:8px}
+  .confirm-sub{font-size:14px;color:#666;margin-bottom:24px}
 </style>
 </head>
 <body>
 
-<!-- ROLE SWITCHER -->
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- JV Modal -->
+<div class="modal-overlay" id="jv-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('jv-modal')">✕</button>
+    <div class="modal-title">Send JV Agreement</div>
+    <div class="modal-sub" id="jv-modal-sub">Both parties will receive this agreement for e-signature.</div>
+    <div class="modal-section">
+      <strong>The Property</strong>
+      <span id="jv-address">1842 W. Cactus Rd, Phoenix AZ</span><br>
+      Strategy: <span id="jv-type">Sub-To</span>
+    </div>
+    <div class="modal-section">
+      <strong>Parties</strong>
+      Planet / Deal Executor: <span id="jv-planet">Aurora Holdings (Maya Okafor)</span><br>
+      Orbit / Lead Provider: <span id="jv-orbit">Avery Quinn</span>
+    </div>
+    <div class="modal-section">
+      <strong>Profit Split</strong>
+      Planet: <strong>70%</strong> · Orbit: <strong>25%</strong> · Network Fee: <strong>5%</strong><br>
+      <span style="font-size:11px;color:#888;">Both parties pay 5% of their share to The Prime Strategy upon closing.</span>
+    </div>
+    <div class="modal-section">
+      <strong>Lead Lock</strong>
+      This lead is <strong>exclusively locked</strong> to the Planet once JV is signed. The Orbit cannot send this lead to another Planet during the active period.
+    </div>
+    <div class="modal-section" style="background:#fef2f2;">
+      <strong>Non-Circumvention</strong>
+      Both parties agree to the 24-month non-circumvention clause and $5,000 liquidated damages for violations.
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn mb-ghost" onclick="closeModal('jv-modal')">Cancel</button>
+      <button class="modal-btn mb-primary" onclick="sendJV()">✉ Send to Both Parties</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lead Detail Modal -->
+<div class="modal-overlay" id="lead-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('lead-modal')">✕</button>
+    <div class="modal-title" id="lead-modal-addr">1842 W. Cactus Rd, Phoenix AZ</div>
+    <div class="modal-sub" id="lead-modal-sub">Submitted by Avery Quinn · May 10</div>
+    <div class="modal-section"><strong>Financing</strong><span id="lead-modal-type">Sub-To</span></div>
+    <div class="modal-section"><strong>Seller Info</strong>Equity: $62,000 · Motivation: Foreclosure<br>Asking: $280,000 · ARV: $342,000</div>
+    <div class="modal-section"><strong>Orbit's Preferred Split</strong>30% to Orbit · 70% to Planet</div>
+    <div class="modal-section"><strong>Notes</strong>Seller is 3 months behind. Open to Sub-To or Seller Finance. Needs to close within 30 days.</div>
+    <div class="modal-actions">
+      <button class="modal-btn mb-ghost" onclick="closeModal('lead-modal')">Close</button>
+      <button class="modal-btn mb-primary" id="lead-modal-btn" onclick="acceptFromModal()">Accept This Lead</button>
+    </div>
+  </div>
+</div>
+
+<!-- Post Composer Modal -->
+<div class="modal-overlay" id="post-modal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeModal('post-modal')">✕</button>
+    <div class="modal-title">New Post</div>
+    <div class="modal-sub">Share with your community</div>
+    <textarea class="composer-input" id="post-content" placeholder="What's on your mind? Share a tip, a win, or an update..."></textarea>
+    <div style="margin-top:10px;">
+      <select class="form-select" style="width:auto;">
+        <option>General</option><option>Announcement</option><option>Win 🎉</option><option>Tip 💡</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn mb-ghost" onclick="closeModal('post-modal')">Cancel</button>
+      <button class="modal-btn mb-primary" onclick="submitPost()">Post to Community</button>
+    </div>
+  </div>
+</div>
+
+<!-- Role Bar -->
 <div class="role-bar">
   <span class="role-bar-label">Preview as:</span>
-  <button class="role-btn active-orbit" onclick="switchRole('orbit')">Orbit</button>
-  <button class="role-btn" onclick="switchRole('planet')">Planet</button>
-  <button class="role-btn" onclick="switchRole('moon')">Moon</button>
-  <span class="role-bar-note">⚠ Realistic GHL mockup — not the custom demo</span>
+  <button class="role-btn active-orbit" id="rb-orbit" onclick="switchRole('orbit')">Orbit</button>
+  <button class="role-btn" id="rb-planet" onclick="switchRole('planet')">Planet</button>
+  <button class="role-btn" id="rb-moon" onclick="switchRole('moon')">Moon</button>
+  <span class="role-bar-note">⚠ Realistic GHL mockup — buttons work</span>
 </div>
 
 <div class="shell">
 
-  <!-- ═══════════════════════════════════════════
-       ORBIT SIDEBAR
-  ════════════════════════════════════════════ -->
-  <aside class="sidebar" id="sidebar-orbit">
-    <div class="sb-brand">
-      <div class="sb-logo">O</div>
-      <div>
-        <div class="sb-brand-name">Orbit Network</div>
-        <div class="sb-brand-sub">Powered by DoneRN.com</div>
-      </div>
-    </div>
-    <div class="sb-user">
-      <div class="sb-avatar" style="background:#b04a2a;">AQ</div>
-      <div>
-        <div class="sb-user-name">Avery Quinn</div>
-        <div class="sb-user-role">Orbit Member</div>
-      </div>
-    </div>
+  <!-- ══════ ORBIT SIDEBAR ══════ -->
+  <aside class="sidebar" id="sb-orbit">
+    <div class="sb-brand"><div class="sb-logo" style="background:#b04a2a;">O</div><div><div class="sb-brand-name">Orbit Network</div><div class="sb-brand-sub">DoneRN.com</div></div></div>
+    <div class="sb-user"><div class="sb-avatar" style="background:#b04a2a;">AQ</div><div><div class="sb-user-name">Avery Quinn</div><div class="sb-user-role">Orbit Member</div></div></div>
     <div class="sb-nav">
       <div class="sb-section">Menu</div>
-      <div class="sb-item active" onclick="switchScreen('o-dashboard',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        Dashboard
-      </div>
-      <div class="sb-item" onclick="switchScreen('o-community',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5"/><circle cx="12" cy="7" r="4"/></svg>
-        Orbit Hub
-        <span class="sb-badge red">3</span>
-      </div>
-      <div class="sb-item" onclick="switchScreen('o-form',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-        Submit a Lead
-      </div>
-      <div class="sb-item" onclick="switchScreen('o-leads',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-        My Leads
-        <span class="sb-badge">7</span>
-      </div>
+      <div class="sb-item active" onclick="nav(this,'o-dashboard')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</div>
+      <div class="sb-item" onclick="nav(this,'o-community')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5"/><circle cx="12" cy="7" r="4"/></svg>Orbit Hub<span class="sb-badge bg-red">3</span></div>
+      <div class="sb-item" onclick="nav(this,'o-form')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Submit a Lead</div>
+      <div class="sb-item" onclick="nav(this,'o-leads')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>My Leads<span class="sb-badge bg-blue">7</span></div>
     </div>
     <div class="sb-footer">© 2026 The Prime Strategy</div>
   </aside>
 
-  <!-- ═══════════════════════════════════════════
-       PLANET SIDEBAR
-  ════════════════════════════════════════════ -->
-  <aside class="sidebar" id="sidebar-planet" style="display:none;">
-    <div class="sb-brand">
-      <div class="sb-logo" style="background:#2f7d4a;">O</div>
-      <div>
-        <div class="sb-brand-name">Orbit Network</div>
-        <div class="sb-brand-sub">Powered by DoneRN.com</div>
-      </div>
-    </div>
-    <div class="sb-user">
-      <div class="sb-avatar" style="background:#2f7d4a;">MO</div>
-      <div>
-        <div class="sb-user-name">Maya Okafor</div>
-        <div class="sb-user-role">Planet · Aurora Holdings</div>
-      </div>
-    </div>
+  <!-- ══════ PLANET SIDEBAR ══════ -->
+  <aside class="sidebar" id="sb-planet" style="display:none">
+    <div class="sb-brand"><div class="sb-logo" style="background:#2f7d4a;">O</div><div><div class="sb-brand-name">Orbit Network</div><div class="sb-brand-sub">DoneRN.com</div></div></div>
+    <div class="sb-user"><div class="sb-avatar" style="background:#2f7d4a;">MO</div><div><div class="sb-user-name">Maya Okafor</div><div class="sb-user-role">Planet · Aurora Holdings</div></div></div>
     <div class="sb-nav">
       <div class="sb-section">Menu</div>
-      <div class="sb-item active" onclick="switchScreen('p-dashboard',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        Dashboard
-      </div>
-      <div class="sb-item" onclick="switchScreen('p-hub',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5"/><circle cx="12" cy="7" r="4"/></svg>
-        Planet Hub
-        <span class="sb-badge red">2</span>
-      </div>
-      <div class="sb-item" onclick="switchScreen('p-inbox',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0H4"/></svg>
-        Lead Inbox
-        <span class="sb-badge">11</span>
-      </div>
-      <div class="sb-item" onclick="switchScreen('p-buybox',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
-        My Buy Box
-      </div>
-      <div class="sb-item" onclick="switchScreen('p-pipeline',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"/></svg>
-        My Pipeline
-      </div>
+      <div class="sb-item active" onclick="nav(this,'p-dashboard')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</div>
+      <div class="sb-item" onclick="nav(this,'p-hub')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5"/><circle cx="12" cy="7" r="4"/></svg>Planet Hub<span class="sb-badge bg-red">2</span></div>
+      <div class="sb-item" onclick="nav(this,'p-inbox')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0H4"/></svg>Lead Inbox<span class="sb-badge bg-blue" id="p-inbox-badge">4</span></div>
+      <div class="sb-item" onclick="nav(this,'p-buybox')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>My Buy Box</div>
+      <div class="sb-item" onclick="nav(this,'p-pipeline')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"/></svg>My Pipeline</div>
     </div>
     <div class="sb-footer">© 2026 The Prime Strategy</div>
   </aside>
 
-  <!-- ═══════════════════════════════════════════
-       MOON SIDEBAR
-  ════════════════════════════════════════════ -->
-  <aside class="sidebar" id="sidebar-moon" style="display:none;">
-    <div class="sb-brand">
-      <div class="sb-logo" style="background:#5b7b9e;">O</div>
-      <div>
-        <div class="sb-brand-name">Orbit Network</div>
-        <div class="sb-brand-sub">Powered by DoneRN.com</div>
-      </div>
-    </div>
-    <div class="sb-user">
-      <div class="sb-avatar" style="background:#5b7b9e;">JR</div>
-      <div>
-        <div class="sb-user-name">Jordan Rivera</div>
-        <div class="sb-user-role">Moon · RV Parks / MF</div>
-      </div>
-    </div>
+  <!-- ══════ MOON SIDEBAR ══════ -->
+  <aside class="sidebar" id="sb-moon" style="display:none">
+    <div class="sb-brand"><div class="sb-logo" style="background:#5b7b9e;">O</div><div><div class="sb-brand-name">Orbit Network</div><div class="sb-brand-sub">DoneRN.com</div></div></div>
+    <div class="sb-user"><div class="sb-avatar" style="background:#5b7b9e;">JR</div><div><div class="sb-user-name">Jordan Rivera</div><div class="sb-user-role">Moon · RV Parks / MF</div></div></div>
     <div class="sb-nav">
       <div class="sb-section">Menu</div>
-      <div class="sb-item active" onclick="switchScreen('m-dashboard',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        Dashboard
-      </div>
+      <div class="sb-item active" onclick="nav(this,'m-dashboard')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</div>
       <div class="moon-section">As a Planet</div>
-      <div class="sb-item" onclick="switchScreen('m-hub-planet',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5"/><circle cx="12" cy="7" r="4"/></svg>
-        Planet Hub
-        <span class="sb-badge red">1</span>
-      </div>
-      <div class="sb-item" onclick="switchScreen('m-inbox',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0H4"/></svg>
-        Lead Inbox
-        <span class="sb-badge">5</span>
-      </div>
-      <div class="sb-item" onclick="switchScreen('m-buybox',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
-        My Buy Box
-      </div>
+      <div class="sb-item" onclick="nav(this,'m-hub-planet')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5"/><circle cx="12" cy="7" r="4"/></svg>Planet Hub<span class="sb-badge bg-red">1</span></div>
+      <div class="sb-item" onclick="nav(this,'m-inbox')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0H4"/></svg>Lead Inbox<span class="sb-badge bg-blue">5</span></div>
+      <div class="sb-item" onclick="nav(this,'m-buybox')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>My Buy Box</div>
       <div class="moon-section">As an Orbit</div>
-      <div class="sb-item" onclick="switchScreen('m-hub-orbit',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5"/><circle cx="12" cy="7" r="4"/></svg>
-        Orbit Hub
-      </div>
-      <div class="sb-item" onclick="switchScreen('m-form',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-        Submit a Lead
-      </div>
-      <div class="sb-item" onclick="switchScreen('m-leads',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-        My Sent Leads
-        <span class="sb-badge">3</span>
-      </div>
+      <div class="sb-item" onclick="nav(this,'m-hub-orbit')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5"/><circle cx="12" cy="7" r="4"/></svg>Orbit Hub</div>
+      <div class="sb-item" onclick="nav(this,'m-form')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Submit a Lead</div>
+      <div class="sb-item" onclick="nav(this,'m-leads')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg>My Sent Leads<span class="sb-badge bg-blue">3</span></div>
     </div>
     <div class="sb-footer">© 2026 The Prime Strategy</div>
   </aside>
 
-  <!-- ════════════════════════════════════════════════════
-       MAIN CONTENT
-  ═════════════════════════════════════════════════════ -->
-  <div class="main">
+  <!-- ══════ MAIN ══════ -->
+  <div class="main" id="main-area">
 
-    <!-- ─── ORBIT SCREENS ─── -->
-
+    <!-- ── ORBIT: Dashboard ── -->
     <div id="o-dashboard" class="screen active">
-      <div class="topbar"><div class="topbar-title">Dashboard</div><button class="topbar-btn btn-primary">+ Submit a Lead</button></div>
+      <div class="topbar"><div class="topbar-title">Dashboard</div><button class="tb-btn btn-primary" onclick="nav(document.querySelector('#sb-orbit .sb-item:nth-child(4)'),'o-form')">+ Submit a Lead</button></div>
       <div class="content">
-        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> This is the Orbit member dashboard inside GHL Client Portal. Standard layout — your logo and color applied, but the grid/card structure is GHL's fixed template.</div></div>
+        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> This is the Orbit member dashboard inside GHL Client Portal. Stats pulled from GHL pipeline data. Cards show community feed previews and recent lead activity.</div></div>
         <div class="grid-3">
           <div class="stat-card"><div class="stat-label">Leads Sent · 30d</div><div class="stat-val">12</div><div class="stat-delta">↑ +3 from last month</div></div>
           <div class="stat-card"><div class="stat-label">Active Deals</div><div class="stat-val">7</div><div class="stat-delta warn">2 need your reply</div></div>
@@ -323,366 +342,629 @@
         </div>
         <div class="grid-2">
           <div class="card">
-            <div class="card-title">My Recent Leads</div>
-            <div class="card-sub">Latest activity on your submissions</div>
-            <table>
-              <tr><th>Address</th><th>Sent To</th><th>Status</th></tr>
-              <tr><td>1842 W. Cactus Rd, Phoenix AZ</td><td>Aurora Holdings</td><td><span class="status-badge s-review">Under Review</span></td></tr>
-              <tr><td>903 Elm St, Tucson AZ</td><td>Blue Heron Group</td><td><span class="status-badge s-matched">JV Signed</span></td></tr>
-              <tr><td>2210 N. 32nd St, Las Vegas NV</td><td>Pinegrove Realty</td><td><span class="status-badge s-new">Sent</span></td></tr>
+            <div class="card-title">My Recent Leads</div><div class="card-sub">Click any row to view details</div>
+            <table><tr><th>Address</th><th>Sent To</th><th>Status</th></tr>
+              <tr style="cursor:pointer" onclick="openLeadModal('1842 W. Cactus Rd, Phoenix AZ','Submitted to Aurora Holdings · May 10','Sub-To')"><td><strong>1842 W. Cactus Rd</strong></td><td>Aurora Holdings</td><td><span class="status-badge s-review">Under Review</span></td></tr>
+              <tr style="cursor:pointer" onclick="openLeadModal('903 Elm St, Tucson AZ','JV Signed with Blue Heron · May 6','Seller Finance')"><td><strong>903 Elm St, Tucson</strong></td><td>Blue Heron Group</td><td><span class="status-badge s-jv">JV Signed</span></td></tr>
+              <tr style="cursor:pointer" onclick="openLeadModal('2210 N. 32nd St, Las Vegas NV','Submitted to Pinegrove · May 3','Novation')"><td><strong>2210 N. 32nd St</strong></td><td>Pinegrove Realty</td><td><span class="status-badge s-new">Sent</span></td></tr>
             </table>
           </div>
           <div class="card">
-            <div class="card-title">Orbit Hub — Recent Posts</div>
-            <div class="card-sub">Community updates</div>
-            <div style="display:flex;flex-direction:column;gap:10px;">
-              <div style="padding:10px;background:#f8faff;border-radius:6px;font-size:12px;"><strong>Philip S.</strong> · 2h ago<br><span style="color:#444;">Planets are looking for Sub-To deals in AZ and TX — submit your leads now!</span></div>
-              <div style="padding:10px;background:#f8faff;border-radius:6px;font-size:12px;"><strong>Reed P.</strong> · 5h ago<br><span style="color:#444;">Just closed my first JV — $14,200 earned. Shoutout to Aurora Holdings 🙌</span></div>
+            <div class="card-title">Orbit Hub — Recent Posts</div><div class="card-sub">Click to go to Orbit Hub</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="padding:10px;background:#f8faff;border-radius:6px;font-size:12px;cursor:pointer" onclick="nav(null,'o-community')"><strong>Philip S.</strong> · 2h ago<br><span style="color:#444">Planets ready for Sub-To in AZ/TX — submit now!</span></div>
+              <div style="padding:10px;background:#f8faff;border-radius:6px;font-size:12px;cursor:pointer" onclick="nav(null,'o-community')"><strong>Reed P.</strong> · 5h ago<br><span style="color:#444">Closed my first JV — $14,200 earned 🙌</span></div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- ── ORBIT: Community ── -->
     <div id="o-community" class="screen">
-      <div class="topbar"><div class="topbar-title">Orbit Hub</div><button class="topbar-btn btn-primary">+ New Post</button></div>
+      <div class="topbar"><div class="topbar-title">Orbit Hub</div><button class="tb-btn btn-primary" onclick="openModal('post-modal')">+ New Post</button></div>
       <div class="view-tabs"><div class="vtab active">Feed</div><div class="vtab">Announcements</div><div class="vtab">Resources</div><div class="vtab">Members (74)</div></div>
       <div class="content">
-        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> GHL Communities look like a social feed — similar to Facebook Groups. Layout is fixed by GHL. Your VA can customize the banner image, colors, and post content, but NOT the card or feed structure.</div></div>
+        <div id="new-posts-area"></div>
         <div class="feed-post">
-          <div class="post-header"><div class="post-avatar" style="background:#0073e6;">PS</div><div><div class="post-name">Philip Samonte · Admin</div><div class="post-time">2 hours ago</div></div></div>
-          <div class="post-body">📢 <strong>Planets are ready for Sub-To and Seller Finance deals in AZ and TX.</strong> Submit your leads now — fast response guaranteed this week.<div><span class="post-tag tag-announce">Announcement</span></div></div>
-          <div class="post-actions"><div class="post-action">👍 Like (12)</div><div class="post-action">💬 Comment (3)</div></div>
+          <div class="post-header"><div class="post-avatar" style="background:#0073e6">PS</div><div><div class="post-name">Philip Samonte · Admin</div><div class="post-time">2 hours ago</div></div></div>
+          <div class="post-body">📢 <strong>Planets are ready for Sub-To and Seller Finance deals in AZ and TX.</strong> Submit leads now — fast responses this week.<div><span class="post-tag tag-announce">Announcement</span></div></div>
+          <div class="post-actions">
+            <button class="post-action" onclick="like(this)">👍 Like (12)</button>
+            <button class="post-action" onclick="toggleComment(this)">💬 Comment (3)</button>
+          </div>
+          <div class="comment-box"><input class="comment-input" placeholder="Write a comment..." onkeydown="if(event.key==='Enter'){postComment(this)}"></div>
         </div>
         <div class="feed-post">
-          <div class="post-header"><div class="post-avatar" style="background:#16a34a;">RP</div><div><div class="post-name">Reed Patel · Orbit</div><div class="post-time">5 hours ago</div></div></div>
-          <div class="post-body">Closed my first JV deal! Sub-To in Tucson — earned $14,200. Submit your leads. This works. 🔥<div><span class="post-tag tag-win">Win</span></div></div>
-          <div class="post-actions"><div class="post-action">👍 Like (31)</div><div class="post-action">💬 Comment (8)</div></div>
+          <div class="post-header"><div class="post-avatar" style="background:#16a34a">RP</div><div><div class="post-name">Reed Patel · Orbit</div><div class="post-time">5 hours ago</div></div></div>
+          <div class="post-body">Closed first JV! Sub-To in Tucson — earned $14,200. This works. 🔥<div><span class="post-tag tag-win">Win</span></div></div>
+          <div class="post-actions">
+            <button class="post-action" onclick="like(this)">👍 Like (31)</button>
+            <button class="post-action" onclick="toggleComment(this)">💬 Comment (8)</button>
+          </div>
+          <div class="comment-box"><input class="comment-input" placeholder="Write a comment..." onkeydown="if(event.key==='Enter'){postComment(this)}"></div>
         </div>
         <div class="feed-post">
-          <div class="post-header"><div class="post-avatar" style="background:#b45309;">IB</div><div><div class="post-name">Imani Brooks · Orbit</div><div class="post-time">Yesterday</div></div></div>
-          <div class="post-body">Tip: Lead with "We can take over your payments and save your credit" for Sub-To sellers. Works every time.<div><span class="post-tag tag-tip">Tip</span></div></div>
-          <div class="post-actions"><div class="post-action">👍 Like (18)</div><div class="post-action">💬 Comment (5)</div></div>
+          <div class="post-header"><div class="post-avatar" style="background:#b45309">IB</div><div><div class="post-name">Imani Brooks · Orbit</div><div class="post-time">Yesterday</div></div></div>
+          <div class="post-body">Tip: Lead with "We can take over payments and save your credit" for Sub-To. Works every time.<div><span class="post-tag tag-tip">Tip</span></div></div>
+          <div class="post-actions">
+            <button class="post-action" onclick="like(this)">👍 Like (18)</button>
+            <button class="post-action" onclick="toggleComment(this)">💬 Comment (5)</button>
+          </div>
+          <div class="comment-box"><input class="comment-input" placeholder="Write a comment..." onkeydown="if(event.key==='Enter'){postComment(this)}"></div>
         </div>
       </div>
     </div>
 
+    <!-- ── ORBIT: Submit Lead (multi-step) ── -->
     <div id="o-form" class="screen">
       <div class="topbar"><div class="topbar-title">Submit a Lead</div></div>
       <div class="content">
-        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> GHL forms look like this — standard web inputs. No animated wizard like the custom demo. Multi-step is possible in GHL but will look basic.</div></div>
-        <div class="card" style="max-width:680px;">
+        <div class="card" style="max-width:680px">
           <div class="card-title">Submit a Motivated Seller Lead</div>
-          <div class="card-sub">We'll match your lead to a Planet within 48 hours.</div>
-          <div class="form-step"><div class="step done">✓ Your Info</div><div class="step active">2. Property</div><div class="step todo">3. Financing</div><div class="step todo">4. Details</div><div class="step todo">5. Submit</div></div>
-          <div class="form-row"><div class="form-group"><label class="form-label">Property Address <span>*</span></label><input class="form-input" placeholder="123 Main St" type="text"></div><div class="form-group"><label class="form-label">City <span>*</span></label><input class="form-input" placeholder="Phoenix" type="text"></div></div>
-          <div class="form-row"><div class="form-group"><label class="form-label">State <span>*</span></label><select class="form-select"><option>Select state...</option><option>AZ</option><option>TX</option><option>FL</option></select></div><div class="form-group"><label class="form-label">Zip Code <span>*</span></label><input class="form-input" placeholder="85001" type="text"></div></div>
-          <div class="form-row"><div class="form-group"><label class="form-label">Seller Asking Price <span>*</span></label><input class="form-input" placeholder="$280,000" type="text"></div><div class="form-group"><label class="form-label">Estimated ARV <span>*</span></label><input class="form-input" placeholder="$340,000" type="text"></div></div>
-          <div class="form-group"><label class="form-label">Financing Type <span>*</span></label><select class="form-select"><option>Select...</option><option>Sub-To</option><option>Seller Finance</option><option>Wrap-Around</option><option>Novation</option><option>Hybrid</option></select></div>
-          <div class="form-group"><label class="form-label">Seller Motivation <span>*</span></label><select class="form-select"><option>Select...</option><option>Foreclosure</option><option>Divorce</option><option>Relocation</option><option>Financial Hardship</option><option>Inherited</option></select></div>
-          <div class="form-group"><label class="form-label">Preferred JV Split</label><input class="form-input" placeholder="e.g. 30% to me, 70% to Planet" type="text"></div>
-          <div class="form-group"><label class="form-label">Additional Notes</label><textarea class="form-textarea" placeholder="Any details about the seller or property..."></textarea></div>
-          <button class="form-submit">Next Step →</button>
+          <div class="card-sub">Complete all steps. We'll match your lead to a Planet within 48 hours.</div>
+          <div class="form-step" id="form-steps">
+            <div class="step active">1. Property</div>
+            <div class="step todo">2. Financing</div>
+            <div class="step todo">3. Seller</div>
+            <div class="step todo">4. Split</div>
+            <div class="step todo">5. Submit</div>
+          </div>
+          <!-- Step 1 -->
+          <div class="form-page active" id="fp-1">
+            <div class="form-row"><div class="form-group"><label class="form-label">Property Address <span>*</span></label><input class="form-input" id="f-addr" placeholder="123 Main St"></div><div class="form-group"><label class="form-label">City <span>*</span></label><input class="form-input" id="f-city" placeholder="Phoenix"></div></div>
+            <div class="form-row"><div class="form-group"><label class="form-label">State <span>*</span></label><select class="form-select" id="f-state"><option value="">Select...</option><option>AZ</option><option>TX</option><option>FL</option><option>CA</option><option>NV</option></select></div><div class="form-group"><label class="form-label">Zip <span>*</span></label><input class="form-input" id="f-zip" placeholder="85001"></div></div>
+            <div class="form-row"><div class="form-group"><label class="form-label">Seller Asking Price <span>*</span></label><input class="form-input" id="f-price" placeholder="$280,000"></div><div class="form-group"><label class="form-label">Estimated ARV <span>*</span></label><input class="form-input" id="f-arv" placeholder="$340,000"></div></div>
+            <button class="form-next" onclick="nextStep(1)">Next: Financing →</button>
+          </div>
+          <!-- Step 2 -->
+          <div class="form-page" id="fp-2">
+            <div class="form-group"><label class="form-label">Financing Type <span>*</span></label><select class="form-select" id="f-type"><option value="">Select...</option><option>Sub-To (Subject-To)</option><option>Seller Finance</option><option>Wrap-Around</option><option>Novation</option><option>Hybrid / Not Sure</option></select></div>
+            <div id="subto-fields" style="display:none">
+              <div class="form-row"><div class="form-group"><label class="form-label">Existing Loan Balance</label><input class="form-input" placeholder="$210,000"></div><div class="form-group"><label class="form-label">Monthly Payment</label><input class="form-input" placeholder="$1,450/mo"></div></div>
+              <div class="form-group"><label class="form-label">Interest Rate</label><input class="form-input" placeholder="3.5%"></div>
+            </div>
+            <button class="form-next" onclick="nextStep(2)">Next: Seller Info →</button>
+          </div>
+          <!-- Step 3 -->
+          <div class="form-page" id="fp-3">
+            <div class="form-group"><label class="form-label">Seller Motivation <span>*</span></label><select class="form-select" id="f-motiv"><option value="">Select...</option><option>Foreclosure / Pre-Foreclosure</option><option>Divorce</option><option>Relocation</option><option>Financial Hardship</option><option>Inherited Property</option><option>Other</option></select></div>
+            <div class="form-group"><label class="form-label">Additional Notes</label><textarea class="form-textarea" id="f-notes" placeholder="Any details about the seller, timeline, or property condition..."></textarea></div>
+            <button class="form-next" onclick="nextStep(3)">Next: JV Split →</button>
+          </div>
+          <!-- Step 4 -->
+          <div class="form-page" id="fp-4">
+            <div class="form-group"><label class="form-label">Your Preferred JV Split <span>*</span></label><input class="form-input" id="f-split" placeholder="e.g. 30% to me, 70% to Planet"></div>
+            <div class="form-group"><label class="form-label">Target Planet (optional)</label><select class="form-select"><option value="">Let the network match me</option><option>Aurora Holdings</option><option>Blue Heron Group</option><option>Pinegrove Realty</option><option>Ironvine Capital</option></select></div>
+            <button class="form-next" onclick="nextStep(4)">Review & Submit →</button>
+          </div>
+          <!-- Step 5 - Review -->
+          <div class="form-page" id="fp-5">
+            <div style="background:#f8faff;border-radius:8px;padding:16px;margin-bottom:16px;font-size:13px;line-height:1.8">
+              <strong>Review Your Lead</strong><br>
+              Address: <span id="rev-addr">—</span><br>
+              Financing: <span id="rev-type">—</span><br>
+              Motivation: <span id="rev-motiv">—</span><br>
+              Preferred Split: <span id="rev-split">—</span>
+            </div>
+            <div style="background:#fff8e6;border-radius:6px;padding:12px;font-size:12px;margin-bottom:16px;color:#78350f">
+              ⚠ By submitting, you confirm this lead has NOT been submitted to another Planet in this network. Duplicate submissions are grounds for removal.
+            </div>
+            <button class="form-submit-btn" onclick="submitLead()">✓ Submit Lead to Network</button>
+          </div>
+          <!-- Confirmation -->
+          <div class="form-page" id="fp-confirm">
+            <div class="confirm-screen">
+              <div class="confirm-icon">✅</div>
+              <div class="confirm-title">Lead Submitted!</div>
+              <div class="confirm-sub">Your lead has been received. We'll match it to a Planet within 48 hours and notify you by email.</div>
+              <button class="tb-btn btn-primary" onclick="resetForm()">Submit Another Lead</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- ── ORBIT: My Leads ── -->
     <div id="o-leads" class="screen">
-      <div class="topbar"><div class="topbar-title">My Leads</div><button class="topbar-btn btn-primary">+ New Lead</button></div>
+      <div class="topbar"><div class="topbar-title">My Leads</div><button class="tb-btn btn-primary" onclick="nav(null,'o-form')">+ New Lead</button></div>
       <div class="content">
-        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> GHL does not have a native member-facing leads table. Your VA will replicate this as a community post feed filtered by the member's tag, or as a simple embedded view. It will be a feed/list — not a sortable table.</div></div>
         <div class="card">
-          <div class="card-title">Your Submitted Leads</div>
-          <div class="card-sub">7 active · 1 closed</div>
-          <table>
-            <tr><th>Property</th><th>Type</th><th>Sent To</th><th>Date</th><th>Status</th></tr>
-            <tr><td><strong>1842 W. Cactus Rd, Phoenix AZ</strong></td><td><span class="k-tag k-subto">Sub-To</span></td><td>Aurora Holdings</td><td>May 10</td><td><span class="status-badge s-review">Under Review</span></td></tr>
-            <tr><td><strong>903 Elm St, Tucson AZ</strong></td><td><span class="k-tag k-sf">Seller Finance</span></td><td>Blue Heron Group</td><td>May 6</td><td><span class="status-badge s-matched">JV Signed</span></td></tr>
-            <tr><td><strong>2210 N. 32nd St, Las Vegas NV</strong></td><td><span class="k-tag k-nov">Novation</span></td><td>Pinegrove Realty</td><td>May 3</td><td><span class="status-badge s-new">Sent</span></td></tr>
+          <div class="card-title">Your Submitted Leads</div><div class="card-sub">Click any row to view details</div>
+          <table><tr><th>Property</th><th>Type</th><th>Sent To</th><th>Date</th><th>Status</th></tr>
+            <tr style="cursor:pointer" onclick="openLeadModal('1842 W. Cactus Rd, Phoenix AZ','Submitted to Aurora Holdings · May 10','Sub-To')"><td><strong>1842 W. Cactus Rd, Phoenix AZ</strong></td><td><span class="k-tag k-subto">Sub-To</span></td><td>Aurora Holdings</td><td>May 10</td><td><span class="status-badge s-review">Under Review</span></td></tr>
+            <tr style="cursor:pointer" onclick="openLeadModal('903 Elm St, Tucson AZ','JV Signed · May 6','Seller Finance')"><td><strong>903 Elm St, Tucson AZ</strong></td><td><span class="k-tag k-sf">Seller Finance</span></td><td>Blue Heron Group</td><td>May 6</td><td><span class="status-badge s-jv">JV Signed</span></td></tr>
+            <tr style="cursor:pointer" onclick="openLeadModal('2210 N. 32nd St, Las Vegas NV','Sent · May 3','Novation')"><td><strong>2210 N. 32nd St, Las Vegas NV</strong></td><td><span class="k-tag k-nov">Novation</span></td><td>Pinegrove Realty</td><td>May 3</td><td><span class="status-badge s-new">Sent</span></td></tr>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- ─── PLANET SCREENS ─── -->
-
+    <!-- ── PLANET: Dashboard ── -->
     <div id="p-dashboard" class="screen">
-      <div class="topbar"><div class="topbar-title">Dashboard</div><button class="topbar-btn btn-ghost">Update Buy Box</button></div>
+      <div class="topbar"><div class="topbar-title">Dashboard</div><button class="tb-btn btn-ghost" onclick="nav(null,'p-buybox')">Update Buy Box</button></div>
       <div class="content">
-        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> Planet dashboard inside GHL Client Portal. Same fixed GHL layout — different stats and content. The sidebar shows Planet-only items (no Submit a Lead).</div></div>
+        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> Planet dashboard — different stats and actions from Orbit. No "Submit Lead" button. Sidebar only shows Planet-relevant screens.</div></div>
         <div class="grid-3">
-          <div class="stat-card"><div class="stat-label">Lead Inbox</div><div class="stat-val">11</div><div class="stat-delta">3 new today</div></div>
+          <div class="stat-card"><div class="stat-label">Lead Inbox</div><div class="stat-val" id="p-inbox-count">4</div><div class="stat-delta">3 new today</div></div>
           <div class="stat-card"><div class="stat-label">In Closing</div><div class="stat-val">4</div><div class="stat-delta warn">1 funding Friday</div></div>
           <div class="stat-card"><div class="stat-label">Acquired · YTD</div><div class="stat-val">22</div><div class="stat-delta">↑ +6 vs last year</div></div>
         </div>
         <div class="grid-2">
           <div class="card">
-            <div class="card-title">Hot Inbox</div>
-            <div class="card-sub">Leads matching your buy box</div>
-            <table>
-              <tr><th>Address</th><th>Type</th><th>Fit</th><th>Action</th></tr>
-              <tr><td>1842 W. Cactus Rd, Phoenix AZ</td><td><span class="k-tag k-subto">Sub-To</span></td><td style="color:#16a34a;font-weight:700;">92%</td><td><button class="action-btn ab-accept">Accept</button><button class="action-btn ab-pass">Pass</button></td></tr>
-              <tr><td>903 Elm St, Tucson AZ</td><td><span class="k-tag k-sf">Seller Finance</span></td><td style="color:#16a34a;font-weight:700;">85%</td><td><button class="action-btn ab-jv">Send JV</button></td></tr>
-              <tr><td>2210 N. 32nd St, Las Vegas NV</td><td><span class="k-tag k-nov">Novation</span></td><td style="color:#b45309;font-weight:700;">61%</td><td><button class="action-btn ab-accept">Accept</button><button class="action-btn ab-pass">Pass</button></td></tr>
+            <div class="card-title">Hot Inbox</div><div class="card-sub">Leads matching your buy box — click Accept or Pass</div>
+            <table><tr><th>Address</th><th>Type</th><th>Fit</th><th>Action</th></tr>
+              <tr><td>1842 W. Cactus Rd</td><td><span class="k-tag k-subto">Sub-To</span></td><td style="color:#16a34a;font-weight:700">92%</td><td id="dash-row-1"><button class="ab ab-accept" onclick="acceptLead('dash-row-1','1842 W. Cactus Rd, Phoenix AZ','Avery Quinn')">Accept</button><button class="ab ab-pass" onclick="passLead('dash-row-1')">Pass</button></td></tr>
+              <tr><td>903 Elm St, Tucson</td><td><span class="k-tag k-sf">Seller Finance</span></td><td style="color:#16a34a;font-weight:700">85%</td><td id="dash-row-2"><button class="ab ab-jv" onclick="openJVModal('903 Elm St, Tucson AZ','Seller Finance','Reed Patel')">Send JV</button></td></tr>
             </table>
           </div>
           <div class="card">
             <div class="card-title">Planet Hub — Recent Posts</div>
-            <div class="card-sub">For Planets only</div>
-            <div style="display:flex;flex-direction:column;gap:10px;">
-              <div style="padding:10px;background:#f0f9f4;border-radius:6px;font-size:12px;"><strong>Philip S.</strong> · 1h ago<br><span style="color:#444;">3 new Sub-To leads in AZ just came in — check your inbox.</span></div>
-              <div style="padding:10px;background:#f0f9f4;border-radius:6px;font-size:12px;"><strong>Jordan R.</strong> · 4h ago<br><span style="color:#444;">Looking for a Planet to JV on a Multifamily deal in Dallas — 40K equity. DM me.</span></div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="padding:10px;background:#f0f9f4;border-radius:6px;font-size:12px;cursor:pointer" onclick="nav(null,'p-hub')"><strong>Philip S.</strong> · 1h ago<br><span style="color:#444">3 new Sub-To leads in AZ just came in — check inbox.</span></div>
+              <div style="padding:10px;background:#f0f9f4;border-radius:6px;font-size:12px;cursor:pointer" onclick="nav(null,'p-hub')"><strong>Jordan R. (Moon)</strong> · 4h ago<br><span style="color:#444">Looking to JV on a MF deal in Dallas — DM me.</span></div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- ── PLANET: Hub ── -->
     <div id="p-hub" class="screen">
-      <div class="topbar"><div class="topbar-title">Planet Hub</div><button class="topbar-btn btn-primary">+ New Post</button></div>
+      <div class="topbar"><div class="topbar-title">Planet Hub</div><button class="tb-btn btn-primary" onclick="openModal('post-modal')">+ New Post</button></div>
       <div class="view-tabs"><div class="vtab active">Feed</div><div class="vtab">Announcements</div><div class="vtab">New Leads</div><div class="vtab">Members (28)</div></div>
       <div class="content">
-        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> Planet Hub is a separate GHL Community restricted to the <code>planet</code> and <code>moon</code> tags. Same feed layout as Orbit Hub. Only Planets and Moons can see this.</div></div>
+        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> Planet Hub is a separate GHL Community — only contacts with the <code>planet</code> or <code>moon</code> tag can see this. Pure Orbits cannot access this community.</div></div>
+        <div id="planet-new-posts"></div>
         <div class="feed-post">
-          <div class="post-header"><div class="post-avatar" style="background:#0073e6;">PS</div><div><div class="post-name">Philip Samonte · Admin</div><div class="post-time">1 hour ago</div></div></div>
-          <div class="post-body">📋 <strong>3 new leads posted to #new-leads.</strong> Sub-To and Seller Finance in AZ. First Planet to accept gets the lock. Check your inbox.<div><span class="post-tag tag-announce">Announcement</span></div></div>
-          <div class="post-actions"><div class="post-action">👍 Like (6)</div><div class="post-action">💬 Comment (1)</div></div>
+          <div class="post-header"><div class="post-avatar" style="background:#0073e6">PS</div><div><div class="post-name">Philip Samonte · Admin</div><div class="post-time">1 hour ago</div></div></div>
+          <div class="post-body">📋 <strong>3 new leads in your inbox.</strong> Sub-To and Seller Finance in AZ. First Planet to accept locks the lead.<div><span class="post-tag tag-announce">Announcement</span></div></div>
+          <div class="post-actions"><button class="post-action" onclick="like(this)">👍 Like (6)</button><button class="post-action" onclick="toggleComment(this)">💬 Comment (1)</button></div>
+          <div class="comment-box"><input class="comment-input" placeholder="Write a comment..." onkeydown="if(event.key==='Enter'){postComment(this)}"></div>
         </div>
         <div class="feed-post">
-          <div class="post-header"><div class="post-avatar" style="background:#2f7d4a;">JR</div><div><div class="post-name">Jordan Rivera · Moon</div><div class="post-time">4 hours ago</div></div></div>
-          <div class="post-body">Anyone buying Multifamily in Dallas? I have a motivated seller, $40K equity, willing to do seller finance. DM me to JV.<div><span class="post-tag" style="background:#e8f5ff;color:#5b7b9e;">Moon Posting</span></div></div>
-          <div class="post-actions"><div class="post-action">👍 Like (9)</div><div class="post-action">💬 Comment (4)</div></div>
+          <div class="post-header"><div class="post-avatar" style="background:#5b7b9e">JR</div><div><div class="post-name">Jordan Rivera · Moon</div><div class="post-time">4 hours ago</div></div></div>
+          <div class="post-body">Looking for a Planet to JV on Multifamily in Dallas — $40K equity, seller finance. DM me.<div><span class="post-tag" style="background:#e8f5ff;color:#5b7b9e">Moon Post</span></div></div>
+          <div class="post-actions"><button class="post-action" onclick="like(this)">👍 Like (9)</button><button class="post-action" onclick="toggleComment(this)">💬 Comment (4)</button></div>
+          <div class="comment-box"><input class="comment-input" placeholder="Write a comment..." onkeydown="if(event.key==='Enter'){postComment(this)}"></div>
         </div>
       </div>
     </div>
 
+    <!-- ── PLANET: Lead Inbox ── -->
     <div id="p-inbox" class="screen">
       <div class="topbar"><div class="topbar-title">Lead Inbox</div></div>
       <div class="content">
-        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> This is the Planet's lead inbox. Leads submitted by Orbits and Moons appear here. Once a Planet accepts, the lead locks per the JV agreement. "Locked" means another Planet cannot claim it.</div></div>
+        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> Accept locks the lead exclusively to this Planet per the JV agreement. Pass releases it back to the Orbit. Locked leads cannot be claimed by other Planets until released.</div></div>
         <div class="card">
-          <div class="card-title">Incoming Leads</div>
-          <div class="card-sub">11 leads · 3 new · 2 locked by other Planets</div>
-          <table>
-            <tr><th>Address</th><th>Type</th><th>Submitted By</th><th>Equity</th><th>Fit</th><th>Status</th><th>Action</th></tr>
-            <tr><td><strong>1842 W. Cactus Rd, Phoenix AZ</strong></td><td><span class="k-tag k-subto">Sub-To</span></td><td>Avery Q. (Orbit)</td><td>$62K</td><td style="color:#16a34a;font-weight:700;">92%</td><td><span class="status-badge s-new">New</span></td><td><button class="action-btn ab-accept">Accept</button><button class="action-btn ab-pass">Pass</button></td></tr>
-            <tr><td><strong>903 Elm St, Tucson AZ</strong></td><td><span class="k-tag k-sf">Seller Finance</span></td><td>Reed P. (Orbit)</td><td>$44K</td><td style="color:#16a34a;font-weight:700;">85%</td><td><span class="status-badge s-matched">Accepted</span></td><td><button class="action-btn ab-jv">Send JV</button></td></tr>
-            <tr><td><strong>7734 Sunrise Blvd, Scottsdale AZ</strong></td><td><span class="k-tag k-subto">Sub-To</span></td><td>Jordan R. (Moon)</td><td>$55K</td><td style="color:#16a34a;font-weight:700;">88%</td><td><span class="status-badge s-locked">🔒 Locked</span></td><td style="color:#aaa;font-size:12px;">Taken by another Planet</td></tr>
-            <tr><td><strong>2210 N. 32nd St, Las Vegas NV</strong></td><td><span class="k-tag k-nov">Novation</span></td><td>Imani B. (Orbit)</td><td>$88K</td><td style="color:#b45309;font-weight:700;">61%</td><td><span class="status-badge s-new">New</span></td><td><button class="action-btn ab-accept">Accept</button><button class="action-btn ab-pass">Pass</button></td></tr>
+          <div class="card-title">Incoming Leads</div><div class="card-sub" id="inbox-sub">4 leads · 3 new</div>
+          <table><tr><th>Address</th><th>Type</th><th>From</th><th>Equity</th><th>Fit</th><th>Status</th><th>Action</th></tr>
+            <tr id="inbox-row-1" style="cursor:pointer">
+              <td onclick="openLeadModal('1842 W. Cactus Rd, Phoenix AZ','Submitted by Avery Quinn · May 10','Sub-To')"><strong>1842 W. Cactus Rd, Phoenix AZ</strong></td>
+              <td><span class="k-tag k-subto">Sub-To</span></td><td>Avery Q.</td><td>$62K</td>
+              <td style="color:#16a34a;font-weight:700">92%</td>
+              <td><span class="status-badge s-new">New</span></td>
+              <td><button class="ab ab-accept" onclick="acceptLead('inbox-row-1','1842 W. Cactus Rd, Phoenix AZ','Avery Quinn')">Accept</button><button class="ab ab-pass" onclick="passLead('inbox-row-1')">Pass</button></td>
+            </tr>
+            <tr id="inbox-row-2" style="cursor:pointer">
+              <td onclick="openLeadModal('903 Elm St, Tucson AZ','Submitted by Reed Patel · May 6','Seller Finance')"><strong>903 Elm St, Tucson AZ</strong></td>
+              <td><span class="k-tag k-sf">Seller Finance</span></td><td>Reed P.</td><td>$44K</td>
+              <td style="color:#16a34a;font-weight:700">85%</td>
+              <td><span class="status-badge s-matched">Accepted</span></td>
+              <td><button class="ab ab-jv" onclick="openJVModal('903 Elm St, Tucson AZ','Seller Finance','Reed Patel')">Send JV</button></td>
+            </tr>
+            <tr id="inbox-row-3" style="cursor:pointer">
+              <td onclick="openLeadModal('7734 Sunrise Blvd, Scottsdale AZ','Submitted by Jordan Rivera (Moon) · May 8','Sub-To')"><strong>7734 Sunrise Blvd, Scottsdale AZ</strong></td>
+              <td><span class="k-tag k-subto">Sub-To</span></td><td>Jordan R. (Moon)</td><td>$55K</td>
+              <td style="color:#16a34a;font-weight:700">88%</td>
+              <td><span class="status-badge s-locked">🔒 Locked</span></td>
+              <td style="font-size:11px;color:#aaa">Taken by Ironvine</td>
+            </tr>
+            <tr id="inbox-row-4" style="cursor:pointer">
+              <td onclick="openLeadModal('2210 N. 32nd St, Las Vegas NV','Submitted by Imani Brooks · May 3','Novation')"><strong>2210 N. 32nd St, Las Vegas NV</strong></td>
+              <td><span class="k-tag k-nov">Novation</span></td><td>Imani B.</td><td>$88K</td>
+              <td style="color:#b45309;font-weight:700">61%</td>
+              <td><span class="status-badge s-new">New</span></td>
+              <td><button class="ab ab-accept" onclick="acceptLead('inbox-row-4','2210 N. 32nd St, Las Vegas NV','Imani Brooks')">Accept</button><button class="ab ab-pass" onclick="passLead('inbox-row-4')">Pass</button></td>
+            </tr>
           </table>
         </div>
       </div>
     </div>
 
+    <!-- ── PLANET: Buy Box ── -->
     <div id="p-buybox" class="screen">
-      <div class="topbar"><div class="topbar-title">My Buy Box</div><button class="topbar-btn btn-primary">Save Changes</button></div>
+      <div class="topbar"><div class="topbar-title">My Buy Box</div><button class="tb-btn btn-primary" onclick="saveBuyBox()">Save Changes</button></div>
       <div class="content">
-        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> The Buy Box is built using GHL Custom Fields on the contact record, displayed via a GHL form embedded in the portal. It will look like a settings form — not the styled card from the custom demo.</div></div>
-        <div class="card" style="max-width:640px;">
-          <div class="card-title">Aurora Holdings — Buy Box Settings</div>
-          <div class="card-sub">Orbits will be matched to your buy box criteria when submitting leads.</div>
+        <div class="card" style="max-width:640px">
+          <div class="card-title">Aurora Holdings — Buy Box</div><div class="card-sub">Orbits are matched to your criteria when submitting leads.</div>
           <div class="bb-row"><div class="bb-label">States I Buy In</div><div class="bb-val"><span class="tag-pill">Arizona</span><span class="tag-pill">Nevada</span><span class="tag-pill">Texas</span></div></div>
           <div class="bb-row"><div class="bb-label">Deal Types</div><div class="bb-val"><span class="tag-pill">Sub-To</span><span class="tag-pill">Seller Finance</span><span class="tag-pill green">Wrap-Around</span></div></div>
-          <div class="bb-row"><div class="bb-label">Max Purchase Price</div><div class="bb-val"><input class="form-input" style="width:180px;" value="$450,000" type="text"></div></div>
-          <div class="bb-row"><div class="bb-label">Min Equity</div><div class="bb-val"><input class="form-input" style="width:180px;" value="$40,000" type="text"></div></div>
-          <div class="bb-row"><div class="bb-label">JV Split Preference</div><div class="bb-val"><input class="form-input" style="width:180px;" value="70% Planet / 30% Orbit" type="text"></div></div>
+          <div class="bb-row"><div class="bb-label">Max Purchase Price</div><div class="bb-val"><input class="form-input" style="width:180px" value="$450,000"></div></div>
+          <div class="bb-row"><div class="bb-label">Min Equity</div><div class="bb-val"><input class="form-input" style="width:180px" value="$40,000"></div></div>
+          <div class="bb-row"><div class="bb-label">JV Split Preference</div><div class="bb-val"><input class="form-input" style="width:180px" value="70% Planet / 30% Orbit"></div></div>
           <div class="bb-row"><div class="bb-label">Property Types</div><div class="bb-val"><span class="tag-pill">SFR</span><span class="tag-pill">Small Multi (2-4)</span></div></div>
+          <div style="margin-top:16px"><button class="tb-btn btn-primary" onclick="saveBuyBox()">Save Changes</button></div>
         </div>
       </div>
     </div>
 
+    <!-- ── PLANET: Pipeline ── -->
     <div id="p-pipeline" class="screen">
       <div class="topbar"><div class="topbar-title">My Pipeline</div></div>
       <div class="content">
-        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> The Pipeline Kanban is an internal GHL tool — normally only admins see it. Your VA can give Planets a read-only view of their own deals using a filtered pipeline or a community post. It will look like this Kanban but may be admin-only by default.</div></div>
+        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> GHL Pipeline Kanban. Normally admin-only — VA will configure filtered view for Planets. Click cards to view lead details.</div></div>
         <div class="kanban">
-          <div class="kol"><div class="kol-head">Accepted <span class="kol-count">2</span></div><div class="k-card"><div class="k-addr">903 Elm St, Tucson</div><div class="k-meta">Reed P. · May 6</div><span class="k-tag k-sf">Seller Finance</span></div></div>
-          <div class="kol"><div class="kol-head">JV Sent <span class="kol-count">1</span></div><div class="k-card"><div class="k-addr">415 Desert Rose Ln</div><div class="k-meta">Avery Q. · May 4</div><span class="k-tag k-subto">Sub-To</span></div></div>
-          <div class="kol"><div class="kol-head">JV Signed <span class="kol-count">1</span></div><div class="k-card"><div class="k-addr">88 Palo Verde Dr</div><div class="k-meta">Reed P. · Apr 30</div><span class="k-tag k-sf">Seller Finance</span></div></div>
-          <div class="kol"><div class="kol-head">Under Contract <span class="kol-count">2</span></div><div class="k-card"><div class="k-addr">521 Ironwood Ave</div><div class="k-meta">Imani B. · Apr 20</div><span class="k-tag k-subto">Sub-To</span></div></div>
-          <div class="kol"><div class="kol-head">Closed <span class="kol-count">4</span></div><div class="k-card"><div class="k-addr">302 Coyote Trail</div><div class="k-meta">Avery Q. · Apr 1</div><span class="k-tag k-subto">Sub-To</span></div></div>
+          <div class="kol"><div class="kol-head">Accepted <span class="kol-count">2</span></div>
+            <div class="k-card" onclick="openLeadModal('903 Elm St, Tucson AZ','Accepted · May 6','Seller Finance')"><div class="k-addr">903 Elm St, Tucson</div><div class="k-meta">Reed P. · May 6</div><span class="k-tag k-sf">Seller Finance</span></div>
+            <div class="k-card" onclick="openLeadModal('1842 W. Cactus Rd, Phoenix AZ','Accepted · May 10','Sub-To')"><div class="k-addr">1842 W. Cactus Rd</div><div class="k-meta">Avery Q. · May 10</div><span class="k-tag k-subto">Sub-To</span></div>
+          </div>
+          <div class="kol"><div class="kol-head">JV Sent <span class="kol-count">1</span></div>
+            <div class="k-card" onclick="openLeadModal('415 Desert Rose Ln, Mesa AZ','JV Sent · May 4','Sub-To')"><div class="k-addr">415 Desert Rose Ln</div><div class="k-meta">Avery Q. · May 4</div><span class="k-tag k-subto">Sub-To</span></div>
+          </div>
+          <div class="kol"><div class="kol-head">JV Signed <span class="kol-count">1</span></div>
+            <div class="k-card" onclick="openLeadModal('88 Palo Verde Dr, Chandler AZ','JV Signed · Apr 30','Seller Finance')"><div class="k-addr">88 Palo Verde Dr</div><div class="k-meta">Reed P. · Apr 30</div><span class="k-tag k-sf">Seller Finance</span></div>
+          </div>
+          <div class="kol"><div class="kol-head">Under Contract <span class="kol-count">2</span></div>
+            <div class="k-card" onclick="openLeadModal('521 Ironwood Ave, Glendale AZ','Under Contract · Apr 20','Sub-To')"><div class="k-addr">521 Ironwood Ave</div><div class="k-meta">Imani B. · Apr 20</div><span class="k-tag k-subto">Sub-To</span></div>
+          </div>
+          <div class="kol"><div class="kol-head">Closed <span class="kol-count">4</span></div>
+            <div class="k-card" onclick="openLeadModal('302 Coyote Trail, Tempe AZ','Closed · Apr 1','Sub-To')"><div class="k-addr">302 Coyote Trail</div><div class="k-meta">Avery Q. · Apr 1</div><span class="k-tag k-subto">Sub-To</span></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ─── MOON SCREENS ─── -->
-
+    <!-- ── MOON: Dashboard ── -->
     <div id="m-dashboard" class="screen">
-      <div class="topbar"><div class="topbar-title">Dashboard</div><div style="display:flex;gap:8px;"><button class="topbar-btn btn-primary">+ Submit a Lead</button><button class="topbar-btn btn-ghost">My Inbox</button></div></div>
+      <div class="topbar"><div class="topbar-title">Dashboard</div><div style="display:flex;gap:8px"><button class="tb-btn btn-primary" onclick="nav(null,'m-form')">+ Submit a Lead</button><button class="tb-btn btn-ghost" onclick="nav(null,'m-inbox')">My Inbox</button></div></div>
       <div class="content">
-        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> Moon dashboard combines Planet and Orbit stats. Same GHL fixed layout. The sidebar shows BOTH Planet and Orbit sections separated by a label — this is done using GHL's community membership, not a custom role switcher.</div></div>
-        <div class="grid-3" style="grid-template-columns:repeat(4,1fr);">
+        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> Moon dashboard combines Planet and Orbit views. Stats show both incoming leads (as Planet) and sent leads (as Orbit). Both community hubs accessible via sidebar.</div></div>
+        <div class="grid-4">
           <div class="stat-card"><div class="stat-label">Leads Sent · 30d</div><div class="stat-val">5</div><div class="stat-delta">↑ +2 this month</div></div>
-          <div class="stat-card"><div class="stat-label">My Inbox</div><div class="stat-val">8</div><div class="stat-delta warn">2 unread</div></div>
+          <div class="stat-card"><div class="stat-label">My Inbox</div><div class="stat-val">5</div><div class="stat-delta warn">2 unread</div></div>
           <div class="stat-card"><div class="stat-label">Active JVs</div><div class="stat-val">4</div><div class="stat-delta">2 as Orbit · 2 as Planet</div></div>
           <div class="stat-card"><div class="stat-label">Earned · YTD</div><div class="stat-val">$31,200</div><div class="stat-delta">↑ +1 closed</div></div>
         </div>
         <div class="grid-2">
           <div class="card">
-            <div class="card-title">My Incoming Leads (as Planet)</div>
-            <div class="card-sub">Leads Orbits sent to you for your RV Park niche</div>
-            <table>
-              <tr><th>Address</th><th>Type</th><th>From</th><th>Action</th></tr>
-              <tr><td>44 Lakeview Dr, Austin TX</td><td><span class="k-tag k-sf">Seller Finance</span></td><td>Imani B.</td><td><button class="action-btn ab-accept">Accept</button></td></tr>
-              <tr><td>1100 Park Rd, Flagstaff AZ</td><td><span class="k-tag k-subto">Sub-To</span></td><td>Theo M.</td><td><button class="action-btn ab-accept">Accept</button></td></tr>
+            <div class="card-title">My Incoming Leads <span style="font-size:11px;color:#5b7b9e;font-weight:400">(as Planet)</span></div>
+            <table><tr><th>Address</th><th>From</th><th>Action</th></tr>
+              <tr><td>44 Lakeview Dr, Austin TX</td><td>Imani B.</td><td><button class="ab ab-accept" onclick="acceptLead('m-inc-1','44 Lakeview Dr, Austin TX','Imani Brooks')">Accept</button><button class="ab ab-pass" onclick="passLead('m-inc-1')">Pass</button></td></tr>
+              <tr id="m-inc-1"><td>1100 Park Rd, Flagstaff AZ</td><td>Theo M.</td><td><button class="ab ab-accept" onclick="acceptLead('m-inc-2','1100 Park Rd, Flagstaff AZ','Theo Marlowe')">Accept</button><button class="ab ab-pass" onclick="passLead('m-inc-2')">Pass</button></td></tr>
             </table>
           </div>
           <div class="card">
-            <div class="card-title">My Sent Leads (as Orbit)</div>
-            <div class="card-sub">Leads you sent to Multifamily Planets</div>
-            <table>
-              <tr><th>Address</th><th>Sent To</th><th>Status</th></tr>
-              <tr><td>7734 Sunrise Blvd, Scottsdale</td><td>Blue Heron Group</td><td><span class="status-badge s-review">Under Review</span></td></tr>
-              <tr><td>200 Oak St, Dallas TX</td><td>Pinegrove Realty</td><td><span class="status-badge s-matched">JV Signed</span></td></tr>
+            <div class="card-title">My Sent Leads <span style="font-size:11px;color:#5b7b9e;font-weight:400">(as Orbit)</span></div>
+            <table><tr><th>Address</th><th>Sent To</th><th>Status</th></tr>
+              <tr style="cursor:pointer" onclick="openLeadModal('7734 Sunrise Blvd, Scottsdale AZ','Sent to Blue Heron · May 8','Sub-To')"><td>7734 Sunrise Blvd</td><td>Blue Heron</td><td><span class="status-badge s-review">Under Review</span></td></tr>
+              <tr style="cursor:pointer" onclick="openLeadModal('200 Oak St, Dallas TX','JV Signed · May 5','Seller Finance')"><td>200 Oak St, Dallas</td><td>Pinegrove</td><td><span class="status-badge s-jv">JV Signed</span></td></tr>
             </table>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- ── MOON: Planet Hub ── -->
     <div id="m-hub-planet" class="screen">
-      <div class="topbar"><div class="topbar-title">Planet Hub</div></div>
+      <div class="topbar"><div class="topbar-title">Planet Hub <span style="font-size:12px;color:#5b7b9e;font-weight:400">(Moon access)</span></div><button class="tb-btn btn-primary" onclick="openModal('post-modal')">+ New Post</button></div>
       <div class="view-tabs"><div class="vtab active">Feed</div><div class="vtab">Announcements</div><div class="vtab">New Leads</div></div>
       <div class="content">
-        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> Moons see the Planet Hub because they have the <code>moon</code> tag, which grants access to both communities. Same feed view as the Planet sees.</div></div>
+        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> Moon can see Planet Hub because they have the <code>moon</code> tag, which grants access to both communities.</div></div>
         <div class="feed-post">
-          <div class="post-header"><div class="post-avatar" style="background:#0073e6;">PS</div><div><div class="post-name">Philip Samonte · Admin</div><div class="post-time">1 hour ago</div></div></div>
-          <div class="post-body">📋 <strong>3 new leads in #new-leads.</strong> Sub-To and Seller Finance in AZ. First Planet to accept gets the lock.<div><span class="post-tag tag-announce">Announcement</span></div></div>
-          <div class="post-actions"><div class="post-action">👍 Like (6)</div><div class="post-action">💬 Comment (1)</div></div>
+          <div class="post-header"><div class="post-avatar" style="background:#0073e6">PS</div><div><div class="post-name">Philip Samonte · Admin</div><div class="post-time">1 hour ago</div></div></div>
+          <div class="post-body">3 new leads in inbox — Sub-To/SF in AZ. First to accept gets the lock.<div><span class="post-tag tag-announce">Announcement</span></div></div>
+          <div class="post-actions"><button class="post-action" onclick="like(this)">👍 Like (6)</button><button class="post-action" onclick="toggleComment(this)">💬 Comment</button></div>
+          <div class="comment-box"><input class="comment-input" placeholder="Write a comment..." onkeydown="if(event.key==='Enter'){postComment(this)}"></div>
         </div>
       </div>
     </div>
 
+    <!-- ── MOON: Lead Inbox ── -->
     <div id="m-inbox" class="screen">
-      <div class="topbar"><div class="topbar-title">Lead Inbox (as Planet)</div></div>
+      <div class="topbar"><div class="topbar-title">Lead Inbox <span style="font-size:12px;color:#5b7b9e;font-weight:400">(as Planet)</span></div></div>
       <div class="content">
-        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> Moon's incoming lead inbox — same as the Planet inbox view. Leads submitted by Orbits for Jordan's RV Park niche appear here.</div></div>
         <div class="card">
-          <div class="card-title">Leads Submitted to You</div>
-          <div class="card-sub">5 leads · 2 new</div>
-          <table>
-            <tr><th>Address</th><th>Type</th><th>From</th><th>Equity</th><th>Status</th><th>Action</th></tr>
-            <tr><td><strong>44 Lakeview Dr, Austin TX</strong></td><td><span class="k-tag k-sf">Seller Finance</span></td><td>Imani B. (Orbit)</td><td>$72K</td><td><span class="status-badge s-new">New</span></td><td><button class="action-btn ab-accept">Accept</button><button class="action-btn ab-pass">Pass</button></td></tr>
-            <tr><td><strong>1100 Park Rd, Flagstaff AZ</strong></td><td><span class="k-tag k-subto">Sub-To</span></td><td>Theo M. (Orbit)</td><td>$48K</td><td><span class="status-badge s-new">New</span></td><td><button class="action-btn ab-accept">Accept</button><button class="action-btn ab-pass">Pass</button></td></tr>
-            <tr><td><strong>500 River Bend Rd, Tucson AZ</strong></td><td><span class="k-tag k-sf">Seller Finance</span></td><td>Reed P. (Orbit)</td><td>$55K</td><td><span class="status-badge s-matched">JV Signed</span></td><td><button class="action-btn ab-jv">View JV</button></td></tr>
+          <div class="card-title">Leads Submitted to You (RV Parks)</div>
+          <table><tr><th>Address</th><th>Type</th><th>From</th><th>Equity</th><th>Status</th><th>Action</th></tr>
+            <tr id="mi-row-1"><td onclick="openLeadModal('44 Lakeview Dr, Austin TX','Submitted by Imani Brooks · May 9','Seller Finance')" style="cursor:pointer"><strong>44 Lakeview Dr, Austin TX</strong></td><td><span class="k-tag k-sf">Seller Finance</span></td><td>Imani B.</td><td>$72K</td><td><span class="status-badge s-new">New</span></td><td><button class="ab ab-accept" onclick="acceptLead('mi-row-1','44 Lakeview Dr, Austin TX','Imani Brooks')">Accept</button><button class="ab ab-pass" onclick="passLead('mi-row-1')">Pass</button></td></tr>
+            <tr id="mi-row-2"><td onclick="openLeadModal('1100 Park Rd, Flagstaff AZ','Submitted by Theo Marlowe · May 7','Sub-To')" style="cursor:pointer"><strong>1100 Park Rd, Flagstaff AZ</strong></td><td><span class="k-tag k-subto">Sub-To</span></td><td>Theo M.</td><td>$48K</td><td><span class="status-badge s-new">New</span></td><td><button class="ab ab-accept" onclick="acceptLead('mi-row-2','1100 Park Rd, Flagstaff AZ','Theo Marlowe')">Accept</button><button class="ab ab-pass" onclick="passLead('mi-row-2')">Pass</button></td></tr>
+            <tr><td onclick="openLeadModal('500 River Bend Rd, Tucson AZ','JV Signed · May 3','Seller Finance')" style="cursor:pointer"><strong>500 River Bend Rd, Tucson AZ</strong></td><td><span class="k-tag k-sf">Seller Finance</span></td><td>Reed P.</td><td>$55K</td><td><span class="status-badge s-jv">JV Signed</span></td><td><button class="ab ab-view" onclick="openJVModal('500 River Bend Rd, Tucson AZ','Seller Finance','Reed Patel')">View JV</button></td></tr>
           </table>
         </div>
       </div>
     </div>
 
+    <!-- ── MOON: Buy Box ── -->
     <div id="m-buybox" class="screen">
-      <div class="topbar"><div class="topbar-title">My Buy Box (as Planet)</div><button class="topbar-btn btn-primary">Save Changes</button></div>
+      <div class="topbar"><div class="topbar-title">My Buy Box <span style="font-size:12px;color:#5b7b9e;font-weight:400">(as Planet)</span></div><button class="tb-btn btn-primary" onclick="saveBuyBox()">Save Changes</button></div>
       <div class="content">
-        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> Moon's buy box — same form structure as the Planet's buy box. Jordan sets criteria for their RV Park niche here so Orbits know what leads to send them.</div></div>
-        <div class="card" style="max-width:640px;">
+        <div class="card" style="max-width:640px">
           <div class="card-title">Jordan Rivera — Buy Box (RV Parks)</div>
-          <div class="card-sub">Orbits will match leads to these criteria when submitting to you.</div>
           <div class="bb-row"><div class="bb-label">States I Buy In</div><div class="bb-val"><span class="tag-pill">Texas</span><span class="tag-pill">Arizona</span><span class="tag-pill">Florida</span></div></div>
           <div class="bb-row"><div class="bb-label">Property Types</div><div class="bb-val"><span class="tag-pill">RV Parks</span><span class="tag-pill">Mobile Home Parks</span></div></div>
           <div class="bb-row"><div class="bb-label">Deal Types</div><div class="bb-val"><span class="tag-pill">Seller Finance</span><span class="tag-pill green">Master Lease</span></div></div>
-          <div class="bb-row"><div class="bb-label">Max Purchase Price</div><div class="bb-val"><input class="form-input" style="width:180px;" value="$1,200,000" type="text"></div></div>
-          <div class="bb-row"><div class="bb-label">JV Split Preference</div><div class="bb-val"><input class="form-input" style="width:180px;" value="65% Planet / 35% Orbit" type="text"></div></div>
+          <div class="bb-row"><div class="bb-label">Max Purchase</div><div class="bb-val"><input class="form-input" style="width:180px" value="$1,200,000"></div></div>
+          <div class="bb-row"><div class="bb-label">JV Split</div><div class="bb-val"><input class="form-input" style="width:180px" value="65% Planet / 35% Orbit"></div></div>
+          <div style="margin-top:16px"><button class="tb-btn btn-primary" onclick="saveBuyBox()">Save Changes</button></div>
         </div>
       </div>
     </div>
 
+    <!-- ── MOON: Orbit Hub ── -->
     <div id="m-hub-orbit" class="screen">
-      <div class="topbar"><div class="topbar-title">Orbit Hub</div></div>
-      <div class="view-tabs"><div class="vtab active">Feed</div><div class="vtab">Resources</div><div class="vtab">Members</div></div>
+      <div class="topbar"><div class="topbar-title">Orbit Hub <span style="font-size:12px;color:#5b7b9e;font-weight:400">(Moon access)</span></div><button class="tb-btn btn-primary" onclick="openModal('post-modal')">+ New Post</button></div>
+      <div class="view-tabs"><div class="vtab active">Feed</div><div class="vtab">Resources</div><div class="vtab">Members (74)</div></div>
       <div class="content">
-        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> Moon also has access to the Orbit Hub — same feed the pure Orbits see. Jordan can post tips, read announcements, and find leads to submit to other Planets.</div></div>
+        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> Moon also has Orbit Hub access. Jordan can read Orbit posts, share tips, and find leads to submit to other Planets.</div></div>
         <div class="feed-post">
-          <div class="post-header"><div class="post-avatar" style="background:#0073e6;">PS</div><div><div class="post-name">Philip Samonte · Admin</div><div class="post-time">2 hours ago</div></div></div>
-          <div class="post-body">📢 Planets are ready for Sub-To deals in AZ and TX. Submit your leads now!<div><span class="post-tag tag-announce">Announcement</span></div></div>
-          <div class="post-actions"><div class="post-action">👍 Like (12)</div><div class="post-action">💬 Comment (3)</div></div>
-        </div>
-        <div class="feed-post">
-          <div class="post-header"><div class="post-avatar" style="background:#5b7b9e;">JR</div><div><div class="post-name">Jordan Rivera · Moon</div><div class="post-time">Yesterday</div></div></div>
-          <div class="post-body">Found a great Multifamily deal in Dallas — submitted to Blue Heron. If anyone else has Multifamily leads in TX, DM me. I know who's buying.<div><span class="post-tag" style="background:#e8f5ff;color:#5b7b9e;">Moon Tip</span></div></div>
-          <div class="post-actions"><div class="post-action">👍 Like (7)</div><div class="post-action">💬 Comment (2)</div></div>
+          <div class="post-header"><div class="post-avatar" style="background:#0073e6">PS</div><div><div class="post-name">Philip Samonte · Admin</div><div class="post-time">2 hours ago</div></div></div>
+          <div class="post-body">📢 Planets are ready for Sub-To deals in AZ and TX — submit your leads!<div><span class="post-tag tag-announce">Announcement</span></div></div>
+          <div class="post-actions"><button class="post-action" onclick="like(this)">👍 Like (12)</button><button class="post-action" onclick="toggleComment(this)">💬 Comment</button></div>
+          <div class="comment-box"><input class="comment-input" placeholder="Write a comment..." onkeydown="if(event.key==='Enter'){postComment(this)}"></div>
         </div>
       </div>
     </div>
 
+    <!-- ── MOON: Submit Lead ── -->
     <div id="m-form" class="screen">
-      <div class="topbar"><div class="topbar-title">Submit a Lead (as Orbit)</div></div>
+      <div class="topbar"><div class="topbar-title">Submit a Lead <span style="font-size:12px;color:#5b7b9e;font-weight:400">(as Orbit)</span></div></div>
       <div class="content">
-        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> Moon uses the same lead submission form as an Orbit when sending leads to other Planets. Same GHL form — same layout.</div></div>
-        <div class="card" style="max-width:680px;">
-          <div class="card-title">Submit a Lead to a Planet</div>
-          <div class="card-sub">You're submitting as a Moon — sending a Multifamily lead to another Planet.</div>
-          <div class="form-step"><div class="step done">✓ Your Info</div><div class="step active">2. Property</div><div class="step todo">3. Financing</div><div class="step todo">4. Submit</div></div>
-          <div class="form-row"><div class="form-group"><label class="form-label">Property Address <span>*</span></label><input class="form-input" placeholder="123 Main St" type="text"></div><div class="form-group"><label class="form-label">City <span>*</span></label><input class="form-input" placeholder="Dallas" type="text"></div></div>
-          <div class="form-group"><label class="form-label">Financing Type <span>*</span></label><select class="form-select"><option>Sub-To</option><option selected>Seller Finance</option><option>Novation</option></select></div>
-          <div class="form-group"><label class="form-label">Preferred JV Split</label><input class="form-input" placeholder="e.g. 35% to me, 65% to Planet" type="text"></div>
-          <div class="form-group"><label class="form-label">Additional Notes</label><textarea class="form-textarea" placeholder="Any details about the seller or property..."></textarea></div>
-          <button class="form-submit">Next Step →</button>
+        <div class="card" style="max-width:680px">
+          <div class="card-title">Submit a Lead to a Planet</div><div class="card-sub">You're submitting as a Moon — sending a lead outside your niche to another Planet.</div>
+          <div class="form-step" id="mform-steps"><div class="step active">1. Property</div><div class="step todo">2. Financing</div><div class="step todo">3. Submit</div></div>
+          <div class="form-page active" id="mfp-1">
+            <div class="form-row"><div class="form-group"><label class="form-label">Property Address <span>*</span></label><input class="form-input" id="mf-addr" placeholder="123 Main St"></div><div class="form-group"><label class="form-label">City, State <span>*</span></label><input class="form-input" id="mf-city" placeholder="Dallas, TX"></div></div>
+            <div class="form-row"><div class="form-group"><label class="form-label">Seller Asking Price</label><input class="form-input" placeholder="$500,000"></div><div class="form-group"><label class="form-label">Estimated ARV</label><input class="form-input" placeholder="$620,000"></div></div>
+            <button class="form-next" onclick="mNextStep(1)">Next: Financing →</button>
+          </div>
+          <div class="form-page" id="mfp-2">
+            <div class="form-group"><label class="form-label">Financing Type</label><select class="form-select"><option>Seller Finance</option><option>Sub-To</option><option>Novation</option></select></div>
+            <div class="form-group"><label class="form-label">Preferred JV Split</label><input class="form-input" placeholder="e.g. 35% to me, 65% to Planet"></div>
+            <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" placeholder="Details about the seller or deal..."></textarea></div>
+            <button class="form-next" onclick="mNextStep(2)">Review & Submit →</button>
+          </div>
+          <div class="form-page" id="mfp-3">
+            <div style="background:#f8faff;border-radius:8px;padding:16px;margin-bottom:16px;font-size:13px;line-height:1.8"><strong>Ready to Submit?</strong><br>Address: <span id="mrev-addr">—</span><br>Your role: Moon (sending as Orbit)</div>
+            <button class="form-submit-btn" onclick="mSubmitLead()">✓ Submit Lead to Network</button>
+          </div>
+          <div class="form-page" id="mfp-confirm">
+            <div class="confirm-screen"><div class="confirm-icon">✅</div><div class="confirm-title">Lead Submitted!</div><div class="confirm-sub">We'll match this lead to a Planet and notify you within 48 hours.</div><button class="tb-btn btn-primary" onclick="mResetForm()">Submit Another</button></div>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- ── MOON: My Sent Leads ── -->
     <div id="m-leads" class="screen">
-      <div class="topbar"><div class="topbar-title">My Sent Leads (as Orbit)</div><button class="topbar-btn btn-primary">+ Submit New Lead</button></div>
+      <div class="topbar"><div class="topbar-title">My Sent Leads <span style="font-size:12px;color:#5b7b9e;font-weight:400">(as Orbit)</span></div><button class="tb-btn btn-primary" onclick="nav(null,'m-form')">+ Submit New Lead</button></div>
       <div class="content">
-        <div class="note"><div>⚠️</div><div><strong>VA Note:</strong> Moon's outgoing leads — leads Jordan submitted to other Planets as an Orbit. Separate from the incoming inbox.</div></div>
         <div class="card">
-          <div class="card-title">Leads You Submitted to Planets</div>
-          <div class="card-sub">3 active</div>
-          <table>
-            <tr><th>Address</th><th>Type</th><th>Sent To</th><th>Date</th><th>Status</th></tr>
-            <tr><td><strong>7734 Sunrise Blvd, Scottsdale AZ</strong></td><td><span class="k-tag k-subto">Sub-To</span></td><td>Blue Heron Group</td><td>May 8</td><td><span class="status-badge s-review">Under Review</span></td></tr>
-            <tr><td><strong>200 Oak St, Dallas TX</strong></td><td><span class="k-tag k-sf">Seller Finance</span></td><td>Pinegrove Realty</td><td>May 5</td><td><span class="status-badge s-matched">JV Signed</span></td></tr>
-            <tr><td><strong>88 Riverside Ave, Tampa FL</strong></td><td><span class="k-tag k-nov">Novation</span></td><td>Ironvine Capital</td><td>May 1</td><td><span class="status-badge s-new">Sent</span></td></tr>
+          <div class="card-title">Leads You Sent to Planets</div>
+          <table><tr><th>Property</th><th>Type</th><th>Sent To</th><th>Date</th><th>Status</th></tr>
+            <tr style="cursor:pointer" onclick="openLeadModal('7734 Sunrise Blvd, Scottsdale AZ','Sent to Blue Heron · May 8','Sub-To')"><td><strong>7734 Sunrise Blvd, Scottsdale AZ</strong></td><td><span class="k-tag k-subto">Sub-To</span></td><td>Blue Heron Group</td><td>May 8</td><td><span class="status-badge s-review">Under Review</span></td></tr>
+            <tr style="cursor:pointer" onclick="openLeadModal('200 Oak St, Dallas TX','JV Signed · May 5','Seller Finance')"><td><strong>200 Oak St, Dallas TX</strong></td><td><span class="k-tag k-sf">Seller Finance</span></td><td>Pinegrove Realty</td><td>May 5</td><td><span class="status-badge s-jv">JV Signed</span></td></tr>
+            <tr style="cursor:pointer" onclick="openLeadModal('88 Riverside Ave, Tampa FL','Sent · May 1','Novation')"><td><strong>88 Riverside Ave, Tampa FL</strong></td><td><span class="k-tag k-nov">Novation</span></td><td>Ironvine Capital</td><td>May 1</td><td><span class="status-badge s-new">Sent</span></td></tr>
           </table>
         </div>
       </div>
     </div>
 
-  </div><!-- end main -->
-</div><!-- end shell -->
+  </div>
+</div>
 
 <script>
-  let currentRole = 'orbit';
-  let currentScreen = 'o-dashboard';
+// ── Nav & Role ──
+function nav(el, screenId) {
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const s = document.getElementById(screenId);
+  if (s) s.classList.add('active');
+}
 
-  function switchRole(role) {
-    currentRole = role;
-    document.querySelectorAll('.role-btn').forEach(b => {
-      b.className = 'role-btn';
-    });
-    event.target.className = 'role-btn active-' + role;
+function switchRole(role) {
+  ['orbit','planet','moon'].forEach(r => {
+    document.getElementById('sb-'+r).style.display = r===role ? 'flex' : 'none';
+    document.getElementById('rb-'+r).className = 'role-btn' + (r===role ? ' active-'+r : '');
+  });
+  const defaults = {orbit:'o-dashboard', planet:'p-dashboard', moon:'m-dashboard'};
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(defaults[role]).classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  const sb = document.getElementById('sb-'+role);
+  const first = sb.querySelector('.sb-item');
+  if (first) first.classList.add('active');
+}
 
-    // Hide all sidebars
-    document.getElementById('sidebar-orbit').style.display = 'none';
-    document.getElementById('sidebar-planet').style.display = 'none';
-    document.getElementById('sidebar-moon').style.display = 'none';
-    document.getElementById('sidebar-' + role).style.display = 'flex';
+// ── Toast ──
+function toast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 3000);
+}
 
-    // Switch to default screen for role
-    const defaults = { orbit: 'o-dashboard', planet: 'p-dashboard', moon: 'm-dashboard' };
-    showScreen(defaults[role]);
+// ── Modals ──
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-    // Reset nav active states
-    document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
-    const sidebar = document.getElementById('sidebar-' + role);
-    if (sidebar) {
-      const first = sidebar.querySelector('.sb-item');
-      if (first) first.classList.add('active');
+function openLeadModal(addr, sub, type) {
+  document.getElementById('lead-modal-addr').textContent = addr;
+  document.getElementById('lead-modal-sub').textContent = sub;
+  document.getElementById('lead-modal-type').textContent = type;
+  openModal('lead-modal');
+}
+
+function acceptFromModal() {
+  closeModal('lead-modal');
+  toast('Lead accepted and locked to you. Orbit has been notified.', 'success');
+}
+
+function openJVModal(addr, type, orbit) {
+  document.getElementById('jv-address').textContent = addr;
+  document.getElementById('jv-type').textContent = type;
+  document.getElementById('jv-orbit').textContent = orbit;
+  openModal('jv-modal');
+}
+
+function sendJV() {
+  closeModal('jv-modal');
+  toast('✉ JV Agreement sent to both parties for e-signature!', 'success');
+}
+
+// ── Accept / Pass Leads ──
+function acceptLead(rowId, addr, orbit) {
+  const row = document.getElementById(rowId);
+  if (!row) { toast('Lead accepted! ' + addr + ' locked to you.', 'success'); return; }
+  // Update status badge
+  const badge = row.querySelector('.status-badge');
+  if (badge) { badge.className = 'status-badge s-matched'; badge.textContent = 'Accepted ✓'; }
+  // Replace buttons with Send JV
+  const td = row.querySelector('td:last-child');
+  if (td) td.innerHTML = '<button class="ab ab-jv" onclick="openJVModal(\''+addr+'\',\'Sub-To\',\''+orbit+'\')">Send JV</button>';
+  // Update badge count
+  const inboxBadge = document.getElementById('p-inbox-badge');
+  if (inboxBadge) { let n = parseInt(inboxBadge.textContent)||0; if(n>0){inboxBadge.textContent=n-1;} }
+  toast('✅ Lead accepted and locked to you. ' + orbit + ' has been notified.', 'success');
+}
+
+function passLead(rowId) {
+  const row = document.getElementById(rowId);
+  if (!row) { toast('Lead passed. It has been released back to the Orbit.', ''); return; }
+  const badge = row.querySelector('.status-badge');
+  if (badge) { badge.className = 'status-badge s-passed'; badge.textContent = 'Passed'; }
+  const td = row.querySelector('td:last-child');
+  if (td) td.innerHTML = '<span style="font-size:11px;color:#aaa">Released to Orbit</span>';
+  row.style.opacity = '0.5';
+  toast('Lead passed. It has been released back to the Orbit to resubmit.', 'warn');
+}
+
+// ── Buy Box Save ──
+function saveBuyBox() {
+  toast('✅ Buy Box saved! Orbits will be matched to your updated criteria.', 'success');
+}
+
+// ── Community ──
+function like(btn) {
+  const match = btn.textContent.match(/\((\d+)\)/);
+  if (match) {
+    const n = parseInt(match[1]) + 1;
+    btn.textContent = btn.textContent.replace(/\(\d+\)/, '(' + n + ')');
+    btn.style.color = '#0073e6';
+  }
+}
+
+function toggleComment(btn) {
+  const box = btn.closest('.post-actions').nextElementSibling;
+  if (box && box.classList.contains('comment-box')) {
+    box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    if (box.style.display === 'block') box.querySelector('input').focus();
+  }
+}
+
+function postComment(input) {
+  if (!input.value.trim()) return;
+  toast('Comment posted!', 'success');
+  input.value = '';
+  input.closest('.comment-box').style.display = 'none';
+}
+
+function submitPost() {
+  const content = document.getElementById('post-content').value.trim();
+  if (!content) { toast('Please write something first.', 'warn'); return; }
+  const areas = ['new-posts-area','planet-new-posts'];
+  areas.forEach(id => {
+    const area = document.getElementById(id);
+    if (area) {
+      const post = document.createElement('div');
+      post.className = 'feed-post';
+      post.style.borderLeft = '3px solid #0073e6';
+      post.innerHTML = '<div class="post-header"><div class="post-avatar" style="background:#5b7b9e">You</div><div><div class="post-name">You · Just now</div></div></div><div class="post-body">'+content+'</div><div class="post-actions"><button class="post-action" onclick="like(this)">👍 Like (0)</button></div>';
+      area.prepend(post);
     }
+  });
+  document.getElementById('post-content').value = '';
+  closeModal('post-modal');
+  toast('✅ Post published to community!', 'success');
+}
+
+// ── Orbit Lead Form (multi-step) ──
+const FORM_STEPS = 5;
+let currentStep = 1;
+
+function nextStep(step) {
+  const validators = {
+    1: () => document.getElementById('f-addr').value && document.getElementById('f-city').value && document.getElementById('f-state').value,
+    2: () => document.getElementById('f-type').value,
+    3: () => document.getElementById('f-motiv').value,
+    4: () => document.getElementById('f-split').value
+  };
+  if (validators[step] && !validators[step]()) { toast('Please fill in all required fields.', 'warn'); return; }
+
+  // Show Sub-To fields if relevant
+  if (step === 1) {
+    const sel = document.getElementById('f-type');
+    if (sel) sel.addEventListener('change', function(){ document.getElementById('subto-fields').style.display = this.value.includes('Sub-To') ? 'block' : 'none'; });
   }
 
-  function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    const el = document.getElementById(id);
-    if (el) el.classList.add('active');
-    currentScreen = id;
+  // Update review on step 4
+  if (step === 4) {
+    const addr = document.getElementById('f-addr').value + ', ' + document.getElementById('f-city').value + ' ' + document.getElementById('f-state').value;
+    document.getElementById('rev-addr').textContent = addr || '—';
+    document.getElementById('rev-type').textContent = document.getElementById('f-type').value || '—';
+    document.getElementById('rev-motiv').textContent = document.getElementById('f-motiv').value || '—';
+    document.getElementById('rev-split').textContent = document.getElementById('f-split').value || '—';
   }
 
-  function switchScreen(id, navEl) {
-    showScreen(id);
-    document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
-    if (navEl) navEl.classList.add('active');
-  }
+  document.getElementById('fp-'+step).classList.remove('active');
+  document.getElementById('fp-'+(step+1)).classList.add('active');
+  currentStep = step + 1;
+
+  const steps = document.getElementById('form-steps').querySelectorAll('.step');
+  steps.forEach((s, i) => {
+    s.className = 'step ' + (i < step ? 'done' : i === step ? 'active' : 'todo');
+  });
+}
+
+function submitLead() {
+  document.getElementById('fp-5').classList.remove('active');
+  document.getElementById('fp-confirm').classList.add('active');
+  document.getElementById('form-steps').querySelectorAll('.step').forEach(s => s.className = 'step done');
+  toast('✅ Lead submitted! We\'ll match it within 48 hours.', 'success');
+}
+
+function resetForm() {
+  document.querySelectorAll('.form-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('fp-1').classList.add('active');
+  document.querySelectorAll('#form-steps .step').forEach((s,i) => s.className = 'step '+(i===0?'active':'todo'));
+  currentStep = 1;
+  document.getElementById('form-steps').querySelectorAll('.step')[0].className = 'step active';
+}
+
+// ── Moon Lead Form ──
+let mStep = 1;
+function mNextStep(step) {
+  if (step === 1 && !document.getElementById('mf-addr').value) { toast('Please enter a property address.', 'warn'); return; }
+  if (step === 2) { document.getElementById('mrev-addr').textContent = (document.getElementById('mf-addr').value || '—') + ', ' + (document.getElementById('mf-city').value || ''); }
+  document.getElementById('mfp-'+step).classList.remove('active');
+  document.getElementById('mfp-'+(step+1)).classList.add('active');
+  const steps = document.getElementById('mform-steps').querySelectorAll('.step');
+  steps.forEach((s,i) => { s.className = 'step '+(i<step?'done':i===step?'active':'todo'); });
+}
+function mSubmitLead() {
+  document.getElementById('mfp-3').classList.remove('active');
+  document.getElementById('mfp-confirm').classList.add('active');
+  toast('✅ Lead submitted!', 'success');
+}
+function mResetForm() {
+  document.querySelectorAll('[id^="mfp-"]').forEach(p => p.classList.remove('active'));
+  document.getElementById('mfp-1').classList.add('active');
+  document.getElementById('mform-steps').querySelectorAll('.step').forEach((s,i)=>s.className='step '+(i===0?'active':'todo'));
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); }));
 </script>
 </body>
 </html>
