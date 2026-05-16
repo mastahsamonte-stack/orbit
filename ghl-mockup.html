@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GHL Client Portal — Orbit Network (Realistic Mockup)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f4f6f8; color: #1a1a1a; font-size: 14px; }
+
+  /* ── Layout ── */
+  .shell { display: flex; height: 100vh; overflow: hidden; }
+  .sidebar { width: 240px; background: #fff; border-right: 1px solid #e0e0e0; display: flex; flex-direction: column; flex-shrink: 0; }
+  .main { flex: 1; overflow-y: auto; background: #f4f6f8; }
+
+  /* ── Sidebar ── */
+  .sb-brand { padding: 18px 16px 14px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 10px; }
+  .sb-logo { width: 32px; height: 32px; background: #0073e6; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 13px; }
+  .sb-brand-name { font-weight: 700; font-size: 14px; color: #111; }
+  .sb-brand-sub { font-size: 10px; color: #888; }
+
+  .sb-user { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 10px; }
+  .sb-avatar { width: 34px; height: 34px; border-radius: 50%; background: #6c3fc5; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .sb-user-name { font-weight: 600; font-size: 13px; }
+  .sb-user-role { font-size: 11px; color: #888; margin-top: 1px; }
+
+  .sb-nav { padding: 10px 8px; flex: 1; }
+  .sb-section { font-size: 10px; color: #aaa; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 8px 4px; }
+  .sb-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 6px; cursor: pointer; color: #444; font-size: 13px; transition: background 0.15s; margin-bottom: 1px; }
+  .sb-item:hover { background: #f0f4ff; color: #0073e6; }
+  .sb-item.active { background: #e8f0ff; color: #0073e6; font-weight: 600; }
+  .sb-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .sb-badge { margin-left: auto; background: #0073e6; color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 999px; font-weight: 700; }
+  .sb-badge.red { background: #e53e3e; }
+
+  .sb-footer { padding: 12px 16px; border-top: 1px solid #f0f0f0; font-size: 11px; color: #aaa; }
+
+  /* ── Topbar ── */
+  .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 24px; display: flex; align-items: center; gap: 12px; }
+  .topbar-title { font-weight: 700; font-size: 16px; flex: 1; }
+  .topbar-btn { padding: 7px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
+  .btn-primary { background: #0073e6; color: #fff; }
+  .btn-primary:hover { background: #005cbf; }
+  .btn-ghost { background: transparent; border: 1px solid #ddd; color: #444; }
+
+  /* ── Tab nav ── */
+  .view-tabs { display: flex; gap: 4px; padding: 0 24px; background: #fff; border-bottom: 1px solid #e0e0e0; }
+  .vtab { padding: 11px 16px; font-size: 13px; font-weight: 500; color: #666; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .vtab.active { color: #0073e6; border-bottom-color: #0073e6; font-weight: 600; }
+
+  /* ── Content ── */
+  .content { padding: 24px; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── Cards ── */
+  .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+  .card-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .card-sub { font-size: 12px; color: #888; margin-bottom: 14px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .stat-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; }
+  .stat-label { font-size: 11px; color: #888; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .stat-val { font-size: 24px; font-weight: 700; color: #111; }
+  .stat-delta { font-size: 11px; color: #16a34a; margin-top: 2px; }
+
+  /* ── Community Feed ── */
+  .feed-post { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+  .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .post-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .post-name { font-weight: 600; font-size: 13px; }
+  .post-time { font-size: 11px; color: #aaa; }
+  .post-body { font-size: 13px; color: #333; line-height: 1.5; }
+  .post-tag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 600; margin-right: 4px; margin-top: 8px; }
+  .tag-announce { background: #e8f0ff; color: #0073e6; }
+  .tag-win { background: #e6f9f0; color: #16a34a; }
+  .tag-tip { background: #fff7e6; color: #b45309; }
+  .post-actions { display: flex; gap: 16px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #f0f0f0; }
+  .post-action { font-size: 12px; color: #888; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+  .post-action:hover { color: #0073e6; }
+
+  /* ── Form ── */
+  .form-group { margin-bottom: 16px; }
+  .form-label { font-size: 12px; font-weight: 600; color: #444; margin-bottom: 5px; display: block; }
+  .form-label span { color: #e53e3e; }
+  .form-input { width: 100%; padding: 9px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; color: #111; outline: none; transition: border 0.15s; }
+  .form-input:focus { border-color: #0073e6; box-shadow: 0 0 0 3px rgba(0,115,230,0.1); }
+  .form-select { width: 100%; padding: 9px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; color: #111; background: #fff; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-textarea { width: 100%; padding: 9px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; color: #111; min-height: 80px; resize: vertical; }
+  .form-submit { background: #0073e6; color: #fff; border: none; padding: 10px 24px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 6px; }
+  .form-submit:hover { background: #005cbf; }
+  .form-step { display: flex; gap: 8px; margin-bottom: 20px; }
+  .step { padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .step.done { background: #16a34a; color: #fff; }
+  .step.active { background: #0073e6; color: #fff; }
+  .step.todo { background: #f0f0f0; color: #aaa; }
+
+  /* ── Pipeline ── */
+  .kanban { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 8px; }
+  .kol { min-width: 220px; background: #f0f4f8; border-radius: 8px; padding: 12px; flex-shrink: 0; }
+  .kol-head { font-size: 12px; font-weight: 700; color: #555; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+  .kol-count { background: #ddd; border-radius: 999px; padding: 1px 7px; font-size: 10px; color: #666; }
+  .k-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 12px; margin-bottom: 8px; cursor: pointer; }
+  .k-card:hover { border-color: #0073e6; box-shadow: 0 2px 8px rgba(0,115,230,0.08); }
+  .k-addr { font-weight: 600; font-size: 12px; margin-bottom: 4px; }
+  .k-meta { font-size: 11px; color: #888; margin-bottom: 8px; }
+  .k-tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+  .k-subto { background: #e8f0ff; color: #0073e6; }
+  .k-sf { background: #fff0e6; color: #b45309; }
+  .k-nov { background: #f0e8ff; color: #6c3fc5; }
+
+  /* ── Note banner ── */
+  .note { background: #fff8e6; border: 1px solid #fbbf24; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; color: #78350f; display: flex; gap: 10px; align-items: flex-start; }
+  .note strong { color: #92400e; }
+
+  /* ── GHL watermark feel ── */
+  .ghl-bar { background: #1a1a2e; color: #fff; font-size: 11px; padding: 4px 16px; text-align: center; letter-spacing: 0.03em; }
+
+  /* ── Inbox table ── */
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 11px; font-weight: 600; color: #888; padding: 8px 12px; border-bottom: 2px solid #eee; text-transform: uppercase; letter-spacing: 0.04em; }
+  td { padding: 12px; border-bottom: 1px solid #f0f0f0; font-size: 13px; vertical-align: middle; }
+  tr:hover td { background: #f8faff; }
+  .status-badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .s-new { background: #e8f0ff; color: #0073e6; }
+  .s-review { background: #fff7e6; color: #b45309; }
+  .s-matched { background: #e6f9f0; color: #16a34a; }
+</style>
+</head>
+<body>
+
+<div class="ghl-bar">This is a realistic mockup of what your GHL Client Portal will look like — not the custom-coded demo</div>
+
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-logo">O</div>
+      <div>
+        <div class="sb-brand-name">Orbit Network</div>
+        <div class="sb-brand-sub">Powered by DoneRN.com</div>
+      </div>
+    </div>
+
+    <div class="sb-user">
+      <div class="sb-avatar">AQ</div>
+      <div>
+        <div class="sb-user-name">Avery Quinn</div>
+        <div class="sb-user-role">Orbit Member</div>
+      </div>
+    </div>
+
+    <div class="sb-nav">
+      <div class="sb-section">Menu</div>
+      <div class="sb-item active" onclick="switchNav(this,'dashboard')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+      <div class="sb-item" onclick="switchNav(this,'community')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5"/><circle cx="12" cy="7" r="4"/></svg>
+        Orbit Hub
+        <span class="sb-badge red">3</span>
+      </div>
+      <div class="sb-item" onclick="switchNav(this,'form')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Submit a Lead
+      </div>
+      <div class="sb-item" onclick="switchNav(this,'inbox')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0H4"/></svg>
+        My Leads
+        <span class="sb-badge">7</span>
+      </div>
+      <div class="sb-item" onclick="switchNav(this,'pipeline')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"/></svg>
+        Pipeline
+      </div>
+    </div>
+
+    <div class="sb-footer">© 2026 The Prime Strategy</div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div id="screen-dashboard" class="screen active">
+      <div class="topbar">
+        <div class="topbar-title">Dashboard</div>
+        <button class="topbar-btn btn-primary" onclick="switchScreen('form')">+ Submit a Lead</button>
+      </div>
+      <div class="content">
+        <div class="note">
+          <div>⚠️</div>
+          <div><strong>VA Note:</strong> This is what your GHL Client Portal dashboard will actually look like. No custom sidebar switcher, no purple theme, no card animations — standard GHL layout with your logo and brand color applied.</div>
+        </div>
+        <div class="grid-3">
+          <div class="stat-card">
+            <div class="stat-label">Leads Sent · 30d</div>
+            <div class="stat-val">12</div>
+            <div class="stat-delta">↑ +3 from last month</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Active Deals</div>
+            <div class="stat-val">7</div>
+            <div class="stat-delta" style="color:#b45309;">2 need your reply</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Earned · YTD</div>
+            <div class="stat-val">$42,600</div>
+            <div class="stat-delta">↑ +1 closed this week</div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Recent Activity</div>
+            <div class="card-sub">Your last 5 lead actions</div>
+            <table>
+              <tr><th>Address</th><th>Planet</th><th>Status</th></tr>
+              <tr><td>1842 W. Cactus Rd</td><td>Aurora Holdings</td><td><span class="status-badge s-review">Under Review</span></td></tr>
+              <tr><td>903 Elm St</td><td>Blue Heron Group</td><td><span class="status-badge s-matched">JV Signed</span></td></tr>
+              <tr><td>2210 N. 32nd St</td><td>Pinegrove Realty</td><td><span class="status-badge s-new">Sent</span></td></tr>
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-title">Orbit Hub — Recent Posts</div>
+            <div class="card-sub">Latest from the community</div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div style="padding:10px;background:#f8faff;border-radius:6px;font-size:12px;">
+                <strong>Philip S.</strong> · 2h ago<br>
+                <span style="color:#444;">New Sub-To leads coming in from AZ — Planets please update your buy boxes!</span>
+              </div>
+              <div style="padding:10px;background:#f8faff;border-radius:6px;font-size:12px;">
+                <strong>Reed P.</strong> · 5h ago<br>
+                <span style="color:#444;">Just closed my first JV deal — $14,200 earned. Shoutout to Aurora Holdings 🙌</span>
+              </div>
+              <div style="padding:10px;background:#f8faff;border-radius:6px;font-size:12px;">
+                <strong>Philip S.</strong> · 1d ago<br>
+                <span style="color:#444;">Seller script for Sub-To conversations now in the Orbit Hub resources tab.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMMUNITY -->
+    <div id="screen-community" class="screen">
+      <div class="topbar">
+        <div class="topbar-title">Orbit Hub — Community</div>
+        <button class="topbar-btn btn-primary">+ New Post</button>
+        <button class="topbar-btn btn-ghost">Members</button>
+      </div>
+      <div class="view-tabs">
+        <div class="vtab active">Feed</div>
+        <div class="vtab">Announcements</div>
+        <div class="vtab">Resources</div>
+        <div class="vtab">Members (74)</div>
+      </div>
+      <div class="content">
+        <div class="note">
+          <div>⚠️</div>
+          <div><strong>VA Note:</strong> GHL Communities look like this — a social feed, not a custom-designed portal. Think Facebook Groups inside your branded portal. Layout is fixed by GHL; only your logo, colors, and content are customizable.</div>
+        </div>
+
+        <div class="feed-post">
+          <div class="post-header">
+            <div class="post-avatar" style="background:#0073e6;">PS</div>
+            <div>
+              <div class="post-name">Philip Samonte · Admin</div>
+              <div class="post-time">2 hours ago</div>
+            </div>
+          </div>
+          <div class="post-body">
+            📢 <strong>Planets are looking for Sub-To and Seller Finance deals in AZ and TX.</strong> If you have motivated sellers in those markets, submit your lead now — several Planets are ready to move fast this week.
+            <div><span class="post-tag tag-announce">Announcement</span></div>
+          </div>
+          <div class="post-actions">
+            <div class="post-action">👍 Like (12)</div>
+            <div class="post-action">💬 Comment (3)</div>
+            <div class="post-action">🔗 Share</div>
+          </div>
+        </div>
+
+        <div class="feed-post">
+          <div class="post-header">
+            <div class="post-avatar" style="background:#16a34a;">RP</div>
+            <div>
+              <div class="post-name">Reed Patel · Orbit</div>
+              <div class="post-time">5 hours ago</div>
+            </div>
+          </div>
+          <div class="post-body">
+            Just closed my first deal through the network! Sub-To in Tucson, AZ. Earned $14,200 on the JV split. Huge thanks to Aurora Holdings for moving fast. If you're sitting on leads — submit them. This works. 🔥
+            <div><span class="post-tag tag-win">Win</span></div>
+          </div>
+          <div class="post-actions">
+            <div class="post-action">👍 Like (31)</div>
+            <div class="post-action">💬 Comment (8)</div>
+            <div class="post-action">🔗 Share</div>
+          </div>
+        </div>
+
+        <div class="feed-post">
+          <div class="post-header">
+            <div class="post-avatar" style="background:#b45309;">IB</div>
+            <div>
+              <div class="post-name">Imani Brooks · Orbit</div>
+              <div class="post-time">Yesterday</div>
+            </div>
+          </div>
+          <div class="post-body">
+            Quick tip: When talking to sellers about Sub-To, lead with "We can take over your payments and save your credit." Works way better than leading with price. Try it this week.
+            <div><span class="post-tag tag-tip">Tip</span></div>
+          </div>
+          <div class="post-actions">
+            <div class="post-action">👍 Like (18)</div>
+            <div class="post-action">💬 Comment (5)</div>
+            <div class="post-action">🔗 Share</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBMIT LEAD FORM -->
+    <div id="screen-form" class="screen">
+      <div class="topbar">
+        <div class="topbar-title">Submit a Lead</div>
+      </div>
+      <div class="content">
+        <div class="note">
+          <div>⚠️</div>
+          <div><strong>VA Note:</strong> GHL forms look like this — standard web form inputs. No multi-step wizard animation, no progress bar styling like the custom demo. The VA can add a progress indicator using GHL's multi-step form feature but it will be basic.</div>
+        </div>
+
+        <div class="card" style="max-width:680px;">
+          <div class="card-title">Submit a Motivated Seller Lead</div>
+          <div class="card-sub">Fill out all required fields. We'll match your lead to a Planet within 48 hours.</div>
+
+          <div class="form-step">
+            <div class="step done">✓ Your Info</div>
+            <div class="step active">2. Property</div>
+            <div class="step todo">3. Financing</div>
+            <div class="step todo">4. Details</div>
+            <div class="step todo">5. Submit</div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Property Address <span>*</span></label>
+              <input class="form-input" placeholder="123 Main St" type="text">
+            </div>
+            <div class="form-group">
+              <label class="form-label">City <span>*</span></label>
+              <input class="form-input" placeholder="Phoenix" type="text">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">State <span>*</span></label>
+              <select class="form-select">
+                <option>Select state...</option>
+                <option>AZ</option><option>TX</option><option>FL</option><option>CA</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Zip Code <span>*</span></label>
+              <input class="form-input" placeholder="85001" type="text">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Seller Asking Price <span>*</span></label>
+              <input class="form-input" placeholder="$280,000" type="text">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estimated ARV <span>*</span></label>
+              <input class="form-input" placeholder="$340,000" type="text">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Financing Type <span>*</span></label>
+            <select class="form-select">
+              <option>Select financing type...</option>
+              <option>Sub-To (Subject-To)</option>
+              <option>Seller Finance</option>
+              <option>Wrap-Around</option>
+              <option>Novation</option>
+              <option>Hybrid / Not Sure</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Seller Motivation <span>*</span></label>
+            <select class="form-select">
+              <option>Select motivation...</option>
+              <option>Foreclosure / Pre-Foreclosure</option>
+              <option>Divorce</option>
+              <option>Relocation</option>
+              <option>Financial Hardship</option>
+              <option>Inherited Property</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Additional Notes</label>
+            <textarea class="form-textarea" placeholder="Any other details about the seller or property..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Preferred JV Split</label>
+            <input class="form-input" placeholder="e.g. 30% to me, 70% to Planet" type="text">
+          </div>
+          <button class="form-submit">Next Step →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY LEADS INBOX -->
+    <div id="screen-inbox" class="screen">
+      <div class="topbar">
+        <div class="topbar-title">My Leads</div>
+        <button class="topbar-btn btn-primary" onclick="switchScreen('form')">+ New Lead</button>
+      </div>
+      <div class="content">
+        <div class="note">
+          <div>⚠️</div>
+          <div><strong>VA Note:</strong> GHL does not have a built-in "My Leads" table for members. This view would be replicated using a GHL Community post feed filtered by tag, or a custom iframe. It will be a list/feed view — not a sortable data table like the custom demo.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Your Submitted Leads</div>
+          <div class="card-sub">7 active leads · 1 closed</div>
+          <table>
+            <tr>
+              <th>Property</th>
+              <th>Financing</th>
+              <th>Sent To</th>
+              <th>Submitted</th>
+              <th>Status</th>
+            </tr>
+            <tr>
+              <td><strong>1842 W. Cactus Rd, Phoenix AZ</strong><br><span style="font-size:11px;color:#888;">Equity: ~$62K</span></td>
+              <td><span class="k-tag k-subto">Sub-To</span></td>
+              <td>Aurora Holdings</td>
+              <td>May 10</td>
+              <td><span class="status-badge s-review">Under Review</span></td>
+            </tr>
+            <tr>
+              <td><strong>903 Elm St, Tucson AZ</strong><br><span style="font-size:11px;color:#888;">Equity: ~$44K</span></td>
+              <td><span class="k-tag k-sf">Seller Finance</span></td>
+              <td>Blue Heron Group</td>
+              <td>May 6</td>
+              <td><span class="status-badge s-matched">JV Signed</span></td>
+            </tr>
+            <tr>
+              <td><strong>2210 N. 32nd St, Las Vegas NV</strong><br><span style="font-size:11px;color:#888;">Equity: ~$88K</span></td>
+              <td><span class="k-tag k-nov">Novation</span></td>
+              <td>Pinegrove Realty</td>
+              <td>May 3</td>
+              <td><span class="status-badge s-new">Sent</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PIPELINE -->
+    <div id="screen-pipeline" class="screen">
+      <div class="topbar">
+        <div class="topbar-title">Lead Pipeline</div>
+      </div>
+      <div class="content">
+        <div class="note">
+          <div>⚠️</div>
+          <div><strong>VA Note:</strong> GHL's Pipeline (Kanban board) is an internal tool — members cannot see it. This is what YOU and your team see in the backend to manage all leads. It looks like Trello. The custom demo's Pipeline screen was a member-facing view; in GHL that doesn't exist natively.</div>
+        </div>
+        <div class="kanban">
+          <div class="kol">
+            <div class="kol-head">New Lead <span class="kol-count">4</span></div>
+            <div class="k-card">
+              <div class="k-addr">1842 W. Cactus Rd</div>
+              <div class="k-meta">Phoenix, AZ · Avery Q.</div>
+              <span class="k-tag k-subto">Sub-To</span>
+            </div>
+            <div class="k-card">
+              <div class="k-addr">7734 Sunrise Blvd</div>
+              <div class="k-meta">Scottsdale, AZ · Reed P.</div>
+              <span class="k-tag k-sf">Seller Finance</span>
+            </div>
+          </div>
+          <div class="kol">
+            <div class="kol-head">Under Review <span class="kol-count">3</span></div>
+            <div class="k-card">
+              <div class="k-addr">903 Elm St</div>
+              <div class="k-meta">Tucson, AZ · Imani B.</div>
+              <span class="k-tag k-sf">Seller Finance</span>
+            </div>
+          </div>
+          <div class="kol">
+            <div class="kol-head">Planet Matched <span class="kol-count">2</span></div>
+            <div class="k-card">
+              <div class="k-addr">2210 N. 32nd St</div>
+              <div class="k-meta">Las Vegas, NV · Theo M.</div>
+              <span class="k-tag k-nov">Novation</span>
+            </div>
+          </div>
+          <div class="kol">
+            <div class="kol-head">JV Sent <span class="kol-count">1</span></div>
+            <div class="k-card">
+              <div class="k-addr">415 Desert Rose Ln</div>
+              <div class="k-meta">Mesa, AZ · Avery Q.</div>
+              <span class="k-tag k-subto">Sub-To</span>
+            </div>
+          </div>
+          <div class="kol">
+            <div class="kol-head">JV Signed <span class="kol-count">1</span></div>
+            <div class="k-card">
+              <div class="k-addr">88 Palo Verde Dr</div>
+              <div class="k-meta">Chandler, AZ · Reed P.</div>
+              <span class="k-tag k-sf">Seller Finance</span>
+            </div>
+          </div>
+          <div class="kol">
+            <div class="kol-head">Deal Closed <span class="kol-count">2</span></div>
+            <div class="k-card">
+              <div class="k-addr">521 Ironwood Ave</div>
+              <div class="k-meta">Glendale, AZ · Imani B.</div>
+              <span class="k-tag k-subto">Sub-To</span>
+            </div>
+          </div>
+          <div class="kol">
+            <div class="kol-head">Dead Lead <span class="kol-count">1</span></div>
+            <div class="k-card">
+              <div class="k-addr">302 Coyote Trail</div>
+              <div class="k-meta">Tempe, AZ · Theo M.</div>
+              <span class="k-tag" style="background:#f0f0f0;color:#888;">Declined</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main -->
+</div><!-- end shell -->
+
+<script>
+  function switchNav(el, screen) {
+    document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    switchScreen(screen);
+  }
+  function switchScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    document.querySelectorAll('.sb-item').forEach(i => {
+      if (i.getAttribute('onclick') && i.getAttribute('onclick').includes("'" + id + "'")) {
+        i.classList.add('active');
+      }
+    });
+  }
+</script>
+</body>
+</html>
