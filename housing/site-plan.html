@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neurodivergent Community — Site & House Plans</title>
+<style>
+  :root{
+    --bg:#f4f1ea; --ink:#2c3331; --soft:#5d6b66; --line:#c9c2b4;
+    --house:#dfe7e1; --house-stroke:#8aa595; --commons:#e7efe2; --garden:#cfe0c6;
+    --hub:#e9ddc9; --hub-stroke:#c4a980; --pod-a:#dce8ef; --pod-b:#efe4dc;
+    --core:#f0ece2; --quiet:#e8e0ef; --staff:#f6ddd6; --path:#ece7da; --park:#e3e0d6;
+    --accent:#6f8f7e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;padding:0 0 60px}
+  header{padding:38px 24px 14px;text-align:center;max-width:1000px;margin:0 auto}
+  h1{margin:0 0 6px;font-size:1.9rem;letter-spacing:-.5px}
+  .sub{color:var(--soft);font-size:1rem;margin:0}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0 0}
+  .chip{background:#fff;border:1px solid var(--line);border-radius:999px;
+    padding:5px 13px;font-size:.82rem;color:var(--soft)}
+  section{max-width:1000px;margin:34px auto 0;padding:0 24px}
+  h2{font-size:1.25rem;border-bottom:2px solid var(--line);padding-bottom:8px;margin:0 0 6px}
+  .cap{color:var(--soft);font-size:.9rem;margin:0 0 16px}
+  .frame{background:#fffdf8;border:1px solid var(--line);border-radius:14px;
+    padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  svg{width:100%;height:auto;display:block}
+  .lbl{font:600 13px/1 -apple-system,Segoe UI,Roboto,sans-serif;fill:var(--ink)}
+  .lbl-sm{font:500 10.5px/1 -apple-system,Segoe UI,Roboto,sans-serif;fill:var(--soft)}
+  .lbl-w{font:600 12px/1 -apple-system,Segoe UI,Roboto,sans-serif;fill:#fff}
+  .tag{font:700 11px/1 -apple-system,Segoe UI,Roboto,sans-serif;fill:var(--accent);letter-spacing:.5px}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:.83rem;color:var(--soft)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .sw{width:14px;height:14px;border-radius:3px;border:1px solid rgba(0,0,0,.12);display:inline-block}
+  .note{background:#fff;border-left:4px solid var(--accent);border-radius:0 10px 10px 0;
+    padding:13px 16px;margin-top:18px;font-size:.92rem;color:var(--soft)}
+  footer{max-width:1000px;margin:40px auto 0;padding:0 24px;color:var(--soft);font-size:.8rem;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <h1>Neurodivergent Community Living</h1>
+  <p class="sub">Concept site &amp; house plans · pocket-neighborhood cluster</p>
+  <div class="meta">
+    <span class="chip">📍 New Jersey</span>
+    <span class="chip">🧩 High / behavioral support</span>
+    <span class="chip">🏠 4 houses · 8–12 residents each</span>
+    <span class="chip">👥 32–48 residents total</span>
+  </div>
+</header>
+
+<!-- ================= SITE PLAN ================= -->
+<section>
+  <h2>1 · Site plan — four houses around a shared commons</h2>
+  <p class="cap">Homes face <em>inward</em> onto a car-free green. Parking &amp; service sit at the edges; one secure landscaped perimeter wraps the whole campus so residents can roam the interior freely.</p>
+  <div class="frame">
+  <svg viewBox="0 0 760 620" role="img" aria-label="Site plan">
+    <!-- perimeter -->
+    <rect x="14" y="14" width="732" height="592" rx="22" fill="none" stroke="var(--house-stroke)" stroke-width="2.5" stroke-dasharray="3 7"/>
+    <text x="380" y="34" text-anchor="middle" class="lbl-sm">secure landscaped perimeter</text>
+
+    <!-- parking corners -->
+    <rect x="34" y="46" width="150" height="60" rx="8" fill="var(--park)"/>
+    <text x="109" y="80" text-anchor="middle" class="lbl-sm">parking</text>
+    <rect x="576" y="46" width="150" height="60" rx="8" fill="var(--park)"/>
+    <text x="651" y="80" text-anchor="middle" class="lbl-sm">parking</text>
+    <rect x="34" y="514" width="150" height="60" rx="8" fill="var(--park)"/>
+    <text x="109" y="548" text-anchor="middle" class="lbl-sm">parking</text>
+    <rect x="576" y="514" width="150" height="60" rx="8" fill="var(--park)"/>
+    <text x="651" y="548" text-anchor="middle" class="lbl-sm">parking</text>
+
+    <!-- commons green -->
+    <rect x="150" y="150" width="460" height="320" rx="26" fill="var(--commons)" stroke="#bcd0b8" stroke-width="1.5"/>
+    <!-- walking loop -->
+    <rect x="186" y="186" width="388" height="248" rx="120" fill="none" stroke="var(--accent)" stroke-width="3" stroke-dasharray="2 8" opacity=".7"/>
+    <text x="380" y="178" text-anchor="middle" class="tag">THE COMMONS · walking loop · sensory garden</text>
+    <!-- garden patches -->
+    <circle cx="232" cy="232" r="22" fill="var(--garden)"/>
+    <circle cx="528" cy="232" r="22" fill="var(--garden)"/>
+    <circle cx="232" cy="388" r="22" fill="var(--garden)"/>
+    <circle cx="528" cy="388" r="22" fill="var(--garden)"/>
+    <text x="232" y="236" text-anchor="middle" class="lbl-sm">🌿</text>
+    <text x="528" y="236" text-anchor="middle" class="lbl-sm">🌿</text>
+    <text x="232" y="392" text-anchor="middle" class="lbl-sm">🌿</text>
+    <text x="528" y="392" text-anchor="middle" class="lbl-sm">🌿</text>
+
+    <!-- community building (center) -->
+    <rect x="306" y="262" width="148" height="96" rx="12" fill="var(--hub)" stroke="var(--hub-stroke)" stroke-width="2"/>
+    <text x="380" y="304" text-anchor="middle" class="lbl">Community</text>
+    <text x="380" y="322" text-anchor="middle" class="lbl">Building</text>
+    <text x="380" y="340" text-anchor="middle" class="lbl-sm">hub · therapy · gym</text>
+
+    <!-- NORTH house -->
+    <rect x="220" y="118" width="320" height="60" rx="10" fill="var(--house)" stroke="var(--house-stroke)" stroke-width="2"/>
+    <text x="380" y="146" text-anchor="middle" class="lbl">HOUSE — North</text>
+    <text x="380" y="163" text-anchor="middle" class="lbl-sm">▼ porch faces commons</text>
+    <!-- SOUTH house -->
+    <rect x="220" y="442" width="320" height="60" rx="10" fill="var(--house)" stroke="var(--house-stroke)" stroke-width="2"/>
+    <text x="380" y="464" text-anchor="middle" class="lbl-sm">▲ porch faces commons</text>
+    <text x="380" y="484" text-anchor="middle" class="lbl">HOUSE — South</text>
+    <!-- WEST house -->
+    <rect x="60" y="220" width="60" height="180" rx="10" fill="var(--house)" stroke="var(--house-stroke)" stroke-width="2"/>
+    <text x="90" y="306" text-anchor="middle" class="lbl" transform="rotate(-90 90 306)">HOUSE — West</text>
+    <text x="128" y="314" text-anchor="middle" class="lbl-sm" transform="rotate(-90 128 314)">porch ►</text>
+    <!-- EAST house -->
+    <rect x="640" y="220" width="60" height="180" rx="10" fill="var(--house)" stroke="var(--house-stroke)" stroke-width="2"/>
+    <text x="670" y="306" text-anchor="middle" class="lbl" transform="rotate(90 670 306)">HOUSE — East</text>
+    <text x="632" y="314" text-anchor="middle" class="lbl-sm" transform="rotate(90 632 314)">◄ porch</text>
+  </svg>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--house)"></i>Resident house</span>
+    <span><i class="sw" style="background:var(--hub)"></i>Community building</span>
+    <span><i class="sw" style="background:var(--commons)"></i>Commons green</span>
+    <span><i class="sw" style="background:var(--garden)"></i>Sensory garden</span>
+    <span><i class="sw" style="background:var(--park)"></i>Parking (edge)</span>
+  </div>
+  </div>
+  <div class="note">Why inward-facing? Porches onto the green create a <strong>graduated social space</strong> — a resident can watch from the porch, step onto the green, or stay inside. Houses also see each other, giving natural "eyes on the green" without anyone feeling surveilled.</div>
+</section>
+
+<!-- ================= HOUSE PLAN ================= -->
+<section>
+  <h2>2 · House plan — the two-pod model</h2>
+  <p class="cap">Each house holds 8–12 residents but is split into <strong>two calm households (pods) of 4–6</strong>, joined by a shared central core, wrapping a secure private rear courtyard. Single-story.</p>
+  <div class="frame">
+  <svg viewBox="0 0 760 470" role="img" aria-label="House floor plan">
+    <!-- front porch -->
+    <rect x="40" y="20" width="680" height="34" rx="8" fill="var(--path)" stroke="var(--line)"/>
+    <text x="380" y="42" text-anchor="middle" class="lbl-sm">FRONT PORCH — faces the commons ▲</text>
+
+    <!-- POD A (left) -->
+    <rect x="40" y="64" width="220" height="300" rx="10" fill="var(--pod-a)" stroke="var(--house-stroke)" stroke-width="1.5"/>
+    <text x="150" y="84" text-anchor="middle" class="tag">POD A · 4–6 residents</text>
+    <rect x="54" y="96" width="192" height="52" rx="6" fill="#fff" stroke="var(--line)"/>
+    <text x="150" y="126" text-anchor="middle" class="lbl-sm">pod living + kitchenette</text>
+    <!-- bedrooms A -->
+    <g>
+      <rect x="54" y="158" width="90" height="46" rx="5" fill="#fff" stroke="var(--line)"/><text x="99" y="185" text-anchor="middle" class="lbl-sm">bedroom</text>
+      <rect x="156" y="158" width="90" height="46" rx="5" fill="#fff" stroke="var(--line)"/><text x="201" y="185" text-anchor="middle" class="lbl-sm">bedroom</text>
+      <rect x="54" y="212" width="90" height="46" rx="5" fill="#fff" stroke="var(--line)"/><text x="99" y="239" text-anchor="middle" class="lbl-sm">bedroom</text>
+      <rect x="156" y="212" width="90" height="46" rx="5" fill="#fff" stroke="var(--line)"/><text x="201" y="239" text-anchor="middle" class="lbl-sm">bedroom</text>
+      <rect x="54" y="266" width="90" height="46" rx="5" fill="#fff" stroke="var(--line)"/><text x="99" y="293" text-anchor="middle" class="lbl-sm">bedroom</text>
+      <rect x="156" y="266" width="90" height="46" rx="5" fill="#fff" stroke="var(--line)"/><text x="201" y="293" text-anchor="middle" class="lbl-sm">bedroom</text>
+    </g>
+    <rect x="54" y="320" width="192" height="34" rx="6" fill="var(--quiet)" stroke="#c5b6da"/>
+    <text x="150" y="341" text-anchor="middle" class="lbl-sm">quiet / de-escalation room</text>
+
+    <!-- CENTRAL CORE -->
+    <rect x="270" y="64" width="220" height="300" rx="10" fill="var(--core)" stroke="var(--hub-stroke)" stroke-width="1.5"/>
+    <text x="380" y="84" text-anchor="middle" class="tag">CENTRAL CORE</text>
+    <rect x="284" y="96" width="192" height="40" rx="6" fill="#fff" stroke="var(--line)"/>
+    <text x="380" y="121" text-anchor="middle" class="lbl-sm">mudroom / transition entry</text>
+    <rect x="284" y="144" width="192" height="74" rx="6" fill="var(--hub)" stroke="var(--hub-stroke)"/>
+    <text x="380" y="176" text-anchor="middle" class="lbl">Shared great room</text>
+    <text x="380" y="194" text-anchor="middle" class="lbl-sm">kitchen · dining · hearth</text>
+    <rect x="284" y="226" width="192" height="56" rx="6" fill="var(--staff)" stroke="#dca895"/>
+    <text x="380" y="250" text-anchor="middle" class="lbl">Staff hub + med room</text>
+    <text x="380" y="268" text-anchor="middle" class="lbl-sm">sightlines ◄ both pods ►</text>
+    <rect x="284" y="290" width="192" height="64" rx="6" fill="var(--quiet)" stroke="#c5b6da"/>
+    <text x="380" y="318" text-anchor="middle" class="lbl">Sensory room</text>
+    <text x="380" y="336" text-anchor="middle" class="lbl-sm">+ overnight staff room</text>
+
+    <!-- POD B (right) -->
+    <rect x="500" y="64" width="220" height="300" rx="10" fill="var(--pod-b)" stroke="var(--house-stroke)" stroke-width="1.5"/>
+    <text x="610" y="84" text-anchor="middle" class="tag">POD B · 4–6 residents</text>
+    <rect x="514" y="96" width="192" height="52" rx="6" fill="#fff" stroke="var(--line)"/>
+    <text x="610" y="126" text-anchor="middle" class="lbl-sm">pod living + kitchenette</text>
+    <g>
+      <rect x="514" y="158" width="90" height="46" rx="5" fill="#fff" stroke="var(--line)"/><text x="559" y="185" text-anchor="middle" class="lbl-sm">bedroom</text>
+      <rect x="616" y="158" width="90" height="46" rx="5" fill="#fff" stroke="var(--line)"/><text x="661" y="185" text-anchor="middle" class="lbl-sm">bedroom</text>
+      <rect x="514" y="212" width="90" height="46" rx="5" fill="#fff" stroke="var(--line)"/><text x="559" y="239" text-anchor="middle" class="lbl-sm">bedroom</text>
+      <rect x="616" y="212" width="90" height="46" rx="5" fill="#fff" stroke="var(--line)"/><text x="661" y="239" text-anchor="middle" class="lbl-sm">bedroom</text>
+      <rect x="514" y="266" width="90" height="46" rx="5" fill="#fff" stroke="var(--line)"/><text x="559" y="293" text-anchor="middle" class="lbl-sm">bedroom</text>
+      <rect x="616" y="266" width="90" height="46" rx="5" fill="#fff" stroke="var(--line)"/><text x="661" y="293" text-anchor="middle" class="lbl-sm">bedroom</text>
+    </g>
+    <rect x="514" y="320" width="192" height="34" rx="6" fill="var(--quiet)" stroke="#c5b6da"/>
+    <text x="610" y="341" text-anchor="middle" class="lbl-sm">quiet / de-escalation room</text>
+
+    <!-- rear courtyard -->
+    <rect x="220" y="374" width="320" height="74" rx="12" fill="var(--garden)" stroke="#aac49e" stroke-width="1.5"/>
+    <text x="380" y="408" text-anchor="middle" class="lbl">Secure rear courtyard</text>
+    <text x="380" y="426" text-anchor="middle" class="lbl-sm">private · fenced · shaded seating</text>
+  </svg>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--pod-a)"></i>Pod A</span>
+    <span><i class="sw" style="background:var(--pod-b)"></i>Pod B</span>
+    <span><i class="sw" style="background:var(--hub)"></i>Shared great room</span>
+    <span><i class="sw" style="background:var(--staff)"></i>Staff hub</span>
+    <span><i class="sw" style="background:var(--quiet)"></i>Quiet / sensory</span>
+    <span><i class="sw" style="background:var(--garden)"></i>Rear courtyard</span>
+  </div>
+  </div>
+  <div class="note">The pod split is the key move: it gives you the <strong>capacity of a big building</strong> with the <strong>calm, family scale</strong> high-support residents need — and it maps cleanly onto NJ small-household licensing. Private bedrooms + per-pod quiet rooms mean every resident can always retreat without crossing a crowd.</div>
+</section>
+
+<footer>
+  Concept design only — not architectural, engineering, or legal advice. Confirm occupancy class, room minimums, exits &amp; staffing with a NJ-licensed architect and the licensing agency (DDD <em>N.J.A.C. 10:44A</em> or DOH ALR <em>N.J.A.C. 8:36</em>) before building. · See <strong>DESIGN-BRIEF.md</strong> for the full spec.
+</footer>
+</body>
+</html>
