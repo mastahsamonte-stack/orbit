@@ -88,6 +88,7 @@ readme = [
     "  2. Unit Economics  - bill vs. pay rate, gross margin per hour, annual P&L.",
     "  3. Working Capital - payroll float: cash gap between paying DSPs and getting paid.",
     "  4. Acquisition     - pro-forma for buying an agency (multiple, price, funding, returns).",
+    "  5. 5-Year Projection - census ramp, debt amortization, taxes, FCFE, and equity IRR/MOIC.",
     "", "GROUNDING (Texas / San Antonio, 2025-2026 - verify before relying)",
     "  - TX Medicaid attendant rates support avg ~$13.00/hr wage + 14-15% payroll-tax/benefits (Sept 2025).",
     "  - On Medicaid work, margin comes from overhead efficiency & scale, NOT rate negotiation (capped).",
@@ -153,6 +154,14 @@ ainp("t_mult", "Purchase multiple (x EBITDA)", 5.0, MULT, "Small IDD ~4-7x; plat
 ainp("debt_pct", "% financed with debt", 0.50, PCT, "SBA / seller note / lender.")
 ainp("rate", "Debt interest rate", 0.105, PCT, "Illustrative.")
 ainp("raise", "Equity raise target", 750000, USD, "What you raise from investors.")
+wa.blank()
+wa.section("5-YEAR PROJECTION", span=3)
+ainp("rev_growth", "Annual revenue growth (census ramp) %", 0.08, PCT, "Organic census growth/yr. Slot freeze caps HCS upside - be realistic.")
+ainp("marg_imp", "EBITDA margin improvement (pp/yr)", 0.005, PCT, "Scale efficiency. 0.005 = +0.5 point/yr.")
+ainp("da", "Annual D&A (goodwill/intangible amort.)", 75000, USD, "Asset-deal intangibles amortize ~15yr (Sec.197). ~price/15.")
+ainp("tax", "Effective tax rate %", 0.21, PCT, "Use ~21% C-corp; set 0 if pass-through taxed at owner level.")
+ainp("term", "Debt amortization term (years)", 7, NUM, "e.g., SBA 7(a) ~10yr; seller note shorter.")
+ainp("exit_mult", "Exit multiple (x Yr-5 EBITDA)", 5.5, MULT, "Terminal value at sale. Scale earns a higher multiple.")
 
 def A(key):
     return wa.addr(key)
@@ -231,6 +240,143 @@ aq.line("payback", "Implied payback (yrs on equity)", formula=f"={aq.addr('equit
 aq.blank()
 aq.note("Simplified: interest-only, pre-tax, single year. For a raise, build a 5-yr projection with")
 aq.note("census ramp, principal amortization, and taxes.")
+
+# =====================================================================
+# 6. 5-YEAR PROJECTION
+# =====================================================================
+from openpyxl.utils import get_column_letter
+wp = wb.create_sheet("5-Year Projection")
+wp.column_dimensions['A'].width = 40
+for ci in range(2, 8):  # B..G
+    wp.column_dimensions[get_column_letter(ci)].width = 15
+# title
+tc = wp.cell(row=1, column=1, value="5-Year Projection & Equity Returns")
+tc.font = H1; tc.fill = HDR_FILL
+for col in range(1, 8):
+    wp.cell(row=1, column=col).fill = HDR_FILL
+wp.row_dimensions[1].height = 24
+
+YR_COLS = [2, 3, 4, 5, 6]  # B..F = Year 1..5
+prows = {}
+
+def psec(R, text):
+    c = wp.cell(row=R, column=1, value=text); c.font = H2; c.fill = SUB_FILL
+    for col in range(1, 7):
+        wp.cell(row=R, column=col).fill = SUB_FILL
+    return R + 1
+
+def pline(R, key, label, per_year_formula, fmt=USD, bold=False):
+    """per_year_formula(col_letter, year_idx, prev_col_letter) -> formula string"""
+    prows[key] = R  # register row first so self-referencing formulas resolve
+    wp.cell(row=R, column=1, value=label)
+    for n, col in enumerate(YR_COLS, start=1):
+        L = get_column_letter(col)
+        prevL = get_column_letter(col - 1)
+        f = per_year_formula(L, n, prevL)
+        cell = wp.cell(row=R, column=col, value=f)
+        cell.fill = CALC_FILL; cell.border = BORDER; cell.number_format = fmt
+        if bold: cell.font = BOLD
+    return R + 1
+
+def PR(key):  # address of a projection row cell in a given column letter
+    return prows[key]
+
+# header row of years
+R = 2
+wp.cell(row=R, column=1, value="(all figures by operating year)").font = ITAL
+for n, col in enumerate(YR_COLS, start=1):
+    c = wp.cell(row=R, column=col, value=f"Year {n}"); c.font = BOLD; c.fill = SUB_FILL
+R += 1
+
+R = psec(R, "OPERATING PROJECTION")
+R = pline(R, "rev", "Revenue",
+          lambda L, n, p: (f"={aq.addr('rev')}*(1+{A('rev_growth')})" if n == 1
+                           else f"={p}{prows['rev']}*(1+{A('rev_growth')})"), USD, bold=True)
+R = pline(R, "margin", "EBITDA margin %",
+          lambda L, n, p: f"={aq.addr('marg')}+{A('marg_imp')}*{n}", PCT)
+R = pline(R, "ebitda", "EBITDA",
+          lambda L, n, p: f"={L}{prows['rev']}*{L}{prows['margin']}", USD, bold=True)
+R = pline(R, "da", "Less: D&A",
+          lambda L, n, p: f"=-{A('da')}", USD)
+R = pline(R, "ebit", "EBIT",
+          lambda L, n, p: f"={L}{prows['ebitda']}+{L}{prows['da']}", USD)
+
+R = psec(R, "DEBT SCHEDULE")
+# pre-register debt rows so 'beg' can forward-reference 'end'
+for off, k in enumerate(["beg", "pmt", "int", "prin", "end"]):
+    prows[k] = R + off
+R = pline(R, "beg", "Beginning debt balance",
+          lambda L, n, p: (f"={aq.addr('debt')}" if n == 1 else f"={p}{prows['end']}"), USD)
+R = pline(R, "pmt", "Annual debt payment (P&I)",
+          lambda L, n, p: f"=IF({L}{prows['beg']}>0,MIN(-PMT({A('rate')},{A('term')},{aq.addr('debt')}),{L}{prows['beg']}+{L}{prows['beg']}*{A('rate')}),0)", USD)
+R = pline(R, "int", "  Interest",
+          lambda L, n, p: f"={L}{prows['beg']}*{A('rate')}", USD)
+R = pline(R, "prin", "  Principal",
+          lambda L, n, p: f"={L}{prows['pmt']}-{L}{prows['int']}", USD)
+R = pline(R, "end", "Ending debt balance",
+          lambda L, n, p: f"=MAX(0,{L}{prows['beg']}-{L}{prows['prin']})", USD)
+
+R = psec(R, "TAXES & NET INCOME")
+R = pline(R, "ebt", "Pre-tax income (EBIT - interest)",
+          lambda L, n, p: f"={L}{prows['ebit']}-{L}{prows['int']}", USD)
+R = pline(R, "tax", "Less: taxes",
+          lambda L, n, p: f"=-MAX(0,{L}{prows['ebt']}*{A('tax')})", USD)
+R = pline(R, "ni", "Net income",
+          lambda L, n, p: f"={L}{prows['ebt']}+{L}{prows['tax']}", USD, bold=True)
+
+R = psec(R, "FREE CASH FLOW TO EQUITY")
+R = pline(R, "fcfe", "FCFE (NI + D&A - principal)",
+          lambda L, n, p: f"={L}{prows['ni']}-{L}{prows['da']}-{L}{prows['prin']}", USD, bold=True)
+
+# ---- Equity returns block (Year 0..Year 5 in columns B..G) ----
+R += 1
+R = psec(R, "EQUITY RETURNS")
+# year header B..G = Year0..Year5
+hdr = R
+wp.cell(row=hdr, column=1, value="").font = BOLD
+for n in range(0, 6):
+    c = wp.cell(row=hdr, column=2 + n, value=f"Year {n}"); c.font = BOLD; c.fill = SUB_FILL
+R = hdr + 1
+
+# terminal value note row: terminal equity value at Year 5
+tv_row = R
+wp.cell(row=tv_row, column=1, value="Terminal equity value (Yr5 sale)")
+tv_cell = wp.cell(row=tv_row, column=7,
+                  value=f"=F{prows['ebitda']}*{A('exit_mult')}-F{prows['end']}")
+tv_cell.fill = CALC_FILL; tv_cell.border = BORDER; tv_cell.number_format = USD; tv_cell.font = BOLD
+R += 1
+
+# equity cash flow row: B=Year0 (-equity), C..F = FCFE Y1..Y4, G = FCFE Y5 + terminal
+ecf_row = R
+wp.cell(row=ecf_row, column=1, value="Equity cash flow")
+# Year 0
+c0 = wp.cell(row=ecf_row, column=2, value=f"=-{aq.addr('equity')}")
+c0.fill = CALC_FILL; c0.border = BORDER; c0.number_format = USD; c0.font = BOLD
+# Years 1..5 map to projection YR_COLS B..F (cols 2..6); equity cols are 3..7
+for n, projcol in enumerate(YR_COLS, start=1):
+    L = get_column_letter(projcol)
+    eqcol = 2 + n  # Year n -> column index
+    if n < 5:
+        f = f"={L}{prows['fcfe']}"
+    else:
+        f = f"={L}{prows['fcfe']}+G{tv_row}"
+    cc = wp.cell(row=ecf_row, column=eqcol, value=f)
+    cc.fill = CALC_FILL; cc.border = BORDER; cc.number_format = USD; cc.font = BOLD
+R += 2
+
+# IRR & MOIC
+ir = R
+wp.cell(row=ir, column=1, value="Equity IRR (5-yr)")
+ic = wp.cell(row=ir, column=2, value=f"=IRR(B{ecf_row}:G{ecf_row})")
+ic.fill = CALC_FILL; ic.border = BORDER; ic.number_format = PCT; ic.font = BOLD
+R += 1
+mo = R
+wp.cell(row=mo, column=1, value="Equity MOIC (5-yr)")
+mc = wp.cell(row=mo, column=2, value=f"=SUM(C{ecf_row}:G{ecf_row})/-B{ecf_row}")
+mc.fill = CALC_FILL; mc.border = BORDER; mc.number_format = '0.00"x"'; mc.font = BOLD
+R += 2
+wp.cell(row=R, column=1, value="Assumes: organic census growth, constant exit multiple, interest-only-then-amortizing debt per term,").font = ITAL
+wp.cell(row=R + 1, column=1, value="and a Year-5 sale at the exit multiple. Stress-test growth & exit multiple - HCS slot freeze caps upside.").font = ITAL
 
 wb.save("/home/user/orbit/staffing-agency-plan/Staffing_Agency_Financial_Model.xlsx")
 print("saved")
