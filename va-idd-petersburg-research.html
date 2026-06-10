@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Virginia IDD Residential Business — Petersburg Research</title>
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --card: #ffffff;
+    --ink: #1a1d23;
+    --muted: #5b6472;
+    --accent: #2563eb;
+    --accent-soft: #eef3ff;
+    --green: #0f8a4f;
+    --green-soft: #e7f6ee;
+    --amber: #b45309;
+    --amber-soft: #fef3e2;
+    --border: #e4e7ec;
+    --th: #f0f2f5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1115;
+      --card: #181b21;
+      --ink: #e8eaed;
+      --muted: #9aa3b2;
+      --accent: #6ea0ff;
+      --accent-soft: #1b2436;
+      --green: #4ade80;
+      --green-soft: #14271c;
+      --amber: #fbbf24;
+      --amber-soft: #2a2113;
+      --border: #2a2f3a;
+      --th: #21262f;
+    }
+  }
+  * { box-sizing: border-box; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    font-size: 17px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 18px 16px 64px; }
+  header.hero {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: #fff;
+    border-radius: 18px;
+    padding: 24px 20px;
+    margin-bottom: 18px;
+  }
+  header.hero h1 { margin: 0 0 6px; font-size: 1.45rem; line-height: 1.25; }
+  header.hero p { margin: 0; opacity: .92; font-size: .95rem; }
+  .verdict {
+    background: var(--green-soft);
+    border: 1px solid var(--border);
+    border-left: 5px solid var(--green);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+  }
+  .verdict strong { color: var(--green); }
+  section.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 18px 6px;
+    margin-bottom: 16px;
+  }
+  h2 {
+    font-size: 1.15rem;
+    margin: 4px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px; height: 30px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 9px;
+    font-weight: 700;
+    font-size: .95rem;
+    flex-shrink: 0;
+  }
+  h3 { font-size: 1rem; margin: 16px 0 6px; }
+  p { margin: 8px 0; }
+  ul { padding-left: 20px; margin: 8px 0; }
+  li { margin: 5px 0; }
+  .muted { color: var(--muted); font-size: .92rem; }
+  strong { font-weight: 700; }
+  .tag {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 6px;
+    padding: 1px 8px;
+    font-size: .8rem;
+    font-weight: 600;
+  }
+  /* tables -> horizontally scrollable on phones */
+  .tablescroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 10px 0; border-radius: 10px; border: 1px solid var(--border); }
+  table { border-collapse: collapse; width: 100%; min-width: 420px; font-size: .92rem; }
+  th, td { text-align: left; padding: 9px 11px; border-bottom: 1px solid var(--border); }
+  th { background: var(--th); font-weight: 700; }
+  tr:last-child td { border-bottom: none; }
+  .flag {
+    background: var(--amber-soft);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--amber);
+    border-radius: 10px;
+    padding: 11px 13px;
+    margin: 12px 0;
+    font-size: .9rem;
+  }
+  .flag b { color: var(--amber); }
+  .note {
+    background: var(--accent-soft);
+    border-radius: 10px;
+    padding: 11px 13px;
+    margin: 12px 0;
+    font-size: .9rem;
+  }
+  .bottomline { background: var(--card); border: 2px solid var(--accent); }
+  .bottomline ul { list-style: none; padding-left: 0; }
+  .bottomline li { padding: 8px 0; border-bottom: 1px dashed var(--border); }
+  .bottomline li:last-child { border-bottom: none; }
+  .nextsteps { counter-reset: step; list-style: none; padding-left: 0; }
+  .nextsteps li { counter-increment: step; padding-left: 38px; position: relative; margin: 12px 0; }
+  .nextsteps li::before {
+    content: counter(step);
+    position: absolute; left: 0; top: 0;
+    width: 26px; height: 26px;
+    background: var(--accent); color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: .85rem;
+  }
+  details.sources {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 4px 16px;
+    margin-bottom: 16px;
+  }
+  details.sources summary { font-weight: 700; cursor: pointer; padding: 12px 0; }
+  details.sources a { color: var(--accent); word-break: break-word; }
+  details.sources li { font-size: .88rem; }
+  footer { text-align: center; color: var(--muted); font-size: .82rem; margin-top: 24px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>Starting an IDD Residential Business in Petersburg, VA</h1>
+    <p>Licensing · Private pay vs. Medicaid · Rates · Home capacity &amp; bedrooms · Feasibility</p>
+    <p class="muted" style="color:#dbe4ff; margin-top:8px;">Research brief &middot; June 2026</p>
+  </header>
+
+  <div class="verdict">
+    <strong>Short answer: Yes — feasible, and Petersburg is a reasonable target.</strong>
+    Demand is strong (a 14,000+ person statewide waitlist), zoning is favorable for homes of 8 or fewer residents, and real estate is cheap. The real hurdles are operational, not market-based: getting your DBHDS license (6–12 months), staffing direct-care workers, and thin Medicaid margins.
+  </div>
+
+  <!-- 1 -->
+  <section class="card">
+    <h2><span class="num">1</span> Do you need a license / permit / certification?</h2>
+    <p><strong>Yes — a DBHDS provider license is mandatory before you can operate, period.</strong> This is set by statute, not optional.</p>
+    <ul>
+      <li>The agency is the <strong>Virginia Department of Behavioral Health &amp; Developmental Services (DBHDS), Office of Licensing</strong>. It licenses providers of developmental disability services (includes intellectual disability).</li>
+      <li>Legal basis: <strong>Va. Code &sect; 37.2-405</strong> — <em>"No provider shall establish, conduct, maintain, or operate&hellip; any service, without being licensed&hellip;"</em></li>
+      <li>Governing regulation: <strong>12VAC35-105</strong>, last amended Dec 1, 2025.</li>
+    </ul>
+    <h3>What the application involves</h3>
+    <ul>
+      <li>Submitted through the <strong>DBHDS CONNECT</strong> provider portal</li>
+      <li>Criminal background + Central Registry checks for all direct-care staff</li>
+      <li>Human Rights policies + complaint-resolution policy</li>
+      <li>On-site inspection of physical plant, records, service descriptions</li>
+      <li>Proof of <strong>HCBS settings compliance</strong></li>
+      <li><strong>Timeline: 6–12 months</strong> (up to ~9 months on a waitlist before a reviewer is even assigned)</li>
+    </ul>
+    <div class="flag"><b>&#9888; Fees flag:</b> Confirmed a $500 fee for <em>children's</em> residential providers; couldn't independently verify the exact current adult DD group-home fee. Confirm the current fee schedule with the DBHDS Office of Licensing.</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="card">
+    <h2><span class="num">2</span> Private pay vs. Medicaid — does that change it?</h2>
+    <p>This is the thing people get wrong: <strong>the DBHDS license is triggered by providing the service — NOT by who pays.</strong></p>
+    <div class="tablescroll">
+      <table>
+        <tr><th>Scenario</th><th>What you need</th></tr>
+        <tr><td><strong>Private pay only</strong> (no Medicaid)</td><td>DBHDS license <strong>still required</strong>. You can't legally operate for unrelated clients without it.</td></tr>
+        <tr><td><strong>Billing Medicaid</strong> (DD Waiver)</td><td>DBHDS license <strong>+</strong> DMAS Medicaid provider enrollment <strong>+</strong> provider agreement <strong>+</strong> HCBS compliance</td></tr>
+      </table>
+    </div>
+    <p>Two separate layers:</p>
+    <ul>
+      <li><strong>DBHDS license</strong> = authorization to <em>legally operate</em>.</li>
+      <li><strong>DMAS Medicaid enrollment</strong> = authorization to <em>bill Medicaid &amp; get paid</em>. It doesn't let you operate; it assumes you already hold the license.</li>
+    </ul>
+    <p>Order is one-directional: <strong>DBHDS license first &rarr; then DMAS enrollment.</strong> The three DD waivers are <strong>Building Independence, Family &amp; Individual Supports, and Community Living</strong> (Community Living funds 24/7 group-home residential).</p>
+    <p><strong>Exemptions:</strong> A narrow carve-out exists for a <em>relative caring for a related individual</em> — not for running a paid group home for unrelated clients. <strong>No "few clients = exempt" loophole.</strong> A "host home" / sponsored-residential setup isn't an exemption either — it runs <em>under</em> an agency's DBHDS license.</p>
+    <div class="flag"><b>&#9888; Flag:</b> The exact &sect; 37.2-405(B) exemption wording couldn't be pulled (state sites block automated access). Verify directly if a family/relative arrangement is in play.</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="card">
+    <h2><span class="num">3</span> The rates</h2>
+    <h3>How it's structured</h3>
+    <ul>
+      <li><strong>Tiered (up to 4 tiers)</strong>, assigned from <strong>7 support levels</strong> based on the Supports Intensity Scale (SIS). Higher needs = higher tier = higher pay.</li>
+      <li><strong>Geographic:</strong> Northern Virginia (NOVA) vs. Rest of State (ROS). <span class="tag">Petersburg = Rest of State</span> (the lower band).</li>
+      <li>Group home rates also vary by licensed bed size; billed ~344 days/year.</li>
+    </ul>
+    <h3>Verified figures — Group Home Residential (eff. 7/1/2024)</h3>
+    <div class="tablescroll">
+      <table>
+        <tr><th>Service / Tier</th><th>Region</th><th>Daily Rate</th></tr>
+        <tr><td>Group Home — Tier 4 (highest needs)</td><td>NOVA</td><td><strong>$330.10/day</strong></td></tr>
+        <tr><td>Group Home — Tier 4 (highest needs)</td><td>Rest of State (Petersburg)</td><td><strong>$277.32/day</strong></td></tr>
+      </table>
+    </div>
+    <p>Confirmed <strong>+3% increases on 7/1/2024 and again 7/1/2025</strong>, so current <strong>SFY2026</strong> Tier 4 ROS is roughly <strong>~$285/day</strong> (&asymp; $8,500–$9,800/month at the top tier). Lower tiers pay less.</p>
+    <p class="muted">For reference, older confirmed Sponsored Residential tiers (2016 baseline, now outdated/low): Tier 1 $131.98 &rarr; Tier 4 $301.19/day.</p>
+    <div class="flag"><b>&#9888; Important:</b> The full current grid (all tiers &times; group home / sponsored / supported living &times; NOVA/ROS) lives only in the official DMAS rate file, which blocks automated access. Get exact numbers from the <a href="https://www.dmas.virginia.gov/for-providers/rates-and-rate-setting/">DMAS Rates &amp; Rate Setting page</a> or the DD Waiver helpline <strong>800-552-8627</strong>.</div>
+    <ul>
+      <li><strong>CCC Plus waiver does NOT fund group homes</strong> — congregate residential is exclusively a DD Waiver benefit.</li>
+      <li><strong>Private-pay IDD rates aren't publicly published</strong> in VA. For context, senior assisted living medians ~$6,500/mo. You'd set your own price — no published benchmark.</li>
+    </ul>
+  </section>
+
+  <!-- 4 -->
+  <section class="card">
+    <h2><span class="num">4</span> How many residents, shared vs. private bedrooms?</h2>
+    <h3>Capacity (max residents)</h3>
+    <div class="tablescroll">
+      <table>
+        <tr><th>Model</th><th>Max residents</th></tr>
+        <tr><td><strong>DD Waiver Group Home</strong></td><td><strong>6 licensed beds</strong> (new homes). Pre-3/31/2021 larger homes grandfathered.</td></tr>
+        <tr><td><strong>Sponsored Residential</strong> (host family home)</td><td><strong>2 individuals served</strong> (~up to 7 total occupants incl. host family)</td></tr>
+        <tr><td><strong>Supported Living</strong> (apartments)</td><td>No fixed cap — by apartment size + HCBS private-unit model</td></tr>
+      </table>
+    </div>
+    <p class="muted">Note: the <em>zoning</em> statute uses an 8-resident threshold, but the DD Waiver reimbursement cap for a new group home is 6 beds. New group homes practically top out at 6.</p>
+    <h3>Bedrooms — can they be shared?</h3>
+    <p><strong>&#10003; Yes, shared bedrooms are allowed.</strong> A private bedroom is NOT required by VA licensing (<strong>12VAC35-105-340</strong>):</p>
+    <ul>
+      <li><strong>Max 2 individuals per bedroom in a group home</strong> (up to 4 in other residential types).</li>
+      <li>Single bedroom: <strong>&ge; 80 sq ft</strong>. Shared: <strong>&ge; 60 sq ft per person</strong>.</li>
+      <li>Each resident needs adequate private storage.</li>
+      <li><strong>Bathrooms:</strong> at least 1 toilet, 1 sink, 1 shower/bath per 4 residents.</li>
+    </ul>
+    <div class="note"><b>Federal overlay (HCBS Settings Rule, 42 CFR 441.301):</b> Shared rooms are allowed, but for Medicaid-funded homes each resident must be <em>offered</em> a private-unit option, get to <strong>choose their roommate</strong> if sharing, have a <strong>lockable bedroom door</strong>, and control their schedule/visitors/food access. You can do shared bedrooms — you just can't <em>force</em> it.</div>
+    <div class="flag"><b>&#9888; Flag:</b> The "7 total occupants" figure for sponsored residential couldn't be pulled verbatim; "2 individuals served" is solidly confirmed. Verify the occupant count directly if it matters.</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="card">
+    <h2><span class="num">5</span> Is Petersburg, VA feasible?</h2>
+    <p><strong>Yes, with caveats.</strong> The market signals are genuinely favorable.</p>
+    <h3>Demand — strong</h3>
+    <ul>
+      <li><strong>Statewide DD Waiver waitlist ~14,258</strong> (Nov 2025), ~2,727 Priority 1.</li>
+      <li>2024 General Assembly funded <strong>3,440 new Priority 1 slots</strong> (FY25–26), releasing through Dec 2026 — each is a potential resident.</li>
+      <li>Petersburg is <strong>high-poverty (~21.7%), high-Medicaid</strong> — above-average eligible population.</li>
+    </ul>
+    <h3>Your entry point — the local CSB</h3>
+    <ul>
+      <li>Served by <strong>District 19 CSB ("Greater Reach")</strong> — 20 W. Bank Street, Petersburg; (804) 862-6082.</li>
+      <li><strong>Critical:</strong> the CSB (not you) controls who gets a waiver slot and assigns the Support Coordinators who refer residents. <strong>You fill beds by building relationships with D19CSB support coordinators</strong> — not by just opening beds.</li>
+    </ul>
+    <h3>Zoning — a real advantage</h3>
+    <ul>
+      <li><strong>Va. Code &sect; 15.2-2291</strong>: a licensed home of <strong>8 or fewer</strong> residents is treated as <strong>"single-family residential"</strong> — <strong>by-right in single-family zones, no special-use permit or rezoning</strong>.</li>
+    </ul>
+    <div class="flag"><b>&#9888; Flag:</b> Couldn't confirm whether a <strong>spacing/separation requirement</strong> between homes applies (not in &sect;15.2-2291 itself). Check Title 37.2 licensing regs before siting two homes close together.</div>
+    <h3>Competition</h3>
+    <p>Not empty, not saturated — ~5 existing operators in the Tri-Cities (A Village Youth &amp; Family Services, Faithful Residential, Family Services, Independent Capacity System, Virginia Group Homes Services). Given the waitlist, there's room for a differentiated entrant (e.g., medically/behaviorally complex populations).</p>
+    <h3>The real risks</h3>
+    <ul>
+      <li><strong>Direct Support Professional (DSP) shortage</strong> — #1 statewide operational risk; high turnover.</li>
+      <li><strong>Licensing barrier</strong> — 6–12 months before you can bill.</li>
+      <li><strong>Thin Medicaid margins / rate dependency.</strong></li>
+      <li><strong>Census depends on CSB referrals</strong>, not on you.</li>
+    </ul>
+  </section>
+
+  <!-- bottom line -->
+  <section class="card bottomline">
+    <h2>Bottom line</h2>
+    <ul>
+      <li><strong>License?</strong> Yes — DBHDS license required <em>either way</em> (private pay or Medicaid). Medicaid adds DMAS enrollment on top.</li>
+      <li><strong>Rates?</strong> Tiered by support level + NOVA/ROS. Petersburg = Rest of State; top-tier group home ~$277/day (2024), ~$285/day now. Get the exact grid from DMAS.</li>
+      <li><strong>Residents per home?</strong> 6 beds for a new DD Waiver group home (8 is the zoning threshold).</li>
+      <li><strong>Bedrooms?</strong> Shared allowed — max 2/room in a group home, 60 sq ft/person — but residents must be offered a private option &amp; choose their roommate.</li>
+      <li><strong>Petersburg?</strong> Feasible and well-chosen: strong demand, by-right zoning, cheap real estate. Win or lose on DSP staffing &amp; D19CSB referrals.</li>
+    </ul>
+    <h3>Recommended first three moves</h3>
+    <ol class="nextsteps">
+      <li>Call the <strong>DBHDS Office of Licensing</strong> to confirm the current DD group-home fee and start the CONNECT application.</li>
+      <li>Pull the official <strong>DMAS SFY26 rate file</strong> or call <strong>800-552-8627</strong> for exact tier rates.</li>
+      <li>Introduce yourself to <strong>District 19 CSB</strong> support coordinators to understand local referral flow.</li>
+    </ol>
+  </section>
+
+  <details class="sources">
+    <summary>Key sources</summary>
+    <ul>
+      <li><a href="https://law.lis.virginia.gov/vacode/title37.2/chapter4/section37.2-405/">Va. Code &sect; 37.2-405 (licensing requirement)</a></li>
+      <li><a href="https://dbhds.virginia.gov/quality-management/office-of-licensing/">DBHDS Office of Licensing</a></li>
+      <li><a href="https://law.lis.virginia.gov/admincode/title12/agency35/chapter105/section340/">12VAC35-105-340 (bedrooms)</a></li>
+      <li><a href="https://law.lis.virginia.gov/admincode/title12/agency30/chapter122/section390/">12VAC30-122-390 (group home, 6-bed cap)</a></li>
+      <li><a href="https://www.dmas.virginia.gov/for-members/benefits-and-services/waivers/developmental-disability-dd-waivers/">DMAS DD Waivers</a></li>
+      <li><a href="https://www.dmas.virginia.gov/for-providers/rates-and-rate-setting/">DMAS Rates &amp; Rate Setting</a></li>
+      <li><a href="https://law.lis.virginia.gov/vacode/title15.2/chapter22/section15.2-2291/">Va. Code &sect; 15.2-2291 (zoning)</a></li>
+      <li><a href="https://dbhds.virginia.gov/wp-content/uploads/2026/01/Developmental-Disability-Waivers-2026.pdf">DBHDS DD Waivers 2026 report (waitlist)</a></li>
+      <li><a href="http://d19csb.com/developmental-disability-services/">District 19 CSB — DD services</a></li>
+    </ul>
+  </details>
+
+  <footer>
+    Research brief generated June 2026. State legal/DMAS sites block automated access, so verify the exact rate grid, the &sect;37.2-405(B) exemption wording, the sponsored-residential occupant count, and any home-spacing rule against primary sources before relying on them. This is informational, not legal advice.
+  </footer>
+
+</div>
+</body>
+</html>
