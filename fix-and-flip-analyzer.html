@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orbit — Fix &amp; Flip Deal Analyzer</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f4f6f8;color:#1a1a1a;font-size:14px}
+
+  /* Role bar (matches Orbit GHL portal) */
+  .role-bar{background:#1a1a2e;padding:8px 20px;display:flex;align-items:center;gap:10px}
+  .role-bar .logo{width:26px;height:26px;border-radius:7px;background:#b04a2a;color:#fff;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center}
+  .role-bar .brand{color:#fff;font-weight:700;font-size:14px}
+  .role-bar .sub{color:#8a8aa0;font-size:11px}
+  .role-bar .tool-tag{margin-left:auto;color:#b04a2a;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:24px}
+  .page-title{font-weight:800;font-size:22px;margin-bottom:2px}
+  .page-sub{font-size:13px;color:#888;margin-bottom:20px}
+
+  .layout{display:grid;grid-template-columns:1.15fr 1fr;gap:20px;align-items:start}
+  @media(max-width:880px){.layout{grid-template-columns:1fr}}
+
+  .card{background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:20px;margin-bottom:18px}
+  .card-title{font-weight:700;font-size:15px;margin-bottom:2px}
+  .card-sub{font-size:12px;color:#999;margin-bottom:16px}
+
+  .field{margin-bottom:13px}
+  .field label{display:block;font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+  .field .hint{font-weight:400;text-transform:none;letter-spacing:0;color:#aaa;font-size:10px;margin-left:6px}
+  .input-wrap{position:relative}
+  .input-wrap .pre,.input-wrap .post{position:absolute;top:50%;transform:translateY(-50%);color:#999;font-size:13px;pointer-events:none}
+  .input-wrap .pre{left:11px}
+  .input-wrap .post{right:11px}
+  input[type=text],input[type=number]{width:100%;padding:9px 11px;border:1px solid #d8dde3;border-radius:7px;font-size:14px;color:#111;transition:border .15s}
+  input.has-pre{padding-left:24px}
+  input.has-post{padding-right:30px}
+  input:focus{outline:none;border-color:#0073e6;box-shadow:0 0 0 3px rgba(0,115,230,.1)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+  .seg{display:flex;gap:0;border:1px solid #d8dde3;border-radius:7px;overflow:hidden}
+  .seg button{flex:1;padding:9px;background:#fff;border:none;cursor:pointer;font-size:13px;font-weight:600;color:#666}
+  .seg button.on{background:#0073e6;color:#fff}
+
+  fieldset{border:none}
+  fieldset[disabled]{opacity:.45}
+
+  .chk{display:flex;align-items:center;gap:8px;font-size:12px;color:#555;cursor:pointer;margin-top:4px}
+  .chk input{width:15px;height:15px;cursor:pointer}
+
+  /* Results */
+  .verdict{border-radius:10px;padding:18px 20px;margin-bottom:18px;color:#fff;display:flex;align-items:center;gap:14px}
+  .verdict .vicon{font-size:30px;line-height:1}
+  .verdict .vtitle{font-weight:800;font-size:18px}
+  .verdict .vsub{font-size:12px;opacity:.92;margin-top:2px}
+  .v-go{background:linear-gradient(135deg,#16a34a,#0f8a3e)}
+  .v-maybe{background:linear-gradient(135deg,#d97706,#b45309)}
+  .v-no{background:linear-gradient(135deg,#dc2626,#b91c1c)}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+  .stat{background:#f9fafb;border:1px solid #eceff2;border-radius:9px;padding:14px}
+  .stat .lbl{font-size:10px;color:#8a909a;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+  .stat .val{font-size:23px;font-weight:800;color:#111;line-height:1.1}
+  .stat .val.pos{color:#16a34a}.stat .val.neg{color:#dc2626}
+  .stat .meta{font-size:11px;color:#999;margin-top:3px}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  .bd td{padding:8px 0;border-bottom:1px solid #f0f2f4}
+  .bd td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+  .bd tr.sum td{border-top:2px solid #e0e0e0;border-bottom:none;font-weight:800;padding-top:11px}
+  .bd td.muted{color:#999;font-weight:400}
+  .bd tr.neg td:last-child{color:#dc2626}
+
+  .rule-box{background:#eef5ff;border:1px solid #cfe0fb;border-radius:9px;padding:13px 15px;margin-top:4px;font-size:12px;color:#1f4e8c}
+  .rule-box b{color:#0a3a72}
+  .rule-box .mao{font-size:20px;font-weight:800;color:#0a3a72;display:block;margin:4px 0}
+  .rule-box .ok{color:#16a34a;font-weight:700}
+  .rule-box .over{color:#dc2626;font-weight:700}
+
+  .foot{font-size:11px;color:#aaa;margin-top:8px;line-height:1.5}
+  .reset{background:none;border:none;color:#0073e6;font-size:12px;font-weight:600;cursor:pointer;padding:0;margin-top:6px}
+</style>
+</head>
+<body>
+  <div class="role-bar">
+    <div class="logo">O</div>
+    <div>
+      <div class="brand">Orbit Lead Network</div>
+      <div class="sub">Deal Tools</div>
+    </div>
+    <div class="tool-tag">Fix &amp; Flip Analyzer</div>
+  </div>
+
+  <div class="wrap">
+    <div class="page-title">Fix &amp; Flip Deal Analyzer</div>
+    <div class="page-sub">Enter the numbers — profit, ROI, and a go/no-go verdict update live. Built on the 70% rule.</div>
+
+    <div class="layout">
+      <!-- INPUTS -->
+      <div>
+        <div class="card">
+          <div class="card-title">The Property</div>
+          <div class="card-sub">The three numbers that make or break a flip.</div>
+          <div class="field">
+            <label>Property Address <span class="hint">optional</span></label>
+            <input type="text" id="addr" placeholder="123 Main St, Dorchester MA">
+          </div>
+          <div class="row3">
+            <div class="field">
+              <label>Purchase Price</label>
+              <div class="input-wrap"><span class="pre">$</span><input type="number" id="purchase" class="has-pre" value="200000"></div>
+            </div>
+            <div class="field">
+              <label>Rehab Budget</label>
+              <div class="input-wrap"><span class="pre">$</span><input type="number" id="rehab" class="has-pre" value="50000"></div>
+            </div>
+            <div class="field">
+              <label>ARV <span class="hint">after-repair value</span></label>
+              <div class="input-wrap"><span class="pre">$</span><input type="number" id="arv" class="has-pre" value="400000"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Financing</div>
+          <div class="card-sub">How you're funding the buy + rehab.</div>
+          <div class="seg" id="fund-seg">
+            <button data-fund="financed" class="on">Financed (hard money)</button>
+            <button data-fund="cash">All cash</button>
+          </div>
+          <fieldset id="fin-fields" style="margin-top:14px">
+            <div class="row3">
+              <div class="field">
+                <label>Down Payment <span class="hint">on price</span></label>
+                <div class="input-wrap"><input type="number" id="down" class="has-post" value="10"><span class="post">%</span></div>
+              </div>
+              <div class="field">
+                <label>Interest Rate <span class="hint">/yr</span></label>
+                <div class="input-wrap"><input type="number" id="rate" class="has-post" value="11"><span class="post">%</span></div>
+              </div>
+              <div class="field">
+                <label>Points</label>
+                <div class="input-wrap"><input type="number" id="points" class="has-post" value="2"><span class="post">%</span></div>
+              </div>
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label>Lender Fees</label>
+                <div class="input-wrap"><span class="pre">$</span><input type="number" id="lenderFees" class="has-pre" value="1500"></div>
+              </div>
+              <div class="field" style="display:flex;align-items:flex-end;padding-bottom:9px">
+                <label class="chk"><input type="checkbox" id="financeRehab" checked> Lender also finances rehab</label>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Holding Costs</div>
+          <div class="card-sub">What it costs to own it while you work.</div>
+          <div class="field">
+            <label>Hold Time <span class="hint">months to buy, fix &amp; sell</span></label>
+            <div class="input-wrap"><input type="number" id="months" class="has-post" value="6"><span class="post">mo</span></div>
+          </div>
+          <div class="row3">
+            <div class="field">
+              <label>Property Tax <span class="hint">/yr</span></label>
+              <div class="input-wrap"><span class="pre">$</span><input type="number" id="taxYr" class="has-pre" value="4200"></div>
+            </div>
+            <div class="field">
+              <label>Insurance <span class="hint">/yr</span></label>
+              <div class="input-wrap"><span class="pre">$</span><input type="number" id="insYr" class="has-pre" value="2400"></div>
+            </div>
+            <div class="field">
+              <label>Utilities+ <span class="hint">/mo</span></label>
+              <div class="input-wrap"><span class="pre">$</span><input type="number" id="utilMo" class="has-pre" value="350"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Buying &amp; Selling Costs</div>
+          <div class="card-sub">Closing on both ends + agent commission.</div>
+          <div class="row3">
+            <div class="field">
+              <label>Buy Closing <span class="hint">% of price</span></label>
+              <div class="input-wrap"><input type="number" id="buyClose" class="has-post" value="2"><span class="post">%</span></div>
+            </div>
+            <div class="field">
+              <label>Agent Commission <span class="hint">% of sale</span></label>
+              <div class="input-wrap"><input type="number" id="commission" class="has-post" value="5"><span class="post">%</span></div>
+            </div>
+            <div class="field">
+              <label>Sell Closing <span class="hint">% of sale</span></label>
+              <div class="input-wrap"><input type="number" id="sellClose" class="has-post" value="1.5"><span class="post">%</span></div>
+            </div>
+          </div>
+          <button class="reset" id="reset">↺ Reset to example deal</button>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div>
+        <div class="verdict v-go" id="verdict">
+          <div class="vicon" id="vicon">✅</div>
+          <div>
+            <div class="vtitle" id="vtitle">Strong Deal</div>
+            <div class="vsub" id="vsub">—</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Bottom Line</div>
+          <div class="card-sub" id="addr-echo">&nbsp;</div>
+          <div class="grid-2">
+            <div class="stat">
+              <div class="lbl">Net Profit</div>
+              <div class="val" id="o-profit">$0</div>
+              <div class="meta" id="o-margin">— of ARV</div>
+            </div>
+            <div class="stat">
+              <div class="lbl">Cash-on-Cash ROI</div>
+              <div class="val" id="o-roi">0%</div>
+              <div class="meta" id="o-annroi">— annualized</div>
+            </div>
+            <div class="stat">
+              <div class="lbl">Cash In Pocket</div>
+              <div class="val" id="o-cash">$0</div>
+              <div class="meta">total out-of-pocket</div>
+            </div>
+            <div class="stat">
+              <div class="lbl">All-In Cost</div>
+              <div class="val" id="o-allin">$0</div>
+              <div class="meta">vs ARV</div>
+            </div>
+          </div>
+
+          <div class="rule-box">
+            <b>70% Rule — Max Allowable Offer</b>
+            <span class="mao" id="o-mao">$0</span>
+            (ARV × 70% − rehab). Your offer is <span id="o-maocheck">—</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Where the money goes</div>
+          <div class="card-sub">Full cost breakdown to resale.</div>
+          <table class="bd">
+            <tbody id="breakdown"></tbody>
+          </table>
+          <div class="foot">
+            Estimates only — verify ARV with real comps, get a contractor's written rehab bid, and pad your timeline. The fastest way to lose money on a flip is an optimistic ARV and a thin rehab budget.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  var fund = "financed";
+  var ids = ["purchase","rehab","arv","down","rate","points","lenderFees","months","taxYr","insYr","utilMo","buyClose","commission","sellClose"];
+  function $(id){return document.getElementById(id);}
+  function num(id){var v=parseFloat($(id).value);return isNaN(v)?0:v;}
+  function money(n){
+    var s = Math.abs(Math.round(n)).toLocaleString("en-US");
+    return (n<0?"-$":"$")+s;
+  }
+  function pct(n){return (n*100).toFixed(1)+"%";}
+
+  function compute(){
+    var purchase=num("purchase"), rehab=num("rehab"), arv=num("arv");
+    var months=Math.max(num("months"),0.0001);
+
+    // Buying / selling costs
+    var buyClose = purchase * num("buyClose")/100;
+    var commission = arv * num("commission")/100;
+    var sellClose = arv * num("sellClose")/100;
+    var sellingCosts = commission + sellClose;
+
+    // Holding costs
+    var holding = (num("taxYr")/12 + num("insYr")/12 + num("utilMo")) * months;
+
+    // Financing
+    var loanAmount=0, interest=0, finFees=0, downPayment=0;
+    if(fund==="financed"){
+      downPayment = purchase * num("down")/100;
+      var financeRehab = $("financeRehab").checked;
+      loanAmount = (purchase - downPayment) + (financeRehab ? rehab : 0);
+      interest = loanAmount * (num("rate")/100/12) * months;
+      finFees = loanAmount * num("points")/100 + num("lenderFees");
+    }
+
+    var financingCost = interest + finFees;
+
+    // Totals
+    var allIn = purchase + rehab + buyClose + holding + financingCost; // cost to own + ready
+    var totalCost = allIn + sellingCosts;
+    var netProfit = arv - totalCost;
+
+    // Cash actually out of pocket (loan principal returns at sale)
+    var cashIn;
+    if(fund==="financed"){
+      var financedRehabAmt = $("financeRehab").checked ? rehab : 0;
+      cashIn = downPayment + (rehab - financedRehabAmt) + buyClose + holding + financingCost;
+    } else {
+      cashIn = allIn; // everything is cash
+    }
+    cashIn = Math.max(cashIn, 0.0001);
+
+    var roi = netProfit / cashIn;
+    var annRoi = roi * (12/months);
+    var margin = arv>0 ? netProfit/arv : 0;
+
+    // 70% rule
+    var mao = arv*0.70 - rehab;
+
+    return {purchase:purchase,rehab:rehab,arv:arv,buyClose:buyClose,commission:commission,
+      sellClose:sellClose,sellingCosts:sellingCosts,holding:holding,interest:interest,
+      finFees:finFees,financingCost:financingCost,downPayment:downPayment,loanAmount:loanAmount,
+      allIn:allIn,totalCost:totalCost,netProfit:netProfit,cashIn:cashIn,roi:roi,annRoi:annRoi,
+      margin:margin,mao:mao};
+  }
+
+  function render(){
+    var r = compute();
+
+    // Bottom line
+    var pe=$("o-profit"); pe.textContent=money(r.netProfit);
+    pe.className="val "+(r.netProfit>=0?"pos":"neg");
+    $("o-margin").textContent=pct(r.margin)+" of ARV";
+    var re=$("o-roi"); re.textContent=pct(r.roi); re.className="val "+(r.roi>=0?"pos":"neg");
+    $("o-annroi").textContent=pct(r.annRoi)+" annualized";
+    $("o-cash").textContent=money(r.cashIn);
+    $("o-allin").textContent=money(r.allIn);
+
+    // MAO
+    $("o-mao").textContent=money(r.mao);
+    var mc=$("o-maocheck");
+    if(r.purchase<=r.mao){mc.innerHTML='<span class="ok">'+money(r.mao-r.purchase)+' under — within the rule ✓</span>';}
+    else{mc.innerHTML='<span class="over">'+money(r.purchase-r.mao)+' over the max ✗</span>';}
+
+    // Address echo
+    var a=$("addr").value.trim();
+    $("addr-echo").innerHTML = a ? a : "&nbsp;";
+
+    // Breakdown
+    var rows=[
+      ["Resale price (ARV)", r.arv, false, true],
+      ["Purchase price", -r.purchase, true, false],
+      ["Rehab budget", -r.rehab, true, false],
+      ["Buy closing costs", -r.buyClose, true, false],
+      ["Holding costs", -r.holding, true, false],
+      ["Loan interest", -r.interest, true, false],
+      ["Points + lender fees", -r.finFees, true, false],
+      ["Agent commission", -r.commission, true, false],
+      ["Sell closing costs", -r.sellClose, true, false]
+    ];
+    var html="";
+    rows.forEach(function(row){
+      var neg = row[2];
+      html+='<tr class="'+(neg?"neg":"")+'"><td class="'+(row[3]?"":"muted")+'">'+row[0]+'</td><td>'+money(row[1])+'</td></tr>';
+    });
+    html+='<tr class="sum"><td>Net Profit</td><td style="color:'+(r.netProfit>=0?"#16a34a":"#dc2626")+'">'+money(r.netProfit)+'</td></tr>';
+    $("breakdown").innerHTML=html;
+
+    // Verdict
+    var v=$("verdict"), vt=$("vtitle"), vs=$("vsub"), vi=$("vicon");
+    v.className="verdict ";
+    var withinMao = r.purchase <= r.mao;
+    if(r.netProfit < 5000 || r.margin < 0.05){
+      v.className+="v-no"; vi.textContent="🛑"; vt.textContent="Pass on this one";
+      vs.textContent="Margin too thin to absorb surprises. One overrun wipes it out.";
+    } else if(r.margin>=0.12 && r.annRoi>=0.20 && withinMao){
+      v.className+="v-go"; vi.textContent="✅"; vt.textContent="Strong Deal";
+      vs.textContent=money(r.netProfit)+" profit · "+pct(r.annRoi)+" annualized · within the 70% rule.";
+    } else {
+      v.className+="v-maybe"; vi.textContent="⚠️"; vt.textContent="Marginal — negotiate";
+      vs.textContent = withinMao
+        ? "It pencils, but the margin is tight. Tighten rehab or hold time."
+        : "Over the 70% max — get the price down to ~"+money(r.mao)+" to make it safe.";
+    }
+  }
+
+  // Wire inputs
+  ids.forEach(function(id){ $(id).addEventListener("input", render); });
+  $("addr").addEventListener("input", render);
+  $("financeRehab").addEventListener("change", render);
+
+  // Funding toggle
+  document.querySelectorAll("#fund-seg button").forEach(function(b){
+    b.addEventListener("click", function(){
+      fund=b.dataset.fund;
+      document.querySelectorAll("#fund-seg button").forEach(function(x){x.classList.remove("on");});
+      b.classList.add("on");
+      $("fin-fields").disabled = (fund==="cash");
+      render();
+    });
+  });
+
+  // Reset
+  var defaults={purchase:200000,rehab:50000,arv:400000,down:10,rate:11,points:2,lenderFees:1500,
+    months:6,taxYr:4200,insYr:2400,utilMo:350,buyClose:2,commission:5,sellClose:1.5};
+  $("reset").addEventListener("click", function(){
+    Object.keys(defaults).forEach(function(k){ $(k).value=defaults[k]; });
+    $("addr").value=""; $("financeRehab").checked=true;
+    fund="financed";
+    document.querySelectorAll("#fund-seg button").forEach(function(x){x.classList.toggle("on",x.dataset.fund==="financed");});
+    $("fin-fields").disabled=false;
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
