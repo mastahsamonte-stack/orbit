@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orbit · Exit Maximizer</title>
+<style>
+  :root {
+    --ink: #1a1a17;
+    --ink-soft: #5a594f;
+    --paper: #fbf2e3;
+    --card: #ffffff;
+    --line: #e8e4d9;
+    --accent: #2f5fe0;
+    --accent-deep: #1f3f99;
+    --accent-soft: #eaf0ff;
+    --green: #2f7d4a;
+    --green-soft: #e7f3ec;
+    --rust: #b04a2a;
+    --rust-soft: #ffeae0;
+    --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    --font-serif: "Fraunces", "Source Serif Pro", Georgia, "Times New Roman", serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 32px 20px 80px;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+
+  header { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; }
+  .logo { font-family: var(--font-serif); font-size: 28px; font-weight: 600; }
+  .logo span { color: var(--accent); }
+  .tagline { font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft); letter-spacing: .04em; }
+  h1 { font-family: var(--font-serif); font-size: 38px; font-weight: 600; margin: 18px 0 8px; }
+  .sub { color: var(--ink-soft); font-size: 15px; max-width: 640px; line-height: 1.5; margin-bottom: 28px; }
+
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 1px 3px rgba(26,26,23,.05);
+  }
+  .panel + .panel { margin-top: 20px; }
+  .panel h2 {
+    font-family: var(--font-serif); font-size: 19px; font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .panel .hint { font-size: 13px; color: var(--ink-soft); margin-bottom: 16px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+  .field label {
+    display: block; font-size: 12px; font-weight: 600; letter-spacing: .03em;
+    text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px;
+  }
+  .field input {
+    width: 100%; padding: 10px 12px; font-size: 15px; font-family: var(--font-mono);
+    border: 1px solid var(--line); border-radius: 8px; background: #fffdf8; color: var(--ink);
+  }
+  .field input:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent); }
+  .field.wide { grid-column: 1 / -1; }
+  .field .note { font-size: 11px; color: var(--ink-soft); margin-top: 4px; }
+
+  .reco {
+    margin-top: 24px;
+    border: 2px solid var(--accent);
+    background: linear-gradient(135deg, var(--accent-soft) 0%, #ffffff 70%);
+    border-radius: 14px; padding: 24px;
+  }
+  .reco .label {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--accent-deep); margin-bottom: 6px;
+  }
+  .reco h2 { font-family: var(--font-serif); font-size: 30px; font-weight: 600; margin-bottom: 8px; }
+  .reco p { font-size: 15px; line-height: 1.55; color: var(--ink); max-width: 720px; }
+  .reco .profit { font-family: var(--font-mono); font-weight: 700; color: var(--green); }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; margin-top: 20px; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 20px; display: flex; flex-direction: column; gap: 12px;
+    box-shadow: 0 1px 3px rgba(26,26,23,.05);
+  }
+  .card.best { border: 2px solid var(--green); }
+  .card .head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .card h3 { font-family: var(--font-serif); font-size: 18px; font-weight: 600; }
+  .badge {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase;
+    padding: 4px 9px; border-radius: 999px; white-space: nowrap;
+  }
+  .badge.best { background: var(--green-soft); color: var(--green); }
+  .badge.risk-low { background: var(--green-soft); color: var(--green); }
+  .badge.risk-med { background: #fef0e1; color: #9a6a1f; }
+  .badge.risk-high { background: var(--rust-soft); color: var(--rust); }
+  .card .profit-line { font-family: var(--font-mono); font-size: 26px; font-weight: 700; }
+  .card .profit-line.pos { color: var(--green); }
+  .card .profit-line.neg { color: var(--rust); }
+  .card .profit-line small { font-size: 12px; font-weight: 400; color: var(--ink-soft); display: block; margin-top: 2px; font-family: var(--font-sans); }
+  .card dl { display: grid; grid-template-columns: 1fr auto; row-gap: 6px; font-size: 13px; border-top: 1px dashed var(--line); padding-top: 12px; }
+  .card dt { color: var(--ink-soft); }
+  .card dd { font-family: var(--font-mono); text-align: right; }
+  .card .meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
+
+  footer { margin-top: 36px; font-size: 12px; color: var(--ink-soft); line-height: 1.6; max-width: 760px; }
+  @media (max-width: 560px) { h1 { font-size: 30px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">Orbit<span>.</span></div>
+    <div class="tagline">creative finance lead network</div>
+  </header>
+
+  <h1>Exit Maximizer</h1>
+  <p class="sub">Enter your deal numbers and Orbit compares five exit strategies side by side —
+  wholesale, wholetail, fix &amp; flip, buy &amp; hold, and creative finance — then recommends
+  the path that maximizes your return for the risk and time involved.</p>
+
+  <div class="panel">
+    <h2>Deal inputs</h2>
+    <p class="hint">Defaults below are placeholder estimates — replace them with your own comps and walkthrough numbers. Everything recalculates live.</p>
+    <div class="grid">
+      <div class="field wide">
+        <label for="address">Property address</label>
+        <input id="address" type="text" value="1563 Angler Ave, Kissimmee, FL 34746">
+      </div>
+      <div class="field">
+        <label for="arv">After-repair value (ARV)</label>
+        <input id="arv" type="number" value="320000" step="1000">
+        <div class="note">From your comps</div>
+      </div>
+      <div class="field">
+        <label for="price">Contract / purchase price</label>
+        <input id="price" type="number" value="235000" step="1000">
+      </div>
+      <div class="field">
+        <label for="repairs">Full repair estimate</label>
+        <input id="repairs" type="number" value="40000" step="500">
+        <div class="note">To retail condition</div>
+      </div>
+      <div class="field">
+        <label for="rent">Market rent / month</label>
+        <input id="rent" type="number" value="2100" step="50">
+      </div>
+      <div class="field">
+        <label for="fee">Wholesale fee target</label>
+        <input id="fee" type="number" value="15000" step="500">
+      </div>
+      <div class="field">
+        <label for="months">Flip hold (months)</label>
+        <input id="months" type="number" value="5" step="1" min="1">
+      </div>
+      <div class="field">
+        <label for="hmrate">Hard money rate %/yr</label>
+        <input id="hmrate" type="number" value="12" step="0.5">
+        <div class="note">Plus 2 pts assumed</div>
+      </div>
+      <div class="field">
+        <label for="mortrate">Mortgage rate %/yr</label>
+        <input id="mortrate" type="number" value="7" step="0.125">
+        <div class="note">30-yr DSCR, 80% LTV</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reco" id="reco"></div>
+
+  <div class="cards" id="cards"></div>
+
+  <footer>
+    <strong>Assumptions baked in:</strong> selling costs 8% of resale (commission + closing + concessions);
+    wholetail = 25% of full repair budget, resells at 90% ARV over a 2-month hold;
+    flip financed with hard money at 90% of purchase + 100% of repairs;
+    rental operating expenses 35% of rent (taxes, insurance, maintenance, vacancy, management);
+    creative finance modeled as seller finance at the contract price, 10% down, 6% interest, 30-yr amortization.
+    This tool is a screening model, not an appraisal or financial advice — verify every number before you sign.
+  </footer>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const fmt = n => (n < 0 ? "-$" : "$") + Math.abs(Math.round(n)).toLocaleString("en-US");
+const pct = n => (n * 100).toFixed(1) + "%";
+
+const inputs = ["arv","price","repairs","rent","fee","months","hmrate","mortrate","address"];
+inputs.forEach(id => $(id).addEventListener("input", calc));
+
+function monthlyPI(principal, annualRate, years) {
+  const r = annualRate / 12;
+  if (r === 0) return principal / (years * 12);
+  const n = years * 12;
+  return principal * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+}
+
+function calc() {
+  const arv = +$("arv").value || 0;
+  const price = +$("price").value || 0;
+  const repairs = +$("repairs").value || 0;
+  const rent = +$("rent").value || 0;
+  const fee = +$("fee").value || 0;
+  const months = Math.max(1, +$("months").value || 1);
+  const hmRate = (+$("hmrate").value || 0) / 100;
+  const mortRate = (+$("mortrate").value || 0) / 100;
+  const sellPct = 0.08;
+
+  const strategies = [];
+
+  // 1. Wholesale — assign the contract; buyer's MAO sets your ceiling
+  const buyerMAO = arv * 0.7 - repairs;
+  const wholesaleRoom = buyerMAO - price;
+  strategies.push({
+    name: "Wholesale",
+    profit: fee,
+    cash: 1000,
+    months: 0.75,
+    risk: "low",
+    viable: wholesaleRoom >= fee,
+    lines: [
+      ["End-buyer MAO (70% rule)", fmt(buyerMAO)],
+      ["Spread above contract", fmt(wholesaleRoom)],
+      ["Your assignment fee", fmt(fee)],
+      ["Cash at risk (EMD)", fmt(1000)],
+    ],
+    blurb: wholesaleRoom >= fee
+      ? "Contract price leaves room under the buyer's 70%-rule ceiling — fee is realistic."
+      : "Contract price is above what a typical cash buyer will pay; renegotiate or pick another exit.",
+  });
+
+  // 2. Wholetail — light cleanup, list as-is on MLS
+  const wtRepairs = repairs * 0.25;
+  const wtResale = arv * 0.9;
+  const wtHoldCost = (price + wtRepairs) * hmRate / 12 * 2 + (price + wtRepairs) * 0.02;
+  const wtProfit = wtResale - price - wtRepairs - wtResale * sellPct - wtHoldCost;
+  strategies.push({
+    name: "Wholetail",
+    profit: wtProfit,
+    cash: (price + wtRepairs) * 0.12,
+    months: 2,
+    risk: "medium",
+    viable: wtProfit > 0,
+    lines: [
+      ["Resale price (90% ARV)", fmt(wtResale)],
+      ["Light repairs (25%)", fmt(wtRepairs)],
+      ["Selling costs (8%)", fmt(wtResale * sellPct)],
+      ["Financing + points (2 mo)", fmt(wtHoldCost)],
+    ],
+    blurb: "Buy, clean, list on MLS as-is. Faster than a flip, more profit than an assignment.",
+  });
+
+  // 3. Fix & flip — full rehab, retail sale
+  const loan = price * 0.9 + repairs;
+  const flipHold = loan * hmRate / 12 * months + loan * 0.02;
+  const carry = (350 + arv * 0.015 / 12) * months; // utilities + taxes/insurance while holding
+  const flipProfit = arv - price - repairs - arv * sellPct - flipHold - carry;
+  strategies.push({
+    name: "Fix & Flip",
+    profit: flipProfit,
+    cash: price * 0.1 + flipHold * 0.3,
+    months: months,
+    risk: "high",
+    viable: flipProfit > 0,
+    lines: [
+      ["Resale at ARV", fmt(arv)],
+      ["Purchase + repairs", fmt(price + repairs)],
+      ["Selling costs (8%)", fmt(arv * sellPct)],
+      ["Financing + carry (" + months + " mo)", fmt(flipHold + carry)],
+    ],
+    blurb: "Highest gross upside, but you carry rehab, market, and timeline risk for " + months + " months.",
+  });
+
+  // 4. Buy & hold — DSCR refi at 80% of ARV after rehab
+  const allIn = price + repairs;
+  const refiLoan = arv * 0.8;
+  const piti = monthlyPI(refiLoan, mortRate, 30) + arv * 0.015 / 12 + 120; // P&I + taxes + insurance
+  const cashFlow = rent - rent * 0.35 - piti;
+  const cashLeft = Math.max(allIn - refiLoan, 0) + arv * 0.02;
+  const equity = arv - refiLoan;
+  const coc = cashLeft > 0 ? (cashFlow * 12) / cashLeft : Infinity;
+  strategies.push({
+    name: "Buy & Hold (BRRRR)",
+    profit: cashFlow * 12 + equity * 0.25, // yr-1 cash flow + portion of equity captured
+    cash: cashLeft,
+    months: months + 1,
+    risk: "medium",
+    viable: cashFlow > 0,
+    lines: [
+      ["Monthly cash flow", fmt(cashFlow)],
+      ["Equity after refi (80% LTV)", fmt(equity)],
+      ["Cash left in deal", fmt(cashLeft)],
+      ["Cash-on-cash", isFinite(coc) ? pct(coc) : "∞ (all cash out)"],
+    ],
+    blurb: cashFlow > 0
+      ? "Rehab, rent, refinance at 80% of ARV — long-term wealth play with " + fmt(equity) + " equity captured."
+      : "Negative cash flow at current rent and rates — hold only if you expect rent growth or can buy down the rate.",
+  });
+
+  // 5. Creative finance — seller finance / sub-to spread
+  const sfDown = price * 0.1;
+  const sfPayment = monthlyPI(price - sfDown, 0.06, 30);
+  const sfFlow = rent - rent * 0.35 - sfPayment - arv * 0.015 / 12 - 120;
+  strategies.push({
+    name: "Creative Finance",
+    profit: sfFlow * 12 + (arv - price) * 0.25,
+    cash: sfDown + 3000,
+    months: 1,
+    risk: "medium",
+    viable: sfFlow > -100,
+    lines: [
+      ["Down payment (10%)", fmt(sfDown)],
+      ["Seller-finance payment", fmt(sfPayment)],
+      ["Monthly cash flow", fmt(sfFlow)],
+      ["Built-in equity vs ARV", fmt(arv - price)],
+    ],
+    blurb: "Seller finance at 6% / 30-yr keeps entry low and locks in " + fmt(arv - price) + " of equity without bank financing.",
+  });
+
+  // Score: profit per month of exposure, discounted by risk, zeroed if not viable
+  const riskFactor = { low: 1.0, medium: 0.85, high: 0.7 };
+  strategies.forEach(s => {
+    s.score = s.viable ? (s.profit / Math.max(s.months, 0.5)) * riskFactor[s.risk] : -Infinity;
+  });
+  const best = strategies.reduce((a, b) => (b.score > a.score ? b : a));
+
+  $("reco").innerHTML = `
+    <div class="label">Recommended exit · ${$("address").value || "your property"}</div>
+    <h2>${best.name}</h2>
+    <p>Projected return of <span class="profit">${fmt(best.profit)}</span> over roughly
+    ${best.months < 1 ? "2–4 weeks" : "~" + Math.round(best.months) + " month" + (Math.round(best.months) > 1 ? "s" : "")}
+    with about ${fmt(best.cash)} of your cash exposed. ${best.blurb}</p>`;
+
+  $("cards").innerHTML = strategies.map(s => `
+    <div class="card${s === best ? " best" : ""}">
+      <div class="head">
+        <h3>${s.name}</h3>
+        ${s === best ? '<span class="badge best">Best exit</span>' : ""}
+      </div>
+      <div class="profit-line ${s.profit >= 0 ? "pos" : "neg"}">${fmt(s.profit)}
+        <small>${s.name === "Buy & Hold (BRRRR)" || s.name === "Creative Finance" ? "year-1 cash flow + 25% of equity captured" : "projected net profit"}</small>
+      </div>
+      <dl>${s.lines.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>
+      <div class="meta">
+        <span class="badge risk-${s.risk}">${s.risk} risk</span>
+        <span class="badge" style="background:var(--accent-soft);color:var(--accent-deep)">${s.months < 1 ? "2–4 wks" : "~" + Math.round(s.months) + " mo"}</span>
+        <span class="badge" style="background:#f3f1ea;color:var(--ink-soft)">${fmt(s.cash)} cash in</span>
+        ${s.viable ? "" : '<span class="badge risk-high">not viable as-is</span>'}
+      </div>
+    </div>`).join("");
+}
+
+calc();
+</script>
+</body>
+</html>
