@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RV Park Underwriting — My Field Guide</title>
+<style>
+  :root{
+    --ink:#1a1a2e; --muted:#5b6172; --line:#e3e6ef; --bg:#f6f7fb; --card:#fff;
+    --accent:#6c4cf1; --accent2:#0ea5a3; --good:#16a34a; --warn:#d97706; --bad:#dc2626;
+    --code:#f1f0fb;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.6;font-size:16px}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px 80px}
+  header.hero{background:linear-gradient(135deg,#6c4cf1,#0ea5a3);color:#fff;padding:48px 20px 40px;margin-bottom:8px}
+  header.hero .inner{max-width:960px;margin:0 auto}
+  header.hero h1{margin:0 0 8px;font-size:34px;letter-spacing:-.5px}
+  header.hero p{margin:4px 0;opacity:.95}
+  .tag{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);
+    padding:3px 10px;border-radius:20px;font-size:12.5px;margin:8px 6px 0 0}
+  h2{font-size:24px;margin:46px 0 6px;padding-top:14px;border-top:3px solid var(--accent);display:inline-block}
+  h3{font-size:18.5px;margin:28px 0 8px;color:#2a2150}
+  h4{font-size:15.5px;margin:18px 0 6px;color:var(--accent)}
+  .lead{color:var(--muted);font-size:16.5px;margin-top:2px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0;
+    box-shadow:0 1px 3px rgba(20,20,50,.04)}
+  .grid{display:grid;gap:14px}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:720px){.g2,.g3{grid-template-columns:1fr}}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px;background:#fff;border-radius:10px;overflow:hidden}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#efeefb;color:#2a2150;font-weight:600}
+  tr:last-child td{border-bottom:none}
+  code,.mono{font-family:"SF Mono",Menlo,Consolas,monospace;background:var(--code);padding:2px 6px;border-radius:6px;font-size:13.5px}
+  pre{background:#1e1b2e;color:#e8e6ff;padding:16px 18px;border-radius:12px;overflow-x:auto;font-size:13px;line-height:1.55}
+  pre .c{color:#9b8cff}
+  .callout{border-left:4px solid var(--accent);background:#f4f2ff;padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .callout.good{border-color:var(--good);background:#effaf1}
+  .callout.warn{border-color:var(--warn);background:#fff8ed}
+  .callout.bad{border-color:var(--bad);background:#fef2f2}
+  .pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:20px}
+  .pill.g{background:#dcfce7;color:#166534}.pill.w{background:#fef3c7;color:#92400e}.pill.b{background:#fee2e2;color:#991b1b}
+  .step{display:flex;gap:14px;margin:14px 0;align-items:flex-start}
+  .step .n{flex:0 0 38px;height:38px;border-radius:10px;background:var(--accent);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17px}
+  .step .body{flex:1}
+  .kpi{font-size:13px;color:var(--muted)}
+  .big{font-size:22px;font-weight:700;color:var(--accent)}
+  ul.tight{margin:8px 0;padding-left:20px}ul.tight li{margin:4px 0}
+  .toc a{color:var(--accent);text-decoration:none}.toc a:hover{text-decoration:underline}
+  .toc ol{columns:2;-webkit-columns:2;margin:6px 0}
+  @media(max-width:720px){.toc ol{columns:1}}
+  footer{color:var(--muted);font-size:13px;margin-top:50px;border-top:1px solid var(--line);padding-top:18px}
+  .src{font-size:13px;color:var(--muted)}.src a{color:var(--accent)}
+  .deal{background:#fbfbff;border:1px dashed #c9c3f0}
+  .check li{list-style:none;margin:5px 0;padding-left:26px;position:relative}
+  .check li:before{content:"☐";position:absolute;left:0;color:var(--accent);font-size:17px}
+</style>
+</head>
+<body>
+<header class="hero"><div class="inner">
+  <h1>RV Park Underwriting — My Field Guide</h1>
+  <p class="lead" style="color:#fff;opacity:.95">From first look to submitted offer. <strong>Buy on what it does TODAY, not what it could do.</strong></p>
+  <div>
+    <span class="tag">Built from: Mentor Cheat Sheet + the live Evaluator spreadsheet</span>
+    <span class="tag">Method: Pace Morby creative-finance playbook</span>
+    <span class="tag">Works for: RV Parks · Mobile Home Parks · Multifamily</span>
+  </div>
+</div></header>
+
+<div class="wrap">
+
+<div class="card" style="margin-top:22px">
+  <h4 style="margin-top:0">How this guide was built (so I can defend every line)</h4>
+  <p style="margin:6px 0">This is my own synthesized playbook, compiled from three sources I fully analyzed, plus market research:</p>
+  <ul class="tight">
+    <li><strong>The RV Park Underwriting Cheat Sheet</strong> — the 8 steps, the key formulas, the financing menu, the golden rules, and the full AI-prompt playbook.</li>
+    <li><strong>The MHP / RV Park Evaluator spreadsheet</strong> (38 tabs) — I reverse-engineered the core engine: <em>Inputs&nbsp;&amp;&nbsp;Analysis</em>, <em>Comps&nbsp;Analysis</em>, <em>Financing</em>, and <em>Deal&nbsp;Summary</em>. It was pre-loaded with a live <strong>71-site, $1.6M</strong> deal, which I use as the worked example throughout.</li>
+    <li><strong>Market research</strong> — current RV/MHP cap-rate, expense-ratio and $/site benchmarks, and the documented mechanics of the Morby Method (sources at the end).</li>
+  </ul>
+  <div class="callout warn" style="margin-bottom:0">
+    <strong>One honesty note on the 3 videos.</strong> They're large MP4 recordings (2.5–4.3&nbsp;GB: "Bobby Souza Underwrite Cap Rate Offer," "RV Park Underwriting Part&nbsp;1 &amp; 2"). I can't watch video or transcribe audio, so nothing here is invented from them. The good news: the spreadsheet <em>is</em> the model walked through in the "Cap Rate Offer" recording, so the lessons are captured structurally. <strong>Send a transcript/captions and I'll merge the exact spoken commentary in.</strong>
+  </div>
+</div>
+
+<nav class="card toc">
+  <h4 style="margin-top:0">Contents</h4>
+  <ol>
+    <li><a href="#philosophy">The one philosophy</a></li>
+    <li><a href="#steps">The 8-step process</a></li>
+    <li><a href="#numbers">The numbers that matter</a></li>
+    <li><a href="#model">The spreadsheet engine, tab by tab</a></li>
+    <li><a href="#example">The worked deal (71 sites / $1.6M)</a></li>
+    <li><a href="#financing">Financing &amp; cash-to-close</a></li>
+    <li><a href="#valueadd">Value-add levers</a></li>
+    <li><a href="#ai">The AI underwriting playbook</a></li>
+    <li><a href="#crossasset">Re-using the model for MHP &amp; Multifamily</a></li>
+    <li><a href="#golden">Golden rules &amp; red flags</a></li>
+    <li><a href="#benchmarks">Market benchmarks (2025–26)</a></li>
+    <li><a href="#checklist">One-page checklist</a></li>
+  </ol>
+</nav>
+
+<!-- 1 -->
+<h2 id="philosophy">1 · The one philosophy</h2>
+<p class="lead">Everything below rolls up to a single sentence.</p>
+<div class="callout good"><strong>Value what it does TODAY, not what it could do.</strong> You underwrite the in-place, buyer-normalized NOI and offer on that. Upside (value-add) tells you how much room you have and how excited to be — it is <em>never</em> what you pay for. The seller wants to be paid for the upside <em>you</em> create; don't let them.</div>
+<p>The whole valuation game is two numbers: <span class="big">NOI ÷ Cap Rate</span>. Get the NOI honest and the cap rate defensible, and the price falls out. Most of underwriting is the discipline of <em>lowering</em> the seller's NOI to a number you can actually operate, and <em>raising</em> the cap rate to one the market and your risk justify. Both moves protect you.</p>
+
+<!-- 2 -->
+<h2 id="steps">2 · The 8-step process</h2>
+<p class="lead">First look → submitted offer. This is the spine; the rest of the guide is detail on each step.</p>
+
+<div class="card">
+  <div class="step"><div class="n">1</div><div class="body"><h4 style="margin-top:0">Gather docs</h4>
+    P&amp;L (2–3 yrs), <strong>T-12</strong>, rent roll / reservation report, OM (offering memo), tax returns. No real docs = you reconstruct income conservatively from the rent roll and bank deposits (and that under-management <em>is</em> the value-add).</div></div>
+  <div class="step"><div class="n">2</div><div class="body"><h4 style="margin-top:0">Park basics</h4>
+    Site count &amp; types, unit mix (monthly / weekly / nightly RV, MH pads POH vs TOH, other), infrastructure (<strong>city vs well/septic</strong>, electric metered or master), occupancy mix (transient vs long-term).</div></div>
+  <div class="step"><div class="n">3</div><div class="body"><h4 style="margin-top:0">Market research</h4>
+    Demand drivers (employers, tourism, pass-through traffic, energy concentration risk), 5–8 competitors (rates, amenities, live Google ratings), and the <strong>market cap rate</strong>. <em>Use the AI prompts A1–A4 here.</em></div></div>
+  <div class="step"><div class="n">4</div><div class="body"><h4 style="margin-top:0">Run financials</h4>
+    Top-line trend, build a <strong>conservative NOI</strong>, <strong>adjust expenses UP</strong> for a new owner, and value it today (Adjusted NOI ÷ Market Cap).</div></div>
+  <div class="step"><div class="n">5</div><div class="body"><h4 style="margin-top:0">Find value-add</h4>
+    Fill vacancy → raise to market rent → bill back utilities → <em>then</em> capex items. Cheapest levers first. <em>Use AI prompts B1–B7.</em></div></div>
+  <div class="step"><div class="n">6</div><div class="body"><h4 style="margin-top:0">Build pro forma</h4>
+    Year 1 = flat revenue + <em>higher</em> expenses (don't lease up while utilities are broken), then model the ramp, then ~3% growth after stabilization.</div></div>
+  <div class="step"><div class="n">7</div><div class="body"><h4 style="margin-top:0">Choose financing</h4>
+    Know the seller's existing debt. Pick the structure: DSCR, seller carry, <strong>Morby Method</strong>, or lease-option.</div></div>
+  <div class="step"><div class="n">8</div><div class="body"><h4 style="margin-top:0">Send the offer</h4>
+    LOI that protects both sides. <strong>If the deal is overpriced, lead with terms, not a low price.</strong> ("When price won't work, terms can.")</div></div>
+</div>
+
+<!-- 3 -->
+<h2 id="numbers">3 · The numbers that matter</h2>
+<div class="grid g2">
+  <div class="card">
+    <h4 style="margin-top:0">The formulas</h4>
+    <table>
+      <tr><th>What</th><th>Formula</th></tr>
+      <tr><td>NOI</td><td><code>Income − Operating Expenses</code></td></tr>
+      <tr><td>Value today</td><td><code>Adjusted NOI ÷ Market Cap</code></td></tr>
+      <tr><td>Implied cap</td><td><code>Asking ÷ Adjusted NOI</code></td></tr>
+      <tr><td>Quick NOI</td><td><code>Revenue × 50%</code> (conservative)</td></tr>
+    </table>
+    <p class="kpi"><strong>Rule of thumb:</strong> implied cap <span class="pill b">below 8% = overpriced</span> for an RV park. Every $1 of durable NOI ≈ <strong>$11 of value at a 9 cap</strong> (1 ÷ 0.09).</p>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">The cap-rate trick</h4>
+    <p>No clean RV comp? Anchor to apartments:</p>
+    <div class="callout" style="margin:8px 0"><strong>Nearest metro's suburban C-class apartment cap rate + 4 points.</strong></div>
+    <p>RV parks usually land <strong>8–10% (~9%)</strong>. Lean to the <em>higher</em> end for single-industry, tertiary or small markets — a higher cap = a lower, safer price.</p>
+  </div>
+</div>
+
+<div class="card">
+  <h4 style="margin-top:0">Adjust expenses UP for a new owner — the four that move the needle</h4>
+  <table>
+    <tr><th>Line</th><th>Why it goes up</th><th>How to set it</th></tr>
+    <tr><td><strong>Property taxes</strong> <span class="pill b">the big one</span></td><td>Reassessed on sale — almost always higher than the seller's frozen basis</td><td>Model the reassessed amount at your purchase price, not their old bill</td></tr>
+    <tr><td><strong>Labor / management</strong></td><td>A "free-rent on-site manager" understates real cost</td><td>Normalize to market payroll + a <strong>~3% management fee</strong> of effective income</td></tr>
+    <tr><td><strong>Insurance</strong></td><td>Hardening market; trailing number is stale</td><td>Get a real quote; expect a modest bump</td></tr>
+    <tr><td><strong>Reserves</strong></td><td>Lenders require it; pads/roads/hookups wear out</td><td>Set cash aside per pad per year</td></tr>
+  </table>
+  <p class="kpi">This is why the seller's NOI is almost always optimistic. Your <em>normalized</em> NOI is the one you offer on.</p>
+</div>
+
+<!-- 4 -->
+<h2 id="model">4 · The spreadsheet engine, tab by tab</h2>
+<p class="lead">The evaluator has 38 tabs, but four do the real work. Here's how they wire together so you can drive it — or rebuild it — with confidence.</p>
+
+<div class="card">
+<h3 style="margin-top:0">① Inputs &amp; Analysis — <span style="font-weight:400">the heart</span></h3>
+<p>Everything starts here. You type the property, the rent mix, utilities, and additional income; the seller's NOI and implied cap fall out automatically.</p>
+<table>
+  <tr><th>Block</th><th>What you enter</th><th>What it computes</th></tr>
+  <tr><td><strong>Property</strong></td><td>Sites, current occupancy, asking price</td><td>Price / site</td></tr>
+  <tr><td><strong>Current Rental Income</strong></td><td>For each type (RV monthly/weekly/nightly, MH POH/TOH, other): # of sites, # rented, avg rate</td><td>Per-line occupancy, monthly &amp; annual income, total gross rent. <span class="kpi">Note: weekly uses ×4.33 wks/mo; nightly uses ×30 nights.</span></td></tr>
+  <tr><td><strong>Utilities &amp; Billback</strong></td><td>Electric included? Meters installed? Monthly electric cost, billback %</td><td>Potential monthly/annual billback income (only counts if not already in rent and no individual meters)</td></tr>
+  <tr><td><strong>Additional Income</strong></td><td>Propane, laundry, storage, other (monthly)</td><td>Total ancillary income</td></tr>
+  <tr><td><strong>Seller's NOI</strong></td><td>Seller's expense ratio (default <strong>50%</strong>)</td><td>Gross income → expenses → <strong>NOI</strong> → <strong>implied cap</strong> (NOI ÷ asking)</td></tr>
+  <tr><td><strong>Valuation</strong></td><td>Market cap rate (e.g. 9%)</td><td><strong>Price based on market cap</strong> = NOI ÷ market cap</td></tr>
+</table>
+<div class="callout"><strong>The T-12 sanity block.</strong> Alongside the tidy input section, the tab carries the seller's real <em>EOY / YTD / T-12</em> figures so you can tie your reconstructed income back to actual collections. <em>Always tie out</em> — if your model can't reproduce the trailing income within a few percent, something's wrong (see prompt&nbsp;B7).</div>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0">② Comps Analysis — <span style="font-weight:400">the market &amp; the pro forma</span></h3>
+<p>You drop in 5–12 competitor parks (rent, occupancy, billback Y/N, amenities, site count, rental type). It averages the market by rental type and builds the <strong>Pro-Forma NOI</strong> from <em>market</em> rent × <em>market</em> occupancy, with a target expense ratio (default 50%, "includes mgmt &amp; payroll") and 3% annual rent growth. This is where your value-add upside becomes a dollar figure.</p>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0">③ Financing — <span style="font-weight:400">offer scenarios &amp; DSCR</span></h3>
+<p>Runs your offer at multiple cap rates (asking, 8%, 9%, 10%, custom) under two structures and reports <strong>debt service, DSCR (as-is &amp; pro-forma), cash-on-cash, and equity created</strong>:</p>
+<ul class="tight">
+  <li><strong>SBA loan</strong> — e.g. 30% down, 8.5%, 25-yr amortization, target DSCR 1.25.</li>
+  <li><strong>Seller finance</strong> — e.g. 30% down, 4%, 30-yr, 5-yr balloon, interest-only toggle. Also layers a <strong>PML</strong> (private-money) line to model the down payment being financed — i.e. the Morby stack.</li>
+</ul>
+<p class="kpi">DSCR = NOI ÷ annual debt service. Lenders want ≥ 1.25. Notice seller-finance DSCRs run far higher (2–3×) because the rate is lower and often interest-only — that's <em>why</em> creative terms let you pay more and still sleep.</p>
+</div>
+
+<div class="card">
+<h3 style="margin-top:0">④ Deal Summary — <span style="font-weight:400">the one-screen verdict</span></h3>
+<p>Pulls it together: current vs pro-forma income/NOI/cap, price-per-site, a <strong>recommended offer</strong> (pro-forma NOI ÷ target cap), down payment, expected DSCR &amp; Year-1 CoC, and a <strong>decision matrix</strong>:</p>
+<table>
+  <tr><th>Criteria</th><th>Target</th></tr>
+  <tr><td>Cap rate (on your offer)</td><td><span class="pill g">≥ 8%</span></td></tr>
+  <tr><td>DSCR</td><td><span class="pill g">≥ 1.25</span></td></tr>
+  <tr><td>Cash-on-cash, Year 1</td><td><span class="pill g">≥ 15%</span></td></tr>
+  <tr><td>Market occupancy</td><td><span class="pill g">≥ 85%</span></td></tr>
+</table>
+</div>
+
+<!-- 5 -->
+<h2 id="example">5 · The worked deal (71 sites / $1.6M)</h2>
+<p class="lead">The exact deal loaded in the evaluator — almost certainly the one from the "Cap Rate Offer" recording. Watch the philosophy do its job.</p>
+<div class="card deal">
+  <table>
+    <tr><th>Metric</th><th>Value</th><th>Read</th></tr>
+    <tr><td>Sites / Asking</td><td>71 sites · $1,600,000</td><td>$22,535 / site</td></tr>
+    <tr><td>Seller's stated NOI</td><td>$112,550 <span class="kpi">(50% expense ratio on $225,100 gross)</span></td><td>Implied cap <strong>7.03%</strong> → <span class="pill b">below 8% = overpriced</span></td></tr>
+    <tr><td>Value at market cap (9%)</td><td>$1,250,556</td><td>~$350K below asking on the seller's own NOI</td></tr>
+    <tr><td>Pro-forma NOI (market rent/occ)</td><td>$123,230</td><td>Upside exists, but modest at conservative market occupancy</td></tr>
+    <tr><td><strong>Recommended offer @ 9% target cap</strong></td><td><strong>$1,369,222</strong></td><td><span class="pill w">−14.4% vs asking</span> · DSCR ≈ 1.33 · this is your number</td></tr>
+  </table>
+  <div class="callout bad" style="margin-bottom:0"><strong>The lesson in one line:</strong> the seller priced it at a 7 cap on an optimistic NOI. You re-price it at a 9 cap on a normalized NOI and arrive ~$230K lower. The gap isn't an insult — it's the difference between <em>their</em> story and <em>today's</em> cash flow. If they won't take the price, that's exactly when you pivot to <strong>terms</strong> (next section).</div>
+</div>
+
+<!-- 6 -->
+<h2 id="financing">6 · Financing &amp; cash-to-close</h2>
+<div class="grid g2">
+  <div class="card">
+    <h4 style="margin-top:0">The four structures</h4>
+    <table>
+      <tr><th>Structure</th><th>How it works</th></tr>
+      <tr><td><strong>DSCR loan</strong></td><td>Underwritten on the property's NOI, ~70% LTV. <em>Low NOI = low appraisal</em> — so your normalized NOI directly caps your leverage.</td></tr>
+      <tr><td><strong>Seller carry</strong></td><td>Seller finances part of the price; bridges the gap between bank debt and price.</td></tr>
+      <tr><td><strong>Morby Method</strong></td><td>Senior DSCR loan <strong>+</strong> seller carry in 2nd-lien position (often low/0% interest, balloon). Appraisal still applies.</td></tr>
+      <tr><td><strong>Lease + option</strong></td><td>Lease now, buy later — buys you time to raise NOI <em>before</em> you pay for it.</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">Morby Method, mechanically</h4>
+    <p>A DSCR lender takes <strong>first position (~75–80% of value)</strong> based on the income; the <strong>seller carries the remaining ~20–25% as a second-position note</strong>, frequently at a low or 0% rate with a long or no balloon. Structured well, seller credits can approach your closing costs — minimizing cash in.</p>
+    <p class="kpi">Why it's powerful: the bank's risk is collateralized and the seller is motivated, so you assemble most of the capital stack without a big check — <em>provided the appraisal (i.e. the NOI) supports it.</em></p>
+  </div>
+</div>
+<div class="callout warn">
+  <strong>Cash to close is NOT just the down payment.</strong> Budget: <code>Down payment + CapEx + Reserves (≈6 mo) + lender debt-service reserve</code>. <strong>Goal:</strong> a credible path to <strong>$10K+/month cash flow within ~1 year</strong> of stabilizing.
+</div>
+
+<!-- 7 -->
+<h2 id="valueadd">7 · Value-add levers (cheapest first)</h2>
+<p class="lead">Because the asset is valued on income, every durable $1 of NOI ≈ $11 of value at a 9 cap. Size each lever in <em>both</em> NOI and value, and rank by return on capital.</p>
+<table>
+  <tr><th>#</th><th>Lever</th><th>Mechanics</th><th>Capital</th></tr>
+  <tr><td>1</td><td><strong>Fill vacant pads</strong></td><td>Lease up the pads that already have working utilities — pure NOI, near-zero cost</td><td><span class="pill g">$</span></td></tr>
+  <tr><td>2</td><td><strong>Raise rents to market</strong></td><td>The biggest mom-and-pop gap. Size it: (market rent − in-place) × occupied pads × 12</td><td><span class="pill g">$</span></td></tr>
+  <tr><td>3</td><td><strong>Recover utilities</strong></td><td>Sub-meter electric (~90% recovery, needs meter capex) <em>or</em> RUBS allocation (~80%, no meter capex — but check state legality). Water/sewer billback alone can add $50–$100/pad/mo.</td><td><span class="pill w">$$</span></td></tr>
+  <tr><td>4</td><td><strong>Add ancillary income</strong></td><td>Laundry, storage, RV/boat storage pads, propane, vending — high margin on existing dirt</td><td><span class="pill w">$$</span></td></tr>
+  <tr><td>5</td><td><strong>Infrastructure / expansion</strong></td><td>Repair offline pads, add sites on owned land — biggest upside, most capital &amp; risk</td><td><span class="pill b">$$$</span></td></tr>
+</table>
+<div class="callout"><strong>Sequencing rule from the cheat sheet:</strong> in Year 1 hold revenue flat while you fix utilities (no lease-up until pads can actually be rented), absorb offline pads at a realistic pace (e.g. 3–6/month), then grow ~3% after stabilization. Optimism in the ramp is where models lie.</div>
+
+<!-- 8 -->
+<h2 id="ai">8 · The AI underwriting playbook</h2>
+<p class="lead">The mentor's exact workflow for Steps 3 &amp; 5. Fill the brackets, run in order, each prompt feeds the next. AI extracts and researches; <em>you</em> set conservative assumptions and verify every number.</p>
+<div class="callout warn"><strong>Six rules before you run anything:</strong> (1) Feed it real data — actual P&amp;L, rent roll, occupancy. (2) Make it cite every number with source + date. (3) Tell it to be conservative and flag every assumption. (4) Verify the math yourself — AI transposes and invents. (5) One clean folder per deal. (6) Tie the model back to actual collections.</div>
+
+<h3>Part A — Market research (Step 3)</h3>
+<div class="grid g2">
+  <div class="card"><h4 style="margin-top:0">A1 · Market drivers &amp; demand</h4>
+  <pre><span class="c"># Produces: market narrative + risk register</span>
+You are an experienced RV park underwriter. Research
+the market for [CITY, STATE] and tell me whether
+demand for monthly RV and workforce housing is
+strengthening or weakening. Cover the main economic
+drivers (employers, industries, tourism, pass-through
+traffic), population/job trends, and single-industry
+concentration risk. If it's an energy market, include
+oil price forecast and the break-even price where
+drilling slows. Cite every source with a date. End
+with a plain-English verdict on demand + top 3 risks.</pre>
+  <p class="kpi">Tip: for energy/tourism markets, ask for the one leading indicator (rig count, oil price, visitor counts) to watch after you buy.</p></div>
+
+  <div class="card"><h4 style="margin-top:0">A2 · Competitor comp set (live ratings)</h4>
+  <pre><span class="c"># Produces: Comp Set + Amenities Matrix</span>
+Find 8–12 RV parks within [25] miles of [CITY/ADDRESS]
+that compete for monthly &amp; workforce tenants. For each
+pull: name, city, distance, size in pads, monthly rate
+(+daily/weekly if posted), utilities included vs billed
+separately, amenities, and the LIVE Google rating &amp;
+review count. Put it in a table. Mark anything you
+can't confirm as 'call to confirm' and list sources.
+Then tell me where [subject park] sits on price and
+rating vs the set.</pre>
+  <p class="kpi">Review counts reveal who the established operators are. Pull ratings live from Maps, not memory.</p></div>
+
+  <div class="card"><h4 style="margin-top:0">A3 · Cap-rate benchmark</h4>
+  <pre><span class="c"># Produces: your market cap range</span>
+What's a defensible going-in cap rate for an RV park
+in [CITY, STATE] with [single-industry / tertiary]
+characteristics? Give national RV averages, the state
+average, and the [100–249] pad-size bracket — each with
+source + date. Recommend a conservative going-in range
+for THIS asset and explain the risk adjustment. Also
+run the shortcut: nearest metro's suburban C-class
+apartment cap rate + 4 points.</pre>
+  <p class="kpi">Lean high for single-industry/small markets. Higher cap = lower, safer price.</p></div>
+
+  <div class="card"><h4 style="margin-top:0">A4 · Rate positioning &amp; bill-back</h4>
+  <pre><span class="c"># Produces: Rate &amp; Bill-Back tab; first levers</span>
+Using the comp set: (1) Is [subject park] under- or
+over-priced vs comps? (2) Are competitors billing back
+electric or including all utilities, at what all-in
+rate? (3) To recover utility costs, must we cut base
+rent, or does the market tolerate rent-plus-electric?
+Quantify the annual revenue impact of moving our rents
+to market at current occupancy.</pre>
+  <p class="kpi">This is the bridge from Step 3 into Step 5 — the rent gap is upside in dollars.</p></div>
+</div>
+
+<h3>Part B — Value-add &amp; the pro forma (Step 5)</h3>
+<div class="grid g2">
+  <div class="card"><h4 style="margin-top:0">B1 · Extract financials from the PDFs</h4>
+  <pre>Here are the seller's docs [upload P&amp;Ls, rent roll,
+occupancy]. Extract into clean tables: combined
+line-item P&amp;L by year with totals, NOI, expense ratio;
+rent roll by unit type with posted &amp; effective rents;
+monthly occupancy series. Flag inconsistencies between
+docs, any expense line missing/too low, anything booked
+at zero. Cite which file each number came from.</pre>
+  <p class="kpi">Catch the tells: $0 property tax, no payroll line, two conflicting P&amp;Ls. Hunt for what's <em>missing</em>.</p></div>
+
+  <div class="card"><h4 style="margin-top:0">B2 · True stabilized occupancy</h4>
+  <pre>From occupancy reports &amp; rent roll, separate pads with
+working utilities from offline pads. Over a full year,
+what occupancy do the pads that CAN be rented actually
+run? Use that as conservative stabilized occupancy —
+not a guess. Tell me how many pads have been dark, for
+how long, and the historical absorption pace.</pre>
+  <p class="kpi">This single move makes the model credible — stabilized = how working pads actually perform.</p></div>
+
+  <div class="card"><h4 style="margin-top:0">B3 · Normalize the seller's NOI</h4>
+  <pre>Re-underwrite the seller's NOI to a buyer-normalized
+number. Add/true-up: market payroll &amp; on-site mgmt, a
+3% management fee, realistic insurance, R&amp;M, reserves
+per pad, and FULL property tax after a conservative
+reassessment (not the seller's frozen value). Show
+seller NOI and normalized NOI side by side, each
+adjustment with its basis.</pre>
+  <p class="kpi">The real number is almost always lower than the seller's. Make it justify each line so you can defend it.</p></div>
+
+  <div class="card"><h4 style="margin-top:0">B4 · Identify &amp; size the levers</h4>
+  <pre>Given the asset &amp; comp set, list every value-add lever
+and size each in annual NOI and the capital required.
+Start cheapest (fill pads, rents to market, recover
+utilities), then capital-heavy (infrastructure,
+expansion). For each, give annual NOI impact and value
+created at a [9%] cap. Rank by return on capital.</pre>
+  <p class="kpi">Every $1 durable NOI ≈ $11 at a 9 cap — translate each lever into both NOI and value.</p></div>
+
+  <div class="card"><h4 style="margin-top:0">B5 · Multi-scenario pro forma</h4>
+  <pre>Build a 10-year operating pro forma (no debt, no sale)
+on 4 scenarios: Conservative, Realistic, Upside,
+Rents-to-Market. Hold occupancy flat during the repair
+window, then absorb offline pads at [3/4/6]/month to
+each scenario's stabilized occupancy. Grow income &amp;
+expenses [3%] after stabilization. Step property tax up
+on reassessment. Output in-place, Y1, Y2, stabilized
+Y5, Y10 NOI + stabilized value at an [8–10%] cap range.
+Make every assumption an editable input on one tab.</pre>
+  <p class="kpi"><strong>Offer on the Conservative case.</strong> The other three show how much room you have.</p></div>
+
+  <div class="card"><h4 style="margin-top:0">B6 · Operating-model variants</h4>
+  <pre>Add alternative operating models as SEPARATE scenarios,
+not stacked: (1) slow-build to market rent (new tenants
+at market, existing convert at year 3); (2) sub-metered
+electric bill-back (~90% recovery, meter capex); (3)
+RUBS allocation (~80% recovery, no meter capex). Compare
+stabilized NOI and tell me which captures the gap to
+market most efficiently and best shifts utility-inflation
+risk to tenants.</pre>
+  <p class="kpi">These are alternative <em>paths</em> to the same goal, not additive.</p></div>
+</div>
+<div class="card"><h4 style="margin-top:0">B7 · Expense-ratio decomposition &amp; tie-out <span class="pill w">QA</span></h4>
+  <pre>Decompose the stabilized expense ratio and explain why
+it is what it is (an all-bills-paid park runs high). Show
+the specific levers that move it toward 50% (rents to
+market, utility recovery, tax protest) and quantify each.
+Then sanity-check: does in-place income reproduce actual
+collections within a few percent? Flag anything that
+doesn't tie out.</pre>
+  <p class="kpi">Always end with a tie-out. If the model can't reproduce the seller's actual collections, something is wrong.</p></div>
+
+<!-- 9 -->
+<h2 id="crossasset">9 · Re-using the model for MHP &amp; Multifamily</h2>
+<p class="lead">Pace's point: the same engine values <em>any</em> income asset, because the core is always <strong>NOI ÷ Cap Rate</strong>. The spreadsheet is even named the "<strong>MHP / RV Park Evaluator</strong>" and already carries MH-pad rows. Here's what stays and what changes.</p>
+<div class="grid g3">
+  <div class="card"><h4 style="margin-top:0">What's identical</h4>
+    <ul class="tight">
+      <li>NOI ÷ cap valuation</li>
+      <li>Normalize expenses up (taxes, mgmt, insurance, reserves)</li>
+      <li>Buy on in-place, not pro-forma</li>
+      <li>Conservative / Realistic / Upside scenarios</li>
+      <li>DSCR / seller-carry / Morby financing</li>
+      <li>Value-add = fill, raise to market, recover utilities</li>
+    </ul>
+  </div>
+  <div class="card"><h4 style="margin-top:0">Mobile Home Parks</h4>
+    <ul class="tight">
+      <li>Use the <strong>MH-pad rows</strong>: POH (park-owned homes — more income but more expense/headache) vs <strong>TOH</strong> (tenant-owned — sticky, low-cost, preferred).</li>
+      <li>Watch <strong>utility infrastructure</strong> (city vs private water/septic) — same billback/RUBS levers, bigger dollars.</li>
+      <li>Cap rates a touch <strong>tighter than RV</strong> (~7–9% stabilized; 9–10%+ for value-add) — longer-term, stickier tenancy = less risk.</li>
+    </ul>
+  </div>
+  <div class="card"><h4 style="margin-top:0">Multifamily</h4>
+    <ul class="tight">
+      <li>Swap "pads/sites" for <strong>units</strong>; rent mix becomes unit types (1BR/2BR).</li>
+      <li><strong>Lower cap rates</strong> (national MF ~5%+) → higher prices; creative terms matter even more.</li>
+      <li>Add <strong>vacancy &amp; bad-debt</strong> loss, turn/make-ready costs; RUBS for water/trash is the classic lever.</li>
+      <li>Expense ratios typically run higher than RV; reserves &amp; capex (roofs, HVAC) loom larger.</li>
+    </ul>
+  </div>
+</div>
+<div class="callout"><strong>One mental model, three assets:</strong> reconstruct honest in-place NOI → divide by a defensible, risk-adjusted cap → that's today's value. Everything asset-specific is just <em>which income lines and which expense lines</em> you populate. The discipline never changes.</div>
+
+<!-- 10 -->
+<h2 id="golden">10 · Golden rules &amp; red flags</h2>
+<div class="grid g2">
+  <div class="card good" style="border-color:#bbf7d0;background:#f3fdf6">
+    <h4 style="margin-top:0;color:var(--good)">Golden rules</h4>
+    <ul class="tight">
+      <li>Value what it does <strong>today</strong>, not what it could do.</li>
+      <li><strong>NOI ÷ cap rate</strong> is the whole valuation game.</li>
+      <li>Always run conservative / realistic / upside — <strong>offer on conservative</strong>.</li>
+      <li>When <strong>price</strong> won't work, <strong>terms</strong> can.</li>
+      <li>Write down every question — it's a <strong>conversation</strong>, not a one-shot.</li>
+    </ul>
+  </div>
+  <div class="card bad" style="border-color:#fecaca;background:#fdf4f4">
+    <h4 style="margin-top:0;color:var(--bad)">Red flags / tells</h4>
+    <ul class="tight">
+      <li>$0 or frozen property tax in the P&amp;L (it <em>will</em> reset).</li>
+      <li>No payroll/management line (owner working free).</li>
+      <li>Two conflicting P&amp;Ls; income that won't tie to deposits.</li>
+      <li>Master-metered utilities with no sub-meter path.</li>
+      <li>Single-industry/one-employer demand (esp. energy).</li>
+      <li>Offline pads sold as "occupancy upside" before utilities are fixed.</li>
+      <li>Implied cap <strong>under 8%</strong> on the seller's own (optimistic) NOI.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 11 -->
+<h2 id="benchmarks">11 · Market benchmarks (2025–26)</h2>
+<p class="lead">Use these to gut-check the AI's cap-rate and expense outputs — but always prefer a live, sourced local number.</p>
+<table>
+  <tr><th>Metric</th><th>Benchmark</th><th>Note</th></tr>
+  <tr><td>RV park cap rate</td><td><strong>~8% (Class A/B) → 9%+ (Class C)</strong>; broad range 6–9%+</td><td>Cheat-sheet shortcut (C-apt + 4 pts) lands you ~9% — consistent with the market</td></tr>
+  <tr><td>RV park expense ratio</td><td><strong>~50%</strong> (well-run) up to <strong>50–70%</strong> (all-bills-paid / labor-heavy)</td><td>Model toward 50% via rents-to-market + utility recovery</td></tr>
+  <tr><td>Value per site</td><td><strong>$15K–$50K+</strong> per site</td><td>Sanity check vs your NOI-based value (example deal = $22.5K/site)</td></tr>
+  <tr><td>MHP cap rate</td><td><strong>~7–9%</strong> stabilized; <strong>9–10%+</strong> value-add</td><td>Tighter than RV; TOH-heavy parks tightest</td></tr>
+  <tr><td>Multifamily cap rate</td><td><strong>~5%+</strong> national</td><td>Why MF needs creative terms to pencil for a small buyer</td></tr>
+  <tr><td>Water/sewer billback</td><td><strong>+$50–$100 / pad / month</strong> to NOI</td><td>One of the highest-ROI levers</td></tr>
+</table>
+
+<!-- 12 -->
+<h2 id="checklist">12 · One-page underwriting checklist</h2>
+<div class="card">
+  <div class="grid g2">
+    <div>
+      <h4 style="margin-top:0">Before you model</h4>
+      <ul class="check">
+        <li>Got T-12, 2–3 yr P&amp;L, rent roll, occupancy, tax returns?</li>
+        <li>Site count &amp; mix confirmed (RV mo/wk/nt, MH POH/TOH)?</li>
+        <li>Utilities mapped: city vs well/septic, metered vs master?</li>
+        <li>Seller's existing debt known?</li>
+      </ul>
+      <h4>Market (AI A1–A4)</h4>
+      <ul class="check">
+        <li>Demand verdict + top-3 risks, sourced &amp; dated?</li>
+        <li>8–12 comps with live Google ratings?</li>
+        <li>Defensible cap range (and C-apt + 4 check)?</li>
+        <li>Rent gap to market quantified in $?</li>
+      </ul>
+    </div>
+    <div>
+      <h4 style="margin-top:0">Normalize &amp; value (AI B1–B7)</h4>
+      <ul class="check">
+        <li>Property tax reassessed to my basis?</li>
+        <li>Market payroll + 3% mgmt fee added?</li>
+        <li>Insurance re-quoted, reserves per pad set?</li>
+        <li>Stabilized occupancy = working-pad reality?</li>
+        <li>Normalized NOI shown beside seller NOI?</li>
+        <li>Model ties to actual collections (B7)?</li>
+      </ul>
+      <h4>Offer</h4>
+      <ul class="check">
+        <li>Priced on <strong>conservative</strong> NOI ÷ target cap?</li>
+        <li>Cap ≥8% · DSCR ≥1.25 · CoC ≥15% · occ ≥85%?</li>
+        <li>Cash-to-close incl. capex + reserves budgeted?</li>
+        <li>Terms ready if price is rejected (Morby/seller carry)?</li>
+        <li>LOI protects both sides?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p class="src"><strong>Sources (market research):</strong>
+    <a href="https://www.roverpass.com/blog/rv-park-cap-rates/">RoverPass — RV Park Cap Rates</a> ·
+    <a href="https://www.analytics.loan/post/u-s-rv-park-industry-trends-analysis-2025">Loan Analytics — US RV Park Trends 2025</a> ·
+    <a href="https://dealstream.com/industry-guides/rv-parks/rules-of-thumb">DealStream — RV Park Rules of Thumb</a> ·
+    <a href="https://keelteam.com/post/mobile-home-park-cap-rates-by-state-2026/">Keel Team — MHP Cap Rates 2026</a> ·
+    <a href="https://voyageinvesting.com/10-ways-to-add-value/">Voyage — 10 Ways to Add Value to MHPs</a> ·
+    <a href="https://chadchoquette.com/articles/morby-method-explained">Morby Method Explained</a> ·
+    <a href="https://levinecapital.com/morby-method/">Levine Capital — Morby Method 2025</a>.
+  </p>
+  <p>Compiled from the mentor's RV Park Underwriting Cheat Sheet and the MHP/RV Park Evaluator spreadsheet. Methodology credit: Pace Morby creative-finance framework. This is an educational underwriting field guide, not investment, legal, or tax advice — verify every number and confirm local rules (e.g. RUBS legality) before acting.</p>
+</footer>
+
+</div>
+</body>
+</html>
