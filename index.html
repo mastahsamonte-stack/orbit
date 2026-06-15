@@ -230,6 +230,73 @@
    ============================================================ */
 
 const KEY = "orbit_state_v1";
+
+/* ---------- Cloud sync (Google Sheets via Apps Script) ----------
+   The app works fully offline on localStorage. If you connect a
+   Google Sheet backend (Settings → Cloud sync), it also syncs to
+   the cloud so your deals follow you across devices. */
+const CONFIG = { apiUrl: "" };           // optional: hard-code your /exec URL here
+const API_KEY = "orbit_api_url";          // localStorage override for the backend URL
+const AUTH_KEY = "orbit_pass";            // your passcode (kept only in this browser)
+let syncStatus = "local";                 // local | syncing | synced | error | offline
+function getApiUrl(){ return (localStorage.getItem(API_KEY)||CONFIG.apiUrl||"").trim(); }
+function getPass(){ return localStorage.getItem(AUTH_KEY)||""; }
+function cloudOn(){ return !!getApiUrl(); }
+
+function jsonp(url){
+  return new Promise((res,rej)=>{
+    const cb="orbcb_"+Math.random().toString(36).slice(2);
+    const s=document.createElement("script");
+    window[cb]=d=>{res(d);try{delete window[cb];}catch(e){}s.remove();};
+    s.onerror=()=>{s.remove();try{delete window[cb];}catch(e){}rej(new Error("network"));};
+    s.src=url+(url.includes("?")?"&":"?")+"callback="+cb;
+    document.body.appendChild(s);
+    setTimeout(()=>{if(window[cb]){try{delete window[cb];}catch(e){}s.remove();rej(new Error("timeout"));}},14000);
+  });
+}
+async function apiPing(pass){
+  const r=await jsonp(getApiUrl()+"?action=ping&pass="+encodeURIComponent(pass));
+  if(r.ok) return true;
+  throw new Error(r.error||"unauthorized");
+}
+async function apiLoad(){
+  const r=await jsonp(getApiUrl()+"?action=load&pass="+encodeURIComponent(getPass()));
+  if(!r.ok) throw new Error(r.error||"load-failed");
+  return r.state;
+}
+async function apiSave(st){
+  const body=JSON.stringify({action:"save",pass:getPass(),state:st});
+  const url=getApiUrl();
+  try{
+    const r=await fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body});
+    try{const j=await r.json();if(j&&j.ok===false&&j.error==="unauthorized")throw {auth:true};}catch(e){if(e&&e.auth)throw e;}
+    return true;
+  }catch(e){
+    if(e&&e.auth)throw new Error("unauthorized");
+    // Cross-origin read may be blocked even though the write went through — fire-and-forget.
+    try{await fetch(url,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body});return true;}
+    catch(_){throw new Error("network");}
+  }
+}
+let _saveTimer=null;
+function scheduleCloudSave(){
+  if(!cloudOn()||!getPass())return;
+  syncStatus="syncing";updateSyncChip();
+  clearTimeout(_saveTimer);
+  _saveTimer=setTimeout(async()=>{
+    try{await apiSave(state);syncStatus="synced";}
+    catch(e){syncStatus=(""+e.message).includes("unauthorized")?"error":"offline";}
+    updateSyncChip();
+  },900);
+}
+function updateSyncChip(){const el=document.getElementById("syncChip");if(el)el.outerHTML=syncChip();}
+function syncChip(){
+  if(!cloudOn())return `<button class="icon-btn" id="syncChip" data-go="settings" title="Not synced — connect a backend">☁</button>`;
+  const map={syncing:["⟳","var(--amber)","Syncing…"],synced:["☁✓","var(--green)","Synced to your Sheet"],error:["☁!","var(--red)","Login needed"],offline:["☁…","var(--ink3)","Offline — will retry"],local:["☁","var(--ink3)","Connected"]};
+  const[ic,col,tip]=map[syncStatus]||map.local;
+  return `<button class="icon-btn" id="syncChip" data-go="settings" title="${tip}" style="color:${col}">${ic}</button>`;
+}
+
 const STATUSES = ["New","Under review","Countered","Seller talks","JV signed","Closed","Declined"];
 const STATUS_PILL = {
   "New":"gray","Under review":"amber","Countered":"amber","Seller talks":"blue",
@@ -291,7 +358,32 @@ function load(){
   try{const raw=localStorage.getItem(KEY);if(raw)return JSON.parse(raw);}catch(e){}
   const s=seed();save(s);return s;
 }
-function save(s){state=s||state;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+function saveLocal(s){state=s||state;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+function save(s){saveLocal(s);scheduleCloudSave();}
+
+/* Boot: show local cache instantly, then pull from the cloud if connected. */
+async function boot(){
+  state=load();
+  render();
+  if(cloudOn()){
+    if(!getPass()){showLogin();return;}
+    await cloudSync();
+  }
+}
+async function cloudSync(){
+  syncStatus="syncing";updateSyncChip();
+  try{
+    const remote=await apiLoad();
+    if(remote&&remote.profile){state=remote;saveLocal();}
+    else{await apiSave(state);}      // empty sheet → seed it with what's here
+    syncStatus="synced";render();
+  }catch(e){
+    const m=""+e.message;
+    if(m.includes("unauthorized")){localStorage.removeItem(AUTH_KEY);syncStatus="error";showLogin();return;}
+    if(m.includes("no-passcode-set")){syncStatus="error";toast("Finish the Google setup: set your passcode in Apps Script");render();return;}
+    syncStatus="offline";render();
+  }
+}
 function nextLeadId(){state.counters.lead+=1;return "L-"+state.counters.lead;}
 
 /* ---------- Helpers ---------- */
@@ -362,6 +454,7 @@ function render(){
       <div class="topbar">
         <div class="crumbs">Orbit <span>→</span> <b>${crumbLabel()}</b></div>
         <div class="search">🔎 <input id="globalSearch" placeholder="Search Planets, leads, sellers..."/></div>
+        ${syncChip()}
         <button class="icon-btn" data-go="settings" title="Notifications">🔔</button>
         <button class="icon-btn" data-go="settings" title="Settings">⚙</button>
       </div>
@@ -820,6 +913,22 @@ function viewSettings(){
         <button class="btn ghostdanger" id="resetData" style="margin-left:8px">Reset to demo data</button>
       </div>
     </div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <div class="sec-head"><h3>Cloud sync · Google Sheet</h3>
+      <span class="pill ${cloudOn()&&getPass()?(syncStatus==='synced'?'green':syncStatus==='error'?'red':'amber'):'gray'}"><span class="d"></span>${cloudOn()?(getPass()?({synced:'Synced',syncing:'Syncing…',error:'Login needed',offline:'Offline'}[syncStatus]||'Connected'):'Passcode needed'):'Not connected'}</span>
+    </div>
+    <div style="padding:18px">
+      <p style="color:var(--ink2);margin:0 0 14px">Connect the Google Sheet backend so your deals sync across devices. Paste the Web app URL from your Apps Script deployment (ends in <code>/exec</code>) and your passcode. See <b>orbit-backend.gs</b> for setup.</p>
+      <div class="field" style="margin-bottom:12px"><label>Apps Script Web app URL</label><input id="cs_url" placeholder="https://script.google.com/macros/s/…/exec" value="${esc(getApiUrl())}"/></div>
+      <div class="field" style="max-width:280px"><label>Passcode</label><input id="cs_pass" type="password" placeholder="${getPass()?'•••••• (saved)':'Your passcode'}"/></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+        <button class="btn primary" id="cs_connect">Connect &amp; sync</button>
+        <button class="btn" id="cs_now" ${cloudOn()&&getPass()?'':'disabled style="opacity:.5"'}>↻ Sync now</button>
+        <button class="btn ghostdanger" id="cs_logout" ${cloudOn()&&getPass()?'':'disabled style="opacity:.5"'}>Log out this device</button>
+      </div>
+      <div id="cs_msg" style="font-size:13px;color:var(--ink2);margin-top:12px"></div>
+    </div>
   </div>`;
 }
 
@@ -855,6 +964,9 @@ document.addEventListener("click",e=>{
     state.profile.initials=initials((state.profile.name+" "+state.profile.surname).trim());
     save();render();toast("Profile saved ✓");
   }
+  if(e.target.id==="cs_connect")cloudConnect();
+  if(e.target.id==="cs_now"){const m=$("#cs_msg");if(m)m.textContent="Syncing…";cloudSync().then(()=>{const mm=$("#cs_msg");if(mm)mm.textContent=syncStatus==="synced"?"Synced ✓":"Couldn't sync — check URL/passcode.";});}
+  if(e.target.id==="cs_logout"){localStorage.removeItem(AUTH_KEY);syncStatus="local";toast("Logged out on this device");render();}
   if(e.target.id==="exportData")exportData();
   if(e.target.id==="clearData"){if(confirm("Clear ALL leads, Planets, and messages? This can't be undone (export first if unsure).")){state={...seed(),leads:[],threads:[],activity:[],planets:state.planets};state.profile=seed().profile;localStorage.setItem(KEY,JSON.stringify(state));view="dashboard";render();toast("Cleared — add your first lead");}}
   if(e.target.id==="resetData"){if(confirm("Reset everything back to the demo dataset?")){localStorage.removeItem(KEY);state=load();view="dashboard";render();toast("Reset to demo data");}}
@@ -969,6 +1081,27 @@ Planet:  ${pl?pl.contact:""} (${pl?pl.name:""})  ____________________   Date: __
   const blob=new Blob([txt],{type:"text/plain"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`JV_${l.id}.txt`;a.click();toast("JV downloaded");
 }
 
+/* ---------- Cloud connect ---------- */
+async function cloudConnect(){
+  const url=($("#cs_url").value||"").trim();
+  const pass=($("#cs_pass").value||"").trim()||getPass();
+  const msg=$("#cs_msg");
+  if(!url){if(msg)msg.textContent="Paste your Apps Script Web app URL first.";return;}
+  if(!/\/exec$/.test(url)){if(msg)msg.textContent="That URL should end in /exec — re-copy it from your Web app deployment.";return;}
+  if(!pass){if(msg)msg.textContent="Enter your passcode.";return;}
+  if(msg)msg.textContent="Connecting…";
+  localStorage.setItem(API_KEY,url);
+  try{
+    await apiPing(pass);
+    localStorage.setItem(AUTH_KEY,pass);
+    await cloudSync();
+    toast("Connected — your Sheet is synced ✓");render();
+  }catch(e){
+    const m=""+e.message;
+    if(msg)msg.textContent=m.includes("no-passcode-set")?"Backend reached, but no passcode is set yet. Run SETUP_setPasscode in Apps Script.":m.includes("unauthorized")?"Wrong passcode for this Sheet.":"Couldn't reach that URL. Confirm the Web app is deployed to “Anyone”.";
+  }
+}
+
 /* ---------- Export / import ---------- */
 function exportData(){
   const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
@@ -995,8 +1128,35 @@ function modal(title,body,actions){
 }
 function closeModal(){$("#modal-root").innerHTML="";}
 
+/* ---------- Login overlay (passcode for cloud sync) ---------- */
+function showLogin(){
+  document.getElementById("modal-root").innerHTML=`<div class="modal-bg"><div class="modal" style="max-width:420px">
+    <div class="modal-head"><h3>Unlock Orbit</h3></div>
+    <div class="modal-body">
+      <p style="color:var(--ink2);margin:0 0 16px">Your deals are synced to your private Google Sheet. Enter your passcode to load them on this device.</p>
+      <div class="field"><label>Passcode</label><input id="loginPass" type="password" placeholder="Your Orbit passcode" autofocus/></div>
+      <div id="loginErr" style="color:var(--red);font-size:13px;margin-top:8px"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" id="loginOffline">Work offline</button>
+      <button class="btn primary" id="loginGo">Unlock</button>
+    </div>
+  </div></div>`;
+  const pass=document.getElementById("loginPass");
+  const err=document.getElementById("loginErr");
+  async function go(){
+    const v=pass.value.trim();if(!v){err.textContent="Enter your passcode";return;}
+    err.textContent="Checking…";
+    try{await apiPing(v);localStorage.setItem(AUTH_KEY,v);closeModal();await cloudSync();toast("Unlocked — synced ✓");}
+    catch(e){const m=""+e.message;err.textContent=m.includes("no-passcode-set")?"Backend has no passcode set yet — finish the Apps Script setup.":m.includes("unauthorized")?"Wrong passcode.":"Couldn't reach your Sheet. Check the URL in Settings.";}
+  }
+  document.getElementById("loginGo").onclick=go;
+  pass.onkeydown=e=>{if(e.key==="Enter")go();};
+  document.getElementById("loginOffline").onclick=()=>{closeModal();syncStatus="offline";render();toast("Working offline — changes stay on this device");};
+}
+
 /* ---------- boot ---------- */
-render();
+boot();
 </script>
 </body>
 </html>
