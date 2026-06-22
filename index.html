@@ -307,7 +307,7 @@ const STRUCTURES = ["Sub-To","Seller Finance","Wrap","Novation","Lease Option","
 /* ---------- Seed data (your starter set — edit or clear anytime) ---------- */
 function seed(){
   return {
-    profile:{ name:"Phil", org:"P.A.T.H. Operating Co.", market:"Phoenix, AZ", role:"Orbit", initials:"P" },
+    profile:{ name:"Phil", org:"P.A.T.H. Operating Co.", market:"Phoenix, AZ", role:"Orbit", initials:"P", currentPlanetId:"aurora" },
     counters:{ lead: 2042 },
     planets:[
       {id:"aurora",name:"Aurora Holdings",markets:["Phoenix, AZ","Tucson, AZ"],note:"Free-and-clear or low-balance notes. Below-market rates preferred.",types:["SFR","Small Multi (2-4)"],financing:["Sub-To","Seller Finance","Wrap"],priceMin:180000,priceMax:450000,closed:38,splitYou:65,splitThem:35,replyHrs:3.2,accept:62,closeDays:"10-14 days",contact:"Maya Okafor"},
@@ -355,7 +355,7 @@ function daysAgo(n){const d=new Date();d.setDate(d.getDate()-n);return d.toISOSt
 let state;
 state = load();
 function load(){
-  try{const raw=localStorage.getItem(KEY);if(raw)return JSON.parse(raw);}catch(e){}
+  try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s&&s.profile&&!s.profile.currentPlanetId&&s.planets&&s.planets.length)s.profile.currentPlanetId=s.planets[0].id;return s;}}catch(e){}
   const s=seed();save(s);return s;
 }
 function saveLocal(s){state=s||state;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
@@ -424,11 +424,18 @@ function payoutEst(lead){
   return Math.round((Number(lead.estProfit)||0)*(Number(lead.splitYou)||0)/100);
 }
 
+/* ---------- Planet helpers ---------- */
+function currentPlanet(){const cpId=state.profile.currentPlanetId||(state.planets[0]||{}).id;return planetById(cpId)||state.planets[0]||null;}
+function planetInboxCount(){const cp=currentPlanet();if(!cp)return "";const n=state.leads.filter(l=>l.planetId===cp.id&&["New","Under review"].includes(l.status)).length;return n||"";}
+function unreadCountPlanet(){const cp=currentPlanet();if(!cp)return "";return state.threads.filter(t=>t.planetId===cp.id&&t.msgs.length&&t.msgs[t.msgs.length-1].from==="you").length||"";}
+
 /* ============================================================
    RENDER
    ============================================================ */
 function render(){
   const p=state.profile;
+  const isPlanet=p.role==="Planet";
+  const cp=isPlanet?currentPlanet():null;
   document.getElementById("root").innerHTML=`
   <div class="app">
     <aside class="sidebar">
@@ -436,24 +443,39 @@ function render(){
       <div class="role-toggle">
         ${["Orbit","Planet","Moon"].map(r=>`<button class="${p.role===r?'active':''}" data-role="${r}">${r}</button>`).join("")}
       </div>
+      ${isPlanet?`<div style="margin-bottom:12px">
+        <div class="nav-label" style="margin-bottom:6px">Acting as</div>
+        <select id="planetSelector" style="width:100%;border:1px solid var(--line);border-radius:9px;padding:8px 10px;background:var(--panel2);font-size:13px;font-weight:600;color:var(--ink)">
+          ${state.planets.map(pl=>`<option value="${pl.id}" ${pl.id===(p.currentPlanetId||'')?'selected':''}>${esc(pl.name)}</option>`).join("")}
+        </select>
+      </div>`:''}
       <div class="nav-label">Workspace</div>
       <nav class="nav">
-        ${navBtn("dashboard","◷","Dashboard")}
-        ${navBtn("planets","◎","Browse Planets")}
-        ${navBtn("submit","➤","Submit a lead")}
-        ${navBtn("leads","☰","My leads",activeLeadCount())}
-        ${navBtn("messages","💬","Messages",unreadCount())}
-        ${navBtn("jv","▤","JV agreements")}
+        ${isPlanet?`
+          ${navBtn("planet-dashboard","◷","Dashboard")}
+          ${navBtn("lead-inbox","📥","Lead Inbox",planetInboxCount())}
+          ${navBtn("buybox","◎","My Buy Box")}
+          ${navBtn("acquisitions","☰","Acquisitions")}
+          ${navBtn("messages","💬","Messages",unreadCountPlanet())}
+          ${navBtn("jv","▤","JV agreements")}
+        `:`
+          ${navBtn("dashboard","◷","Dashboard")}
+          ${navBtn("planets","◎","Browse Planets")}
+          ${navBtn("submit","➤","Submit a lead")}
+          ${navBtn("leads","☰","My leads",activeLeadCount())}
+          ${navBtn("messages","💬","Messages",unreadCount())}
+          ${navBtn("jv","▤","JV agreements")}
+        `}
       </nav>
       <div class="side-foot" data-go="settings">
         <div class="avatar">${esc(p.initials||initials(p.name))}</div>
-        <div><div class="nm">${esc(p.name)} ${esc(p.surname||"")}</div><div class="sub">${esc(p.role)} · ${esc(p.market)}</div></div>
+        <div><div class="nm">${esc(p.name)} ${esc(p.surname||"")}</div><div class="sub">${esc(p.role)} · ${isPlanet&&cp?esc(cp.name):esc(p.market)}</div></div>
       </div>
     </aside>
     <div class="main">
       <div class="topbar">
-        <div class="crumbs">Orbit <span>→</span> <b>${crumbLabel()}</b></div>
-        <div class="search">🔎 <input id="globalSearch" placeholder="Search Planets, leads, sellers..."/></div>
+        <div class="crumbs">${isPlanet?esc(cp?cp.name:"Planet"):"Orbit"} <span>→</span> <b>${crumbLabel()}</b></div>
+        <div class="search">🔎 <input id="globalSearch" placeholder="${isPlanet?"Search leads, activity...":"Search Planets, leads, sellers..."}"/></div>
         ${syncChip()}
         <button class="icon-btn" data-go="settings" title="Notifications">🔔</button>
         <button class="icon-btn" data-go="settings" title="Settings">⚙</button>
@@ -461,8 +483,19 @@ function render(){
       <div class="content" id="content"></div>
     </div>
   </div>`;
-  // sidebar events
-  document.querySelectorAll("[data-role]").forEach(b=>b.onclick=()=>{state.profile.role=b.dataset.role;save();if(b.dataset.role!=="Orbit"){toast(b.dataset.role+" view is coming soon — staying in Orbit");state.profile.role="Orbit";save();}render();});
+  // role toggle handler
+  document.querySelectorAll("[data-role]").forEach(b=>b.onclick=()=>{
+    const r=b.dataset.role;
+    if(r==="Moon"){toast("Moon role coming soon 🌙");return;}
+    state.profile.role=r;
+    if(r==="Planet"){
+      if(!state.profile.currentPlanetId&&state.planets.length)state.profile.currentPlanetId=state.planets[0].id;
+      if(["dashboard","planets","submit","leads"].includes(view))view="planet-dashboard";
+    } else {
+      if(["planet-dashboard","lead-inbox","buybox","acquisitions"].includes(view))view="dashboard";
+    }
+    save();render();
+  });
   document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{view=b.dataset.view;route={};render();});
   document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{view=b.dataset.go;route={};render();});
   renderView();
@@ -472,17 +505,30 @@ function navBtn(v,ico,label,badge){
 }
 function activeLeadCount(){return state.leads.filter(l=>!["Closed","Declined"].includes(l.status)).length||"";}
 function unreadCount(){return state.threads.filter(t=>t.msgs.length&&t.msgs[t.msgs.length-1].from==="them").length||"";}
-function crumbLabel(){return {dashboard:"Dashboard",planets:"Browse Planets",submit:"Submit a lead",leads:"My leads",messages:"Messages",jv:"JV agreements",settings:"Settings"}[view]||"Dashboard";}
+function crumbLabel(){return {dashboard:"Dashboard",planets:"Browse Planets",submit:"Submit a lead",leads:"My leads",messages:"Messages",jv:"JV agreements",settings:"Settings","planet-dashboard":"Dashboard","lead-inbox":"Lead Inbox",buybox:"My Buy Box",acquisitions:"Acquisitions"}[view]||"Dashboard";}
 
 function renderView(){
   const c=$("#content");
-  if(view==="dashboard")c.innerHTML=viewDashboard();
-  else if(view==="planets")c.innerHTML=viewPlanets();
-  else if(view==="submit"){c.innerHTML=viewSubmit();wireSubmit();}
-  else if(view==="leads")c.innerHTML=viewLeads();
-  else if(view==="messages"){c.innerHTML=viewMessages();wireMessages();}
-  else if(view==="jv")c.innerHTML=viewJV();
-  else if(view==="settings")c.innerHTML=viewSettings();
+  const isPlanet=state.profile.role==="Planet";
+  if(isPlanet){
+    if(view==="planet-dashboard")c.innerHTML=viewPlanetDashboard();
+    else if(view==="lead-inbox")c.innerHTML=viewLeadInbox();
+    else if(view==="buybox")c.innerHTML=viewPlanetBuyBox();
+    else if(view==="acquisitions")c.innerHTML=viewAcquisitions();
+    else if(view==="messages"){c.innerHTML=viewMessages(true);wireMessages();}
+    else if(view==="jv")c.innerHTML=viewJV(true);
+    else if(view==="settings")c.innerHTML=viewSettings();
+    else{c.innerHTML=viewPlanetDashboard();}
+  } else {
+    if(view==="dashboard")c.innerHTML=viewDashboard();
+    else if(view==="planets")c.innerHTML=viewPlanets();
+    else if(view==="submit"){c.innerHTML=viewSubmit();wireSubmit();}
+    else if(view==="leads")c.innerHTML=viewLeads();
+    else if(view==="messages"){c.innerHTML=viewMessages(false);wireMessages();}
+    else if(view==="jv")c.innerHTML=viewJV(false);
+    else if(view==="settings")c.innerHTML=viewSettings();
+    else c.innerHTML=viewDashboard();
+  }
   bindCommon();
 }
 function bindCommon(){
@@ -755,10 +801,12 @@ function viewLeads(){
 }
 
 /* ---------- Messages ---------- */
-function viewMessages(){
-  if(!state.threads.length)return `<div class="page-eyebrow">Conversations</div><h1 class="page-h">Messages</h1><div class="card"><div class="empty"><div class="big">No threads yet</div>Send a lead to a Planet and your conversation will show up here.</div></div>`;
-  const active=route.thread||state.threads[0].id;
-  const t=state.threads.find(x=>x.id===active)||state.threads[0];
+function viewMessages(asPlanet){
+  const cp=asPlanet?currentPlanet():null;
+  const threads=asPlanet&&cp?state.threads.filter(t=>t.planetId===cp.id):state.threads;
+  if(!threads.length)return `<div class="page-eyebrow">Conversations</div><h1 class="page-h">Messages</h1><div class="card"><div class="empty"><div class="big">No threads yet</div>${asPlanet?"Leads sent to this Planet will appear here as threads.":"Send a lead to a Planet and your conversation will show up here."}</div></div>`;
+  const activeId=route.thread||(threads[0]||{}).id;
+  const t=threads.find(x=>x.id===activeId)||threads[0];
   const lead=state.leads.find(l=>l.id===t.leadId);
   const pl=planetById(t.planetId);
   return `
@@ -768,7 +816,7 @@ function viewMessages(){
   <div class="msg-wrap">
     <div class="thread-list">
       <div class="thread-search"><input id="threadQ" placeholder="Search threads..."/></div>
-      ${state.threads.map(th=>{const last=th.msgs[th.msgs.length-1];const tp=planetById(th.planetId);return `
+      ${threads.map(th=>{const last=th.msgs[th.msgs.length-1];const tp=planetById(th.planetId);return `
         <div class="thread ${th.id===t.id?'active':''}" data-thread="${th.id}">
           <div class="planet-dot" style="background:${planetColor(tp)}">${initials(th.contact)}</div>
           <div style="flex:1;min-width:0"><div class="nm">${esc(th.contact)}</div><div class="pv">${esc(last?last.text:"No messages yet")}</div><div class="lid">${esc(th.leadId)}</div></div>
@@ -776,11 +824,11 @@ function viewMessages(){
     </div>
     <div class="chat">
       <div class="chat-head"><div class="planet-dot" style="background:${planetColor(pl)}">${initials(t.contact)}</div>
-        <div><div style="font-weight:600">${esc(t.contact)}</div><div style="font-size:12px;color:var(--ink3)">${esc(pl?pl.name:"")} · Planet</div></div></div>
+        <div><div style="font-weight:600">${esc(t.contact)}</div><div style="font-size:12px;color:var(--ink3)">${esc(pl?pl.name:"")} · ${asPlanet?"Orbiter":"Planet"}</div></div></div>
       <div class="chat-body" id="chatBody">
-        ${t.msgs.length?t.msgs.map(m=>`<div class="bubble ${m.from}">${esc(m.text)}<div class="ts">${esc(m.time)}</div></div>`).join(""):`<div class="empty" style="margin:auto">Start the conversation 👇</div>`}
+        ${t.msgs.length?t.msgs.map(m=>{const cls=asPlanet?(m.from==="them"?"you":"them"):m.from;return `<div class="bubble ${cls}">${esc(m.text)}<div class="ts">${esc(m.time)}</div></div>`;}).join(""):`<div class="empty" style="margin:auto">Start the conversation 👇</div>`}
       </div>
-      <div class="chat-input"><input id="msgInput" placeholder="Reply to ${esc((t.contact||"").split(" ")[0])}..."/><button class="btn primary" id="msgSend">Send</button></div>
+      <div class="chat-input"><input id="msgInput" placeholder="Reply..."/><button class="btn primary" id="msgSend">Send</button></div>
     </div>
     <div class="ctx">
       <h3 style="font-size:17px;margin-bottom:14px">Lead context</h3>
@@ -790,9 +838,12 @@ function viewMessages(){
       <div class="kv"><span class="k">Address</span><span>${esc(lead.address)}</span></div>
       <div class="kv"><span class="k">Structure</span><span>${esc(lead.structure)}</span></div>
       <div class="kv"><span class="k">Status</span><span><span class="pill ${STATUS_PILL[lead.status]}"><span class="d"></span>${lead.status}</span></span></div>
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);font-weight:700;margin:16px 0 8px">Proposed JV</div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);font-weight:700;margin:16px 0 8px">JV Split</div>
       <div class="split-bar" style="width:100%"><span class="you" style="width:${lead.splitYou}%"></span></div>
-      <div style="display:flex;justify-content:space-between;font-size:12px;margin-top:6px"><span>You ${lead.splitYou}%</span><span>${esc(pl?pl.name:"Planet")} ${lead.splitThem}%</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-top:6px">
+        <span>${asPlanet?`${esc(pl?pl.name:"Planet")} ${lead.splitThem}%`:`You ${lead.splitYou}%`}</span>
+        <span>${asPlanet?`Orbiter ${lead.splitYou}%`:`${esc(pl?pl.name:"Planet")} ${lead.splitThem}%`}</span>
+      </div>
       <button class="btn" style="width:100%;margin-top:14px;justify-content:center" data-openlead="${lead.id}">Open lead detail</button>
       `:`<div class="empty">No linked lead</div>`}
     </div>
@@ -803,10 +854,16 @@ function wireMessages(){
   const send=$("#msgSend"),input=$("#msgInput");
   function doSend(){
     const v=input.value.trim();if(!v)return;
-    const id=route.thread||state.threads[0].id;
+    const isPlanet=state.profile.role==="Planet";
+    const cp=isPlanet?currentPlanet():null;
+    const threads=isPlanet&&cp?state.threads.filter(t=>t.planetId===cp.id):state.threads;
+    const id=route.thread||(threads[0]||{}).id;
     const t=state.threads.find(x=>x.id===id);
-    t.msgs.push({from:"you",text:v,time:nowTime()});
-    const lead=state.leads.find(l=>l.id===t.leadId);if(lead)lead.lastUpdate="You replied just now";
+    if(!t)return;
+    // Data model is Orbit-centric: "you"=Orbit sent, "them"=Planet sent
+    t.msgs.push({from:isPlanet?"them":"you",text:v,time:nowTime()});
+    const lead=state.leads.find(l=>l.id===t.leadId);
+    if(lead)lead.lastUpdate=(isPlanet?(cp?cp.contact:"Planet"):"You")+" replied just now";
     save();render();setTimeout(()=>{const b=$("#chatBody");if(b)b.scrollTop=b.scrollHeight;},0);
   }
   if(send)send.onclick=doSend;
@@ -816,19 +873,20 @@ function wireMessages(){
 function nowTime(){return new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});}
 
 /* ---------- JV agreements ---------- */
-function viewJV(){
-  const leadId=route.jvLead || (state.leads.find(l=>["JV signed","Under review","Countered","Seller talks"].includes(l.status))||state.leads[0]||{}).id;
+function viewJV(asPlanet){
+  const cp=asPlanet?currentPlanet():null;
+  const myLeads=asPlanet&&cp?state.leads.filter(l=>l.planetId===cp.id):state.leads;
+  const leadId=route.jvLead || (myLeads.find(l=>["JV signed","Under review","Countered","Seller talks"].includes(l.status))||myLeads[0]||{}).id;
   const lead=state.leads.find(l=>l.id===leadId);
-  if(!lead)return `<div class="page-eyebrow">JV — none yet</div><h1 class="page-h">Joint venture agreement</h1><div class="card"><div class="empty"><div class="big">No leads to draft a JV for</div>Send a lead first, then generate the single-deal JV here.</div></div>`;
+  if(!lead)return `<div class="page-eyebrow">JV — none yet</div><h1 class="page-h">Joint venture agreement</h1><div class="card"><div class="empty"><div class="big">No leads to draft a JV for</div>${asPlanet?"Accept a lead from your inbox first.":"Send a lead first, then generate the single-deal JV here."}</div></div>`;
   const pl=planetById(lead.planetId);
   const payout=payoutEst(lead);
-  const others=state.leads.filter(l=>l.id!==lead.id);
   return `
   <div class="page-head">
     <div class="grow"><div class="page-eyebrow">JV — ${esc(lead.id)}</div><h1 class="page-h">Joint venture agreement</h1>
     <div class="page-sub">A short, plain-language JV between Orbiter and Planet for this single lead.</div></div>
-    <select id="jvPick" class="btn" style="font-weight:600">${state.leads.map(l=>`<option value="${l.id}" ${l.id===lead.id?'selected':''}>${esc(l.id)} · ${esc(l.address)}</option>`).join("")}</select>
-    <span class="pill ${lead.status==='JV signed'?'green':'amber'}" style="align-self:center"><span class="d"></span>${lead.status==='JV signed'?'Signed':'Awaiting Planet'}</span>
+    <select id="jvPick" class="btn" style="font-weight:600">${myLeads.map(l=>`<option value="${l.id}" ${l.id===lead.id?'selected':''}>${esc(l.id)} · ${esc(l.address)}</option>`).join("")}</select>
+    <span class="pill ${lead.status==='JV signed'?'green':'amber'}" style="align-self:center"><span class="d"></span>${lead.status==='JV signed'?'Signed':'Awaiting signature'}</span>
   </div>
   <div class="two-col" style="grid-template-columns:1.4fr 1fr">
     <div class="card">
@@ -852,11 +910,11 @@ function viewJV(){
         <div style="padding:18px">
           <div style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);font-weight:700;margin-bottom:8px">Profit split</div>
           <div class="split-bar" style="width:100%;height:9px"><span class="you" style="width:${lead.splitYou}%"></span></div>
-          <div style="display:flex;justify-content:space-between;font-size:12.5px;margin:7px 0 16px"><span>● You (Orbiter) · ${lead.splitYou}%</span><span>${esc(pl?pl.name:"Planet")} · ${lead.splitThem}%</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;margin:7px 0 16px"><span>● ${asPlanet?`${esc(pl?pl.name:"Planet")} · ${lead.splitThem}%`:`You (Orbiter) · ${lead.splitYou}%`}</span><span>${asPlanet?`Orbiter · ${lead.splitYou}%`:`${esc(pl?pl.name:"Planet")} · ${lead.splitThem}%`}</span></div>
           <div class="kv"><span class="k">Property</span><span>${esc(lead.address)}</span></div>
           <div class="kv"><span class="k">Structure</span><span>${esc(lead.structure)}</span></div>
           <div class="kv"><span class="k">Est. profit</span><span>${money(lead.estProfit)}</span></div>
-          <div class="kv"><span class="k">Your payout</span><span style="color:var(--green);font-weight:600">${money(payout)}</span></div>
+          <div class="kv"><span class="k">${asPlanet?"Your payout":"Your payout"}</span><span style="color:var(--green);font-weight:600">${money(asPlanet?Math.round((lead.estProfit||0)*(lead.splitThem/100)):payout)}</span></div>
         </div>
       </div>
       <div class="card">
@@ -870,13 +928,228 @@ function viewJV(){
           <div class="sign-row">
             <div class="planet-dot" style="background:${planetColor(pl)}">${initials(pl?pl.contact:"P")}</div>
             <div><div style="font-weight:600">${esc(pl?pl.contact:"Planet")}</div><div style="font-size:12px;color:var(--ink3)">Planet · ${esc(pl?pl.name:"")}</div></div>
-            <button class="btn ${lead.signedThem?'':''} sm" data-sign="them">${lead.signedThem?'✓ Signed':'Mark signed'}</button>
+            <button class="btn ${asPlanet&&!lead.signedThem?'primary':''} sm" data-sign="them">${lead.signedThem?'✓ Signed':asPlanet?'✎ Sign as Planet':'Mark signed'}</button>
           </div>
           <button class="btn primary" style="width:100%;justify-content:center;margin-top:10px" data-jvdownload>⤓ Download as text</button>
         </div>
       </div>
     </div>
   </div>`;
+}
+
+/* ---------- Planet views ---------- */
+function viewPlanetDashboard(){
+  const cp=currentPlanet();
+  if(!cp)return `<h1 class="page-h">No planet found</h1>`;
+  const myLeads=state.leads.filter(l=>l.planetId===cp.id);
+  const newCount=myLeads.filter(l=>["New","Under review"].includes(l.status)).length;
+  const inProgressCount=myLeads.filter(l=>["Countered","JV signed","Seller talks"].includes(l.status)).length;
+  const now=new Date();const yr=now.getFullYear();
+  const acquired=myLeads.filter(l=>l.status==="Closed"&&l.sentAt&&new Date(l.sentAt).getFullYear()===yr);
+  const acquiredSum=acquired.reduce((a,l)=>a+(l.asking||0),0);
+  const fits=myLeads.map(l=>fitScore(l,cp)).filter(x=>x>0);
+  const avgFit=fits.length?Math.round(fits.reduce((a,b)=>a+b,0)/fits.length):0;
+  const toReview=myLeads.filter(l=>["New","Under review"].includes(l.status));
+  return `
+  <div class="page-eyebrow">Planet — ${esc(cp.name)}</div>
+  <h1 class="page-h" style="margin-bottom:4px">Dashboard</h1>
+  <div class="page-sub" style="margin-bottom:22px">Markets: ${esc((cp.markets||[]).join(", ")||"—")}</div>
+  <div class="stats">
+    <div class="card stat"><div class="lbl">New to review</div><div class="val">${newCount}</div><div class="delta">leads awaiting decision</div></div>
+    <div class="card stat"><div class="lbl">In progress</div><div class="val">${inProgressCount}</div><div class="delta">active pipeline</div></div>
+    <div class="card stat"><div class="lbl">Acquired YTD</div><div class="val">${acquired.length}</div><div class="delta">${acquiredSum?money(acquiredSum)+" asking":""}</div></div>
+    <div class="card stat"><div class="lbl">Avg fit score</div><div class="val">${avgFit||"—"}</div><div class="delta">of incoming leads</div></div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <div class="sec-head"><h3>Leads to review</h3><button class="link" data-go="lead-inbox">View all →</button></div>
+      ${toReview.length?toReview.slice(0,5).map(l=>{
+        const fit=fitScore(l,cp);
+        return `<div class="row-lead" data-go="lead-inbox">
+          <div style="flex:1"><div style="font-weight:600;font-size:14px">${esc(l.address)}</div><div style="font-size:12px;color:var(--ink3)">${esc(l.structure)} · ${money(l.asking)}</div></div>
+          <span class="pill ${fit>=70?'green':fit>=40?'amber':'red'}" style="font-size:11px"><span class="d"></span>${fit}% fit</span>
+        </div>`;}).join(""):`<div class="empty"><div class="big">No new leads</div>Leads sent to you will appear here.</div>`}
+    </div>
+    <div class="card">
+      <div class="sec-head"><h3>Activity</h3></div>
+      <div style="padding:4px 0">
+        ${state.activity.filter(a=>myLeads.some(l=>l.id===a.leadId)||!a.leadId).slice(0,8).map(a=>`
+        <div style="display:flex;gap:10px;padding:10px 18px;border-bottom:1px solid var(--line2)">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--line2);display:flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 28px">${a.icon||"📋"}</div>
+          <div><div style="font-size:13px">${esc(a.text)}</div><div style="font-size:11px;color:var(--ink3)">${esc(a.time)}</div></div>
+        </div>`).join("")||`<div class="empty"><div class="big">No activity yet</div></div>`}
+      </div>
+    </div>
+  </div>`;
+}
+
+function viewLeadInbox(){
+  const cp=currentPlanet();
+  if(!cp)return `<h1 class="page-h">No planet</h1>`;
+  const myLeads=state.leads.filter(l=>l.planetId===cp.id&&["New","Under review"].includes(l.status));
+  return `
+  <div class="page-head">
+    <div class="grow"><div class="page-eyebrow">Planet — ${esc(cp.name)}</div><h1 class="page-h">Lead Inbox</h1>
+    <div class="page-sub">Leads sent to your buy box that need a decision.</div></div>
+  </div>
+  ${myLeads.length===0?`<div class="card"><div class="empty"><div class="big">Inbox zero 🎉</div>No leads awaiting your decision.</div></div>`:`
+  <div class="card">
+    <table class="data-table">
+      <thead><tr><th>Address</th><th>Structure</th><th>Asking</th><th>Balance</th><th>Fit</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        ${myLeads.map(l=>{
+          const fit=fitScore(l,cp);
+          return `<tr>
+            <td><div style="font-weight:600">${esc(l.address)}</div><div style="font-size:12px;color:var(--ink3)">${esc(l.city)}, ${esc(l.state)}</div></td>
+            <td>${esc(l.structure)}</td>
+            <td>${money(l.asking)}</td>
+            <td>${l.balance?money(l.balance):"—"}</td>
+            <td><span class="pill ${fit>=70?'green':fit>=40?'amber':'red'}" style="font-size:11px"><span class="d"></span>${fit}%</span></td>
+            <td><span class="pill ${STATUS_PILL[l.status]||'default'}"><span class="d"></span>${l.status}</span></td>
+            <td style="white-space:nowrap;display:flex;gap:6px;padding:10px 18px">
+              <button class="btn sm" style="background:var(--green);color:#fff;border-color:var(--green)" data-accept="${l.id}">✓ Accept</button>
+              <button class="btn sm" data-counter="${l.id}">↔ Counter</button>
+              <button class="btn sm ghostdanger" data-decline="${l.id}">✕ Decline</button>
+            </td>
+          </tr>`;
+        }).join("")}
+      </tbody>
+    </table>
+  </div>`}
+  <div id="counterModal" class="modal-bg hidden">
+    <div class="modal" style="max-width:420px">
+      <div class="modal-head"><h3>Counter offer</h3><button class="icon-btn" id="closeCounter">✕</button></div>
+      <div style="padding:20px">
+        <div style="margin-bottom:14px">
+          <label style="font-size:12px;font-weight:600;display:block;margin-bottom:5px">Your split % (Planet keeps)</label>
+          <input id="counterSplit" class="form-input" type="number" min="1" max="99" placeholder="e.g. 55" style="width:100%">
+        </div>
+        <div style="margin-bottom:18px">
+          <label style="font-size:12px;font-weight:600;display:block;margin-bottom:5px">Note to Orbiter</label>
+          <textarea id="counterNote" class="form-input" rows="3" placeholder="e.g. Price needs to come down — can do 55/45 if they accept $280k" style="width:100%"></textarea>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+          <button class="btn" id="closeCounter2">Cancel</button>
+          <button class="btn primary" id="submitCounter">Send counter</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function viewPlanetBuyBox(){
+  const cp=currentPlanet();
+  if(!cp)return `<h1 class="page-h">No planet</h1>`;
+  const typeOpts=["Single Family","Multi-Family","Commercial","Land","Mobile Home","Mixed Use"];
+  const structOpts=["Sub-To","Seller Finance","Morby Method","Stacked Method","Cash","DSCR","Wrap","Lease Option"];
+  return `
+  <div class="page-head">
+    <div class="grow"><div class="page-eyebrow">Planet — ${esc(cp.name)}</div><h1 class="page-h">My Buy Box</h1>
+    <div class="page-sub">Update your acquisition criteria. Orbits use this to score leads before sending.</div></div>
+  </div>
+  <div class="card" style="max-width:640px">
+    <div class="sec-head"><h3>Buy box details</h3></div>
+    <div style="padding:20px">
+      <div class="form-grid" style="grid-template-columns:1fr 1fr;margin-bottom:14px">
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:5px">Planet name</label><input name="bb_name" class="form-input" value="${esc(cp.name)}" style="width:100%"></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:5px">Contact name</label><input name="bb_contact" class="form-input" value="${esc(cp.contact||"")}" style="width:100%"></div>
+      </div>
+      <div style="margin-bottom:14px">
+        <label style="font-size:12px;font-weight:600;display:block;margin-bottom:5px">Markets (comma-separated)</label>
+        <input name="bb_markets" class="form-input" value="${esc((cp.markets||[]).join(", "))}" style="width:100%">
+      </div>
+      <div style="margin-bottom:14px">
+        <label style="font-size:12px;font-weight:600;display:block;margin-bottom:5px">Property types</label>
+        <div style="display:flex;flex-wrap:wrap;gap:7px">${typeOpts.map(t=>`<label style="display:flex;align-items:center;gap:5px;font-size:13px"><input type="checkbox" name="bb_type" value="${t}" ${(cp.types||[]).includes(t)?'checked':''}>${t}</label>`).join("")}</div>
+      </div>
+      <div style="margin-bottom:14px">
+        <label style="font-size:12px;font-weight:600;display:block;margin-bottom:5px">Financing structures</label>
+        <div style="display:flex;flex-wrap:wrap;gap:7px">${structOpts.map(s=>`<label style="display:flex;align-items:center;gap:5px;font-size:13px"><input type="checkbox" name="bb_struct" value="${s}" ${(cp.structures||[]).includes(s)?'checked':''}>${s}</label>`).join("")}</div>
+      </div>
+      <div class="form-grid" style="grid-template-columns:1fr 1fr;margin-bottom:14px">
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:5px">Min price ($)</label><input name="bb_priceMin" class="form-input" type="number" value="${cp.priceMin||""}" style="width:100%"></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:5px">Max price ($)</label><input name="bb_priceMax" class="form-input" type="number" value="${cp.priceMax||""}" style="width:100%"></div>
+      </div>
+      <div class="form-grid" style="grid-template-columns:1fr 1fr;margin-bottom:14px">
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:5px">Your split % (Planet keeps)</label><input name="bb_splitThem" class="form-input" type="number" min="1" max="99" value="${cp.splitThem||50}" style="width:100%"></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:5px">Close days target</label><input name="bb_closeDays" class="form-input" type="number" value="${cp.closeDays||30}" style="width:100%"></div>
+      </div>
+      <button class="btn primary" id="saveBuyBox">Save buy box</button>
+    </div>
+  </div>`;
+}
+
+function viewAcquisitions(){
+  const cp=currentPlanet();
+  if(!cp)return `<h1 class="page-h">No planet</h1>`;
+  const myLeads=state.leads.filter(l=>l.planetId===cp.id&&!["New","Under review"].includes(l.status));
+  const active=myLeads.filter(l=>!["Closed","Declined"].includes(l.status));
+  const closed=myLeads.filter(l=>l.status==="Closed");
+  return `
+  <div class="page-head">
+    <div class="grow"><div class="page-eyebrow">Planet — ${esc(cp.name)}</div><h1 class="page-h">Acquisitions</h1>
+    <div class="page-sub">Your active pipeline and closed acquisitions.</div></div>
+  </div>
+  <div class="stats" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
+    <div class="card stat"><div class="lbl">Active</div><div class="val">${active.length}</div><div class="delta">in pipeline</div></div>
+    <div class="card stat"><div class="lbl">Pending close</div><div class="val">${myLeads.filter(l=>l.status==="Seller talks").length}</div><div class="delta">in seller talks</div></div>
+    <div class="card stat"><div class="lbl">Acquired</div><div class="val">${closed.length}</div><div class="delta">${closed.reduce((a,l)=>a+(l.asking||0),0)?money(closed.reduce((a,l)=>a+(l.asking||0),0))+" total asking":""}</div></div>
+  </div>
+  ${myLeads.length===0?`<div class="card"><div class="empty"><div class="big">No acquisitions yet</div>Accept leads from your inbox to start building your pipeline.</div></div>`:`
+  <div class="card">
+    <table class="data-table">
+      <thead><tr><th>Address</th><th>Structure</th><th>Asking</th><th>Your split</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        ${myLeads.map(l=>`<tr>
+          <td><div style="font-weight:600">${esc(l.address)}</div><div style="font-size:12px;color:var(--ink3)">${esc(l.city)}, ${esc(l.state)}</div></td>
+          <td>${esc(l.structure)}</td>
+          <td>${money(l.asking)}</td>
+          <td>${l.splitThem||50}% <span style="color:var(--ink3);font-size:12px">(${money(Math.round((l.estProfit||0)*(l.splitThem||50)/100))} est.)</span></td>
+          <td><span class="pill ${STATUS_PILL[l.status]||'default'}"><span class="d"></span>${l.status}</span></td>
+          <td><button class="btn sm" data-acqf="${l.id}">Details</button></td>
+        </tr>`).join("")}
+      </tbody>
+    </table>
+  </div>`}`;
+}
+
+function acceptLead(id){
+  const l=state.leads.find(x=>x.id===id);if(!l)return;
+  l.status="JV signed";
+  state.activity.unshift({icon:"✅",text:`Planet accepted lead ${id}`,time:nowTime(),leadId:id});
+  save();render();toast("Lead accepted — JV in progress ✓");
+}
+function declineLead(id){
+  const l=state.leads.find(x=>x.id===id);if(!l)return;
+  l.status="Declined";l.declineNote="Outside buy box";
+  state.activity.unshift({icon:"✕",text:`Planet declined lead ${id}`,time:nowTime(),leadId:id});
+  save();render();toast("Lead declined");
+}
+function openCounterModal(id){
+  const m=$("#counterModal");if(!m)return;
+  m.dataset.leadId=id;
+  m.classList.remove("hidden");
+  const splitInput=$("#counterSplit");if(splitInput)splitInput.value="";
+  const noteInput=$("#counterNote");if(noteInput)noteInput.value="";
+  const closeCounterModal=()=>m.classList.add("hidden");
+  const closeBtn=$("#closeCounter");if(closeBtn){closeBtn.onclick=closeCounterModal;}
+  const closeBtn2=$("#closeCounter2");if(closeBtn2){closeBtn2.onclick=closeCounterModal;}
+  const submitBtn=$("#submitCounter");
+  if(submitBtn){
+    submitBtn.onclick=()=>{
+      const split=parseInt($("#counterSplit").value)||50;
+      const note=$("#counterNote").value.trim();
+      const lead=state.leads.find(x=>x.id===id);
+      if(lead){
+        lead.status="Countered";
+        lead.splitThem=split;lead.splitYou=100-split;
+        if(note){const t=state.threads.find(th=>th.planetId===lead.planetId);
+          if(t){t.msgs.push({from:"them",text:`Counter: ${split}/${100-split} split. ${note}`,time:nowTime()});}}
+        state.activity.unshift({icon:"↔",text:`Planet countered lead ${id} at ${split}/${100-split}`,time:nowTime(),leadId:id});
+        save();closeCounterModal();render();toast("Counter sent ✓");
+      }
+    };
+  }
 }
 
 /* ---------- Settings ---------- */
@@ -936,7 +1209,7 @@ function viewSettings(){
    GLOBAL CLICK HANDLERS (delegation for dynamic buttons)
    ============================================================ */
 document.addEventListener("click",e=>{
-  const t=e.target.closest("[data-pf],[data-lf],[data-sendto],[data-addplanet],[data-sign],[data-jvdownload]");
+  const t=e.target.closest("[data-pf],[data-lf],[data-sendto],[data-addplanet],[data-sign],[data-jvdownload],[data-accept],[data-counter],[data-decline],[data-acqf]");
   if(!t)return;
   if(t.dataset.pf!==undefined){route.planetFilter=t.dataset.pf;render();}
   else if(t.dataset.lf!==undefined){route.leadFilter=t.dataset.lf;render();}
@@ -944,6 +1217,10 @@ document.addEventListener("click",e=>{
   else if(t.dataset.addplanet!==undefined){openPlanetModal();}
   else if(t.dataset.sign!==undefined){signJV(t.dataset.sign);}
   else if(t.dataset.jvdownload!==undefined){downloadJV();}
+  else if(t.dataset.accept!==undefined){acceptLead(t.dataset.accept);}
+  else if(t.dataset.counter!==undefined){openCounterModal(t.dataset.counter);}
+  else if(t.dataset.decline!==undefined){declineLead(t.dataset.decline);}
+  else if(t.dataset.acqf!==undefined){route.leadFilter=t.dataset.acqf;render();}
 });
 document.addEventListener("input",e=>{
   if(e.target.id==="planetQ"){route.planetQuery=e.target.value;const v=e.target.value;renderView();const inp=$("#planetQ");if(inp){inp.focus();inp.value=v;inp.setSelectionRange(v.length,v.length);}}
@@ -951,6 +1228,7 @@ document.addEventListener("input",e=>{
 document.addEventListener("change",e=>{
   if(e.target.id==="jvPick"){route.jvLead=e.target.value;render();}
   if(e.target.id==="importData")handleImport(e.target.files[0]);
+  if(e.target.id==="planetSelector"){state.profile.currentPlanetId=e.target.value;save();render();}
 });
 
 /* Settings actions (delegated by id, bound after render) */
@@ -967,6 +1245,20 @@ document.addEventListener("click",e=>{
   if(e.target.id==="cs_connect")cloudConnect();
   if(e.target.id==="cs_now"){const m=$("#cs_msg");if(m)m.textContent="Syncing…";cloudSync().then(()=>{const mm=$("#cs_msg");if(mm)mm.textContent=syncStatus==="synced"?"Synced ✓":"Couldn't sync — check URL/passcode.";});}
   if(e.target.id==="cs_logout"){localStorage.removeItem(AUTH_KEY);syncStatus="local";toast("Logged out on this device");render();}
+  if(e.target.id==="saveBuyBox"){
+    const cp=currentPlanet();if(!cp)return;
+    cp.name=$("[name=bb_name]").value||cp.name;
+    cp.contact=$("[name=bb_contact]").value||cp.contact;
+    cp.markets=($("[name=bb_markets]").value||"").split(",").map(s=>s.trim()).filter(Boolean);
+    cp.types=[...document.querySelectorAll("[name=bb_type]:checked")].map(el=>el.value);
+    cp.structures=[...document.querySelectorAll("[name=bb_struct]:checked")].map(el=>el.value);
+    cp.priceMin=parseInt($("[name=bb_priceMin]").value)||0;
+    cp.priceMax=parseInt($("[name=bb_priceMax]").value)||0;
+    const splitThem=parseInt($("[name=bb_splitThem]").value)||50;
+    cp.splitThem=splitThem;cp.splitYou=100-splitThem;
+    cp.closeDays=parseInt($("[name=bb_closeDays]").value)||30;
+    save();render();toast("Buy box saved ✓");
+  }
   if(e.target.id==="exportData")exportData();
   if(e.target.id==="clearData"){if(confirm("Clear ALL leads, Planets, and messages? This can't be undone (export first if unsure).")){state={...seed(),leads:[],threads:[],activity:[],planets:state.planets};state.profile=seed().profile;localStorage.setItem(KEY,JSON.stringify(state));view="dashboard";render();toast("Cleared — add your first lead");}}
   if(e.target.id==="resetData"){if(confirm("Reset everything back to the demo dataset?")){localStorage.removeItem(KEY);state=load();view="dashboard";render();toast("Reset to demo data");}}
