@@ -755,11 +755,12 @@ function submitLead(d){
 /* ---------- My leads ---------- */
 function viewLeads(){
   const f=route.leadFilter||"All";
-  const counts={All:state.leads.length,Active:state.leads.filter(l=>!["Closed","Declined"].includes(l.status)).length,
+  const counts={All:state.leads.length,GO:state.leads.filter(l=>l.go).length,Active:state.leads.filter(l=>!["Closed","Declined"].includes(l.status)).length,
     "Needs you":state.leads.filter(l=>["Countered","Under review"].includes(l.status)).length,
     Closed:state.leads.filter(l=>l.status==="Closed").length,Declined:state.leads.filter(l=>l.status==="Declined").length};
   let list=state.leads.slice();
-  if(f==="Active")list=list.filter(l=>!["Closed","Declined"].includes(l.status));
+  if(f==="GO")list=list.filter(l=>l.go);
+  else if(f==="Active")list=list.filter(l=>!["Closed","Declined"].includes(l.status));
   else if(f==="Needs you")list=list.filter(l=>["Countered","Under review"].includes(l.status));
   else if(f==="Closed")list=list.filter(l=>l.status==="Closed");
   else if(f==="Declined")list=list.filter(l=>l.status==="Declined");
@@ -780,7 +781,7 @@ function viewLeads(){
     ${stat("Earned · YTD",money(earned),"closed this year","up")}
     ${stat("Pending splits",money(pending),"on JV-signed deals","")}
   </div>
-  <div class="chips" style="margin-bottom:14px">${["All","Active","Needs you","Closed","Declined"].map(x=>`<button class="chip ${x===f?'active':''}" data-lf="${x}">${x} ${counts[x]||0}</button>`).join("")}</div>
+  <div class="chips" style="margin-bottom:14px">${["All","GO","Active","Needs you","Closed","Declined"].map(x=>`<button class="chip ${x===f?'active':''}" data-lf="${x}">${x} ${counts[x]||0}</button>`).join("")}</div>
   <div class="card" style="overflow:hidden">
     <table>
       <thead><tr><th>Lead</th><th>Planet</th><th>Structure</th><th>Asking / balance</th><th>Split</th><th>Status</th><th>Last update</th></tr></thead>
@@ -792,7 +793,7 @@ function viewLeads(){
           <td><span class="tag">${esc(l.structure)}</span></td>
           <td><div>${money(l.asking)}</div><div style="font-size:12px;color:var(--ink3)">${l.freeClear?"Free & clear":money(l.balance)+" bal"}</div></td>
           <td><div class="split-bar"><span class="you" style="width:${l.splitYou}%"></span></div><div class="split-cap">${l.splitYou}/${l.splitThem}</div></td>
-          <td><span class="pill ${STATUS_PILL[l.status]}"><span class="d"></span>${l.status}</span></td>
+          <td><span class="pill ${STATUS_PILL[l.status]}"><span class="d"></span>${l.status}</span>${l.go?` <span class="pill green" style="font-size:11px;padding:2px 7px">GO</span>`:""}</td>
           <td style="color:var(--ink2)">${esc(l.lastUpdate||"")}</td>
         </tr>`;}).join(""):`<tr><td colspan="7"><div class="empty"><div class="big">No leads here yet</div>Hit “New lead” to send your first one.</div></td></tr>`}
       </tbody>
@@ -1293,6 +1294,7 @@ function openLead(id){
     </div>`,
     [
       {label:"Delete",cls:"ghostdanger",act:()=>{if(confirm("Delete this lead?")){state.leads=state.leads.filter(x=>x.id!==id);state.threads=state.threads.filter(t=>t.leadId!==id);save();closeModal();render();toast("Lead deleted");}}},
+      {label:l.go?"✓ Marked GO":"★ Mark as GO",cls:l.go?"primary":"",act:()=>{l.go=!l.go;save();exportGoLeads();closeModal();render();toast(l.go?"Lead marked GO — go-leads.json exported":"GO mark removed");}},
       {label:"Open JV",cls:"",act:()=>{closeModal();route.jvLead=id;view="jv";render();}},
       {label:"Save changes",cls:"primary",act:()=>{
         l.planetId=$("#ed_planet").value;l.structure=$("#ed_structure").value;
@@ -1399,6 +1401,13 @@ function exportData(){
   const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
   const a=document.createElement("a");a.href=URL.createObjectURL(blob);
   a.download=`orbit-backup-${new Date().toISOString().slice(0,10)}.json`;a.click();toast("Backup downloaded ✓");
+}
+function exportGoLeads(){
+  const goLeads=state.leads.filter(l=>l.go).map(({sellerPhone,...l})=>l);
+  const blob=new Blob([JSON.stringify(goLeads,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download="go-leads.json";a.click();
+  toast("go-leads.json exported — commit this file to GitHub so Claude Code can see it ✓");
 }
 function handleImport(file){
   if(!file)return;const r=new FileReader();
